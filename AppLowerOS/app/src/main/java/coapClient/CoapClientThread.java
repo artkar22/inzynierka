@@ -152,26 +152,25 @@ public class CoapClientThread implements Runnable {
                     if (broadcast == null) {
                         continue;
                     }
-                    String address = "/192.168.2";
-//                    for (int x = 0; x < 100; x++){
-                    int port = 11110;
-                    while (port < 11115) {
-//                        URI uriOfSimuletsId = new URI("coap:/" + address +"."+ Integer.toString(x) + ":" + Integer.toString(port)+"/id");
-                        URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port)+"/id");
-                        Log.i("uri", uriOfSimuletsId.toString());
+                    if (broadcast.getClass().equals(Inet4Address.class)) {
+                            int port = 11110;
+                            while (port < 11115) {
+                                URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/id");
 
-                        client.setURI(uriOfSimuletsId.toString());
-                        CoapResponse resp = client.get();
-                        if (resp != null) {
-//                            URI uriOfSimulet = new URI("coap:/" + address +"."+ Integer.toString(x) + ":" + Integer.toString(port));
-                            URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
+                                Log.i("uri", uriOfSimuletsId.toString());
 
-                            createSimulet(resp, uriOfSimulet);
+                                client.setURI(uriOfSimuletsId.toString());
+                                CoapResponse resp = client.get();
+                                if (resp != null) {
+                                    URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
+
+                                    createSimulet(resp, uriOfSimulet);
+                                }
+                                port++;
+                            }
                         }
-                        port++;
-                    }
-//                }
-                 }
+//                    }
+                }
             }
         } catch (SocketException e) {
             e.printStackTrace();
@@ -183,8 +182,7 @@ public class CoapClientThread implements Runnable {
 
     private void createSimulet(CoapResponse resp, URI uri) {
 
-        if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL)) )
-        {
+        if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL))) {
             IpsoLightControl simulet = new IpsoLightControl(uri);
             simulets.add(simulet);
         }
