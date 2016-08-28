@@ -1,5 +1,6 @@
 package karolakpochwala.apploweros;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,7 @@ import java.util.Enumeration;
 
 import Simulets.Simulet;
 import coapClient.CoapClientThread;
+import dynamicGridActivity.GridActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +58,14 @@ public class MainActivity extends AppCompatActivity {
         Button sendButton = (Button) findViewById(R.id.button1);
         Thread CoapClient = new Thread(new CoapClientThread(sendButton,simulets));
         CoapClient.start();
+
+        Button newGameButton = (Button) findViewById(R.id.newGameButton);
+        newGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, GridActivity.class));
+            }
+        });
     }
 
     @Override
