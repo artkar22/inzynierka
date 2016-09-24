@@ -342,7 +342,8 @@ public class DynamicGridView extends GridView {
     }
 
     private int getColumnCount() {
-        return getAdapterInterface().getColumnCount();
+        int columns = getAdapterInterface().getCurrentMap().getNumberOfColums();
+        return getAdapterInterface().getCurrentMap().getNumberOfColums();
     }
 
     private DynamicGridAdapterInterface getAdapterInterface() {
@@ -639,7 +640,7 @@ public class DynamicGridView extends GridView {
         if (isPostHoneycomb() && mWobbleInEditMode) {
             if (mIsEditMode) {
                 restartWobble();
-            } else{
+            } else {
                 stopWobble(true);
             }
         }

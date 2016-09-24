@@ -6,6 +6,8 @@ package dynamicGrid;
  * Time: 23:44
  */
 
+import dynamicGrid.mapGenerator.map.MapDTO;
+
 /**
  * Any adapter used with DynamicGridView must implement DynamicGridAdapterInterface.
  * Adapter implementation also must has stable items id.
@@ -23,8 +25,7 @@ public interface DynamicGridAdapterInterface {
      * @return return columns number for GridView. Need for compatibility
      * (@link android.widget.GridView#getNumColumns() requires api 11)
      */
-    int getColumnCount();
-
+    MapDTO getCurrentMap();
     /**
      * Determines whether the item in the specified <code>position</code> can be reordered.
      */

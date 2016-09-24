@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import dynamicGrid.mapGenerator.map.MapDTO;
+
 /**
  * Author: alex askerov
  * Date: 9/7/13
@@ -14,16 +16,16 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
     private Context mContext;
 
     private ArrayList<Object> mItems = new ArrayList<Object>();
-    private int mColumnCount;
+    private MapDTO currentMap;
 
-    protected BaseDynamicGridAdapter(Context context, int columnCount) {
+    protected BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
         this.mContext = context;
-        this.mColumnCount = columnCount;
+        this.currentMap = currentMap;
     }
 
-    public BaseDynamicGridAdapter(Context context, List<?> items, int columnCount) {
+    public BaseDynamicGridAdapter(Context context, List<?> items, MapDTO currentMap) {
         mContext = context;
-        mColumnCount = columnCount;
+        this.currentMap = currentMap;
         init(items);
     }
 
@@ -82,12 +84,12 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
     }
 
     @Override
-    public int getColumnCount() {
-        return mColumnCount;
+    public MapDTO getCurrentMap() {
+        return currentMap;
     }
 
-    public void setColumnCount(int columnCount) {
-        this.mColumnCount = columnCount;
+    public void setCurrentMap(final MapDTO currentMap) {
+        this.currentMap = currentMap;
         notifyDataSetChanged();
     }
 

@@ -37,12 +37,12 @@ public class GridActivity extends Activity {
         String ApplicationDataJSON = getIntent().getStringExtra(Consts.APPLICATION_DATA);
         applicationData = gSON.fromJson(ApplicationDataJSON, ApplicationData.class);
         applicationData.addMap(mapGenerator.loadMap(getAssets(), "map0.json"));//TODO SYSTEM WCZYTYWANIA MAP - POBIERANIE NAZW MAP Z KATALOGU I SYSTEM WCZYTYWANIA KOLEJNYCH
-        ArrayList<MapDTO> maps = applicationData.getAllMaps();
         //zmiana
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
+        gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         gridView.setAdapter(new CheeseDynamicAdapter(this,
                 new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings)),
-                getResources().getInteger(R.integer.column_count)));
+                applicationData.getAllMaps().get(0))); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        add callback to stop edit mode if needed
 //        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
 //        {

@@ -8,14 +8,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dynamicGrid.BaseDynamicGridAdapter;
+import dynamicGrid.mapGenerator.map.MapDTO;
 import karolakpochwala.apploweros.R;
 
+
 public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
-    public CheeseDynamicAdapter(Context context, List<?> items, int columnCount) {
-        super(context, items, columnCount);
+//    private ArrayList<MapDTO> allMaps;
+    private MapDTO currentMap;
+
+    public CheeseDynamicAdapter(Context context, List<?> items, MapDTO currentMap) {
+        super(context, items, currentMap);
+//        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
+        this.currentMap = currentMap;//TODO tymczasowo pierwsza mapa tylko
     }
 
     @Override
