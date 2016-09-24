@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dynamicGrid.mapGenerator.map.MapDTO;
+import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
 /**
  * Author: alex askerov
@@ -15,7 +16,7 @@ import dynamicGrid.mapGenerator.map.MapDTO;
 public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter {
     private Context mContext;
 
-    private ArrayList<Object> mItems = new ArrayList<Object>();
+    private ArrayList<PlaceInMapDTO> mItems = new ArrayList<PlaceInMapDTO>();
     private MapDTO currentMap;
 
     protected BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
@@ -26,16 +27,16 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
     public BaseDynamicGridAdapter(Context context, List<?> items, MapDTO currentMap) {
         mContext = context;
         this.currentMap = currentMap;
-        init(items);
+        init(currentMap.getPlacesInMap());
     }
 
-    private void init(List<?> items) {
+    private void init(ArrayList<PlaceInMapDTO> items) {
         addAllStableId(items);
-        this.mItems.addAll(items);
+        this.mItems = items;
     }
 
 
-    public void set(List<?> items) {
+    public void set(ArrayList<PlaceInMapDTO> items) {
         clear();
         init(items);
         notifyDataSetChanged();
@@ -47,23 +48,23 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
         notifyDataSetChanged();
     }
 
-    public void add(Object item) {
-        addStableId(item);
-        mItems.add(item);
-        notifyDataSetChanged();
-    }
-
-    public void add(int position, Object item) {
-        addStableId(item);
-        mItems.add(position, item);
-        notifyDataSetChanged();
-    }
-
-    public void add(List<?> items) {
-        addAllStableId(items);
-        this.mItems.addAll(items);
-        notifyDataSetChanged();
-    }
+//    public void add(Object item) {
+//        addStableId(item);
+//        mItems.add(item);
+//        notifyDataSetChanged();
+//    }
+//
+//    public void add(int position, Object item) {
+//        addStableId(item);
+//        mItems.add(position, item);
+//        notifyDataSetChanged();
+//    }
+//
+//    public void add(List<?> items) {
+//        addAllStableId(items);
+//        this.mItems.addAll(items);
+//        notifyDataSetChanged();
+//    }
 
 
     public void remove(Object item) {
@@ -106,9 +107,9 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
         return true;
     }
 
-    public List<Object> getItems() {
-        return mItems;
-    }
+//    public List<Object> getItems() {
+//        return mItems;
+//    }
 
     protected Context getContext() {
         return mContext;
