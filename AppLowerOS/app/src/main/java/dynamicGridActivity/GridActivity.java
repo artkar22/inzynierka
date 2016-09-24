@@ -36,7 +36,7 @@ public class GridActivity extends Activity {
         gSON = new Gson();
         String ApplicationDataJSON = getIntent().getStringExtra(Consts.APPLICATION_DATA);
         applicationData = gSON.fromJson(ApplicationDataJSON, ApplicationData.class);
-        applicationData.addMap(mapGenerator.loadMap("map0.json"));//TODO SYSTEM WCZYTYWANIA MAP - POBIERANIE NAZW MAP Z KATALOGU I SYSTEM WCZYTYWANIA KOLEJNYCH
+        applicationData.addMap(mapGenerator.loadMap(getAssets(), "map0.json"));//TODO SYSTEM WCZYTYWANIA MAP - POBIERANIE NAZW MAP Z KATALOGU I SYSTEM WCZYTYWANIA KOLEJNYCH
         ArrayList<MapDTO> maps = applicationData.getAllMaps();
         //zmiana
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);

@@ -6,10 +6,26 @@ import java.util.ArrayList;
  * Created by ArturK on 2016-09-24.
  */
 public abstract class MapDTOBuilder {
-    public static MapDTO buildMapDto(final String mapId, final int numberOfColumns, final int numberOfRows) {
+    public static MapDTO buildMapDto(final String mapId, final int numberOfColumns,
+                                     final int numberOfRows, final ArrayList<PlaceInMapDTO> specialPlacesInMap) {
         MapDTO dto = initializeMapDTO(mapId, numberOfColumns, numberOfRows);
-        //TODO POCIĄGNĄĆ TO I ZAŁADOWAĆ MIEJSCA Z PLIKU MAPY;
+        if (specialPlacesInMap.size() > 0) {
+            setSpecialPlacesOnDTO(dto.getPlacesInMap(), specialPlacesInMap);
+        }
         return dto;
+    }
+
+    private static void setSpecialPlacesOnDTO(ArrayList<PlaceInMapDTO> placesInDto, ArrayList<PlaceInMapDTO> specialPlacesInMap) {
+        for(PlaceInMapDTO specialPlace : specialPlacesInMap){
+            for(PlaceInMapDTO placeInDto:placesInDto){
+                if(specialPlace.getPlaceInMapId() == placeInDto.getPlaceInMapId()){
+                    placeInDto.setIsItMap(specialPlace.isItMap());
+                    placeInDto.setDropAllowed(specialPlace.isDropAllowed());
+                    placeInDto.setAlreadyDropped(specialPlace.isAlreadyDropped());
+                    break;
+                }
+            }
+        }
     }
 
     private static MapDTO initializeMapDTO(final String mapId, final int numberOfColumns, final int numberOfRows) {
@@ -21,7 +37,7 @@ public abstract class MapDTOBuilder {
         final ArrayList<PlaceInMapDTO> placesInMap = new ArrayList<>();
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
             boolean isItMapFlag = true;
-            if (((numberOfColumns + 1) % currentPlaceInMapIndex) == 0 && currentPlaceInMapIndex != 0) {
+            if (checkIfCurrentIndexShouldBeItemCollection(numberOfColumns, currentPlaceInMapIndex)) {
                 isItMapFlag = false;
             }
             final PlaceInMapDTO defaultPlaceInMap =
@@ -32,4 +48,10 @@ public abstract class MapDTOBuilder {
         return dto;
     }
 
+    private static boolean checkIfCurrentIndexShouldBeItemCollection(final int numberOfColumns, final int currentPlaceInMapIndex) {
+        if (currentPlaceInMapIndex + 1 >= numberOfColumns && ((currentPlaceInMapIndex + 1) % (numberOfColumns)) == 0) {
+            return true;
+        }
+        return false;
+    }
 }
