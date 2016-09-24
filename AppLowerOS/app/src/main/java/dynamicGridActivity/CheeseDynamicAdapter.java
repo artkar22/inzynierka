@@ -1,11 +1,5 @@
 package dynamicGridActivity;
 
-/**
- * Author: alex askerov
- * Date: 9/9/13
- * Time: 10:52 PM
- */
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +13,6 @@ import java.util.List;
 import dynamicGrid.BaseDynamicGridAdapter;
 import karolakpochwala.apploweros.R;
 
-/**
- * Author: alex askerov
- * Date: 9/7/13
- * Time: 10:56 PM
- */
 public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     public CheeseDynamicAdapter(Context context, List<?> items, int columnCount) {
         super(context, items, columnCount);

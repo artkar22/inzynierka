@@ -1,5 +1,7 @@
 package karolakpochwala.apploweros;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+
+import com.google.gson.Gson;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
@@ -29,14 +33,16 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import ApplicationData.ApplicationData;
 import Simulets.Simulet;
 import coapClient.CoapClientThread;
 import dynamicGridActivity.GridActivity;
+import mainUtils.Consts;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Simulet> simulets;
-  //  private CoapClient client;
+    private ApplicationData applicationData;
+    //  private CoapClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +60,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        simulets = new ArrayList<Simulet>();
+        applicationData = new ApplicationData();
         Button sendButton = (Button) findViewById(R.id.button1);
-        Thread CoapClient = new Thread(new CoapClientThread(sendButton,simulets));
+        Thread CoapClient = new Thread(new CoapClientThread(sendButton, applicationData.getSimulets(),this));
         CoapClient.start();
 
         Button newGameButton = (Button) findViewById(R.id.newGameButton);
         newGameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, GridActivity.class));
+                Intent newGame = new Intent();
+                Gson gS = new Gson();
+                String appDataGson = gS.toJson(applicationData);
+                newGame.putExtra(Consts.APPLICATION_DATA, appDataGson);
+                newGame.setClass(MainActivity.this, GridActivity.class);
+                startActivity(newGame);
             }
         });
     }
@@ -89,6 +100,14 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+//    public dataLoaderScreen(){
+//        ProgressDialog dialog=new ProgressDialog(this);
+//        dialog.setMessage("message");
+//        dialog.setCancelable(false);
+//        dialog.setInverseBackgroundForced(false);
+//        dialog.show();
+//    }
 //
 //    private void discoverDevices() {
 //

@@ -1,6 +1,8 @@
 package coapClient;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Button;
 
@@ -26,6 +28,7 @@ import java.util.Enumeration;
 
 import Simulets.IpsoLightControl;
 import Simulets.Simulet;
+import karolakpochwala.apploweros.MainActivity;
 import karolakpochwala.apploweros.SendButtonListener;
 
 import static ipsoConfig.ipsoDefinitions.*;
@@ -41,11 +44,14 @@ public class CoapClientThread implements Runnable {
     private Button sendButton;
     private ArrayList<Simulet> simulets;
     private CoapClient client;
+    private MainActivity mainActivity;
+    private ProgressDialog dialog;
 
-    public CoapClientThread(Button sendButton, ArrayList<Simulet> simulets) {
-        //   this.client=client;
+    public CoapClientThread(Button sendButton, ArrayList<Simulet> simulets, MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
         this.simulets = simulets;
         this.sendButton = sendButton;
+        dialog = new ProgressDialog(mainActivity);
     }
 
     public void run() {
@@ -68,14 +74,23 @@ public class CoapClientThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        mainActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
+                dialog.setCancelable(false);
+                dialog.setInverseBackgroundForced(false);
+                dialog.show();
+            }
+        });
         discoverDevices();
         discoverResourcesOfEachDevice();
+        mainActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                dialog.hide();
+            }
+        });
         SendButtonListener listener = new SendButtonListener(client, simulets);
         sendButton.setOnClickListener(listener);
-
-
     }
 
     /**
@@ -153,22 +168,22 @@ public class CoapClientThread implements Runnable {
                         continue;
                     }
                     if (broadcast.getClass().equals(Inet4Address.class)) {
-                            int port = 11110;
-                            while (port < 11115) {
-                                URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/id");
+                        int port = 11110;
+                        while (port < 11115) {
+                            URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/id");
 
-                                Log.i("uri", uriOfSimuletsId.toString());
+                            Log.i("uri", uriOfSimuletsId.toString());
 
-                                client.setURI(uriOfSimuletsId.toString());
-                                CoapResponse resp = client.get();
-                                if (resp != null) {
-                                    URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
+                            client.setURI(uriOfSimuletsId.toString());
+                            CoapResponse resp = client.get();
+                            if (resp != null) {
+                                URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
 
-                                    createSimulet(resp, uriOfSimulet);
-                                }
-                                port++;
+                                createSimulet(resp, uriOfSimulet);
                             }
+                            port++;
                         }
+                    }
 //                    }
                 }
             }
