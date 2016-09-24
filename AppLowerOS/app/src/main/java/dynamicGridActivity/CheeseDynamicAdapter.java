@@ -36,7 +36,9 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         } else {
             holder = (CheeseViewHolder) convertView.getTag();
         }
-        holder.build(getItem(position).toString());
+        if(!currentMap.getPlacesInMap().get(position).isDropAllowed() && !currentMap.getPlacesInMap().get(position).isItMap()){
+            holder.build(getItem(position).toString());
+        }
         return convertView;
     }
 
