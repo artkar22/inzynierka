@@ -35,6 +35,8 @@ import java.util.Stack;
 import karolakpochwala.apploweros.R;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 /**
  * Author: alex askerov
@@ -718,21 +720,23 @@ public class DynamicGridView extends GridView {
 //        Long target = new Long(0);
         int idINDEX =0;
         Long bestViewIndex = new Long(0);
-
+        double bestVector = 0.0;
         for (Long id : idList) {
             View view = getViewForId(id);
             if (view != null) {
                 Point targetColumnRowPair = getColumnAndRowForView(view);
                 if(id.intValue() == 0){
-                    diffX = abs(mLastEventX-this.positionsOnScreen.get(idINDEX)[0]);
-                    diffY = abs(mLastEventY-this.positionsOnScreen.get(idINDEX)[1]);
-//                    currentBestView = view;
+                    diffX = abs(mLastEventX-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[0]);
+                    diffY = abs(mLastEventY-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[1]);
+                    bestVector = sqrt(pow(diffX,2)+pow(diffY,2));
                 }else{
-                    int newDiffX = abs(mLastEventX-this.positionsOnScreen.get(idINDEX)[0]);
-                    int newDiffY = abs(mLastEventY - this.positionsOnScreen.get(idINDEX)[1]);
-                    if (newDiffX<diffX  || newDiffY<diffY ){
+                    int newDiffX = abs(mLastEventX-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[0]);
+                    int newDiffY = abs(mLastEventY -mOverlapIfSwitchStraightLine- this.positionsOnScreen.get(idINDEX)[1]);
+                    double newVector = sqrt(pow(newDiffX,2)+pow(newDiffY,2));
+                    if (newVector<bestVector){//newDiffX<diffX  || newDiffY<diffY ){
                         diffX = newDiffX;
                         diffY = newDiffY;
+                        bestVector = newVector;
                         bestViewIndex = id;
 //                        currentBestView = view;
                     }
