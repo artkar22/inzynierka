@@ -21,12 +21,10 @@ import karolakpochwala.apploweros.R;
 public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     private MapDTO currentMap;
     private ArrayList<Simulet> listOfSimulets;
-    private int currentSimuletIndex;
 
     public CheeseDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets, MapDTO currentMap) {
         super(context, currentMap);
         this.listOfSimulets = listOfSimulets;
-        currentSimuletIndex = listOfSimulets.size() - 1;
 //        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
         this.currentMap = currentMap;//TODO tymczasowo pierwsza mapa tylko
         bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap);
