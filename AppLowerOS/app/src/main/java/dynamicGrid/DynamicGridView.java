@@ -34,6 +34,8 @@ import java.util.Stack;
 
 import karolakpochwala.apploweros.R;
 
+import static java.lang.Math.abs;
+
 /**
  * Author: alex askerov
  * Date: 9/6/13
@@ -83,6 +85,7 @@ public class DynamicGridView extends GridView {
     private OnDropListener mDropListener;
     private OnDragListener mDragListener;
     private OnEditModeChangeListener mEditModeChangeListener;
+    private ArrayList<int[]> positionsOnScreen = new ArrayList<>();
 
     private OnItemClickListener mUserItemClickListener;
     private OnItemClickListener mLocalItemClickListener = new OnItemClickListener() {
@@ -455,7 +458,7 @@ public class DynamicGridView extends GridView {
                             mHoverCellOriginalBounds.top + deltaY + mTotalOffsetY);
                     mHoverCell.setBounds(mHoverCellCurrentBounds);
                     invalidate();
-                    handleCellSwitch();
+//                    handleCellSwitch();
                     mIsMobileScrolling = false;
                     handleMobileCellScroll();
                     return false;
@@ -689,50 +692,141 @@ public class DynamicGridView extends GridView {
 
     }
 
+    private void getAllPositions(){
+        for(Long id:idList){
+            int[] location = new int[2];
+            this.getViewForId(id.intValue()).getLocationOnScreen(location);
+            this.positionsOnScreen.add(location);
+        }
+    }
+
     private void handleCellSwitch() {
+        this.getAllPositions();
+        //this.positionsOnScreen
         final int deltaY = mLastEventY - mDownY;
         final int deltaX = mLastEventX - mDownX;
         final int deltaYTotal = mHoverCellOriginalBounds.centerY() + mTotalOffsetY + deltaY;
         final int deltaXTotal = mHoverCellOriginalBounds.centerX() + mTotalOffsetX + deltaX;
+        int currentBestX =0;
+        int currentBestY =0;
+        int diffX = 0;
+        int diffY = 0;
         mMobileView = getViewForId(mMobileItemId);
         View targetView = null;
-        float vX = 0;
-        float vY = 0;
+
         Point mobileColumnRowPair = getColumnAndRowForView(mMobileView);
+//        Long target = new Long(0);
+        int idINDEX =0;
+        Long bestViewIndex = new Long(0);
+
         for (Long id : idList) {
             View view = getViewForId(id);
             if (view != null) {
                 Point targetColumnRowPair = getColumnAndRowForView(view);
-                if ((aboveRight(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal < view.getBottom() && deltaXTotal > view.getLeft()
-                        || aboveLeft(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal < view.getBottom() && deltaXTotal < view.getRight()
-                        || belowRight(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal > view.getTop() && deltaXTotal > view.getLeft()
-                        || belowLeft(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal > view.getTop() && deltaXTotal < view.getRight()
-                        || above(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal < view.getBottom() - mOverlapIfSwitchStraightLine
-                        || below(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaYTotal > view.getTop() + mOverlapIfSwitchStraightLine
-                        || right(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaXTotal > view.getLeft() + mOverlapIfSwitchStraightLine
-                        || left(targetColumnRowPair, mobileColumnRowPair)
-                        && deltaXTotal < view.getRight() - mOverlapIfSwitchStraightLine)) {
-                    float xDiff = Math.abs(DynamicGridUtils.getViewX(view) - DynamicGridUtils.getViewX(mMobileView));
-                    float yDiff = Math.abs(DynamicGridUtils.getViewY(view) - DynamicGridUtils.getViewY(mMobileView));
-                    if (xDiff >= vX && yDiff >= vY) {
-                        vX = xDiff;
-                        vY = yDiff;
-                        targetView = view;
+                if(id.intValue() == 0){
+                    diffX = abs(mLastEventX-this.positionsOnScreen.get(idINDEX)[0]);
+                    diffY = abs(mLastEventY-this.positionsOnScreen.get(idINDEX)[1]);
+//                    currentBestView = view;
+                }else{
+                    int newDiffX = abs(mLastEventX-this.positionsOnScreen.get(idINDEX)[0]);
+                    int newDiffY = abs(mLastEventY - this.positionsOnScreen.get(idINDEX)[1]);
+                    if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
+                            newDiffX<diffX  || newDiffY<diffY ){
+                        diffX = newDiffX;
+                        diffY = newDiffY;
+                        bestViewIndex = id;
+//                        currentBestView = view;
                     }
+//                    if(abs(deltaY)>abs(deltaX)){
+//                        if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
+//                                  newDiffY<diffY  ){
+//                            diffY = newDiffY;
+//                            currentBestView = view;
+//                        }
+//                    } else {
+//                        if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
+//                                newDiffX<diffX  ){
+//                            diffX = newDiffX;
+//                            currentBestView = view;
+//                        }
+//                    }
+//                    if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
+//                            newDiffX<diffX && newDiffY<diffY  ){
+//                        diffX = newDiffX;
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                    }
+// else if(aboveLeft(targetColumnRowPair, mobileColumnRowPair)
+//                            && newDiffX<diffX && newDiffY<diffY
+//                            ){
+//                        diffX = newDiffX;
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                    } else if(belowRight(targetColumnRowPair, mobileColumnRowPair)
+//                            && newDiffX<diffX && newDiffY<diffY){
+//                        diffX = newDiffX;
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                } else if(belowLeft(targetColumnRowPair, mobileColumnRowPair)
+//                            && newDiffX<diffX && newDiffY<diffY){
+//                        diffX = newDiffX;
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                    } else if(above(targetColumnRowPair, mobileColumnRowPair)
+//                            && newDiffY<diffY){
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                    } else if(below(targetColumnRowPair, mobileColumnRowPair)
+//                            && newDiffY<diffY){
+//                        diffY = newDiffY;
+//                        currentBestView = view;
+//                } else if(right(targetColumnRowPair, mobileColumnRowPair)
+//                        && newDiffX<diffX){
+//                        diffX = newDiffX;
+//                        currentBestView = view;
+//                } else if(left(targetColumnRowPair, mobileColumnRowPair)
+//                        && newDiffX<diffX){
+//                        diffX = newDiffX;
+//                        currentBestView = view;
+//                }
                 }
+//                if (aboveRight(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal < view.getBottom() && deltaXTotal > view.getLeft()){
+//                    targetView = getTargetView(view);
+//                } else if(aboveLeft(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal < view.getBottom() && deltaXTotal < view.getRight()
+//                        ){
+//                    targetView = getTargetView(view);
+//                } else if(belowRight(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal > view.getTop() && deltaXTotal > view.getLeft()){
+//                    targetView = getTargetView(view);
+//                } else if(belowLeft(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal > view.getTop() && deltaXTotal < view.getRight()){
+//                    targetView = getTargetView(view);
+//                } else if(above(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal < view.getBottom() - mOverlapIfSwitchStraightLine){
+//                    targetView = getTargetView(view);
+//                } else if(below(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaYTotal > view.getTop() + mOverlapIfSwitchStraightLine){
+//                    targetView = getTargetView(view);
+//                } else if(right(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaXTotal > view.getLeft() + mOverlapIfSwitchStraightLine){
+//                    targetView = getTargetView(view);
+//                } else if(left(targetColumnRowPair, mobileColumnRowPair)
+//                        && deltaXTotal < view.getRight() - mOverlapIfSwitchStraightLine &&
+//                        (currentBestX==0 || (currentBestX!=0 && view.getRight()<currentBestX))){
+//                    currentBestX = view.getRight();
+//                    targetView = getTargetView(view);
+//                }
+                idINDEX=idINDEX+1;
             }
         }
+        View currentBestView = getViewForId(bestViewIndex);
+        targetView = getTargetView(currentBestView);
         if (targetView != null) {
             final int originalPosition = getPositionForView(mMobileView);
             int targetPosition = getPositionForView(targetView);
-
+//            int targetPosition = target.intValue();
             final DynamicGridAdapterInterface adapter = getAdapterInterface();
             if (targetPosition == INVALID_POSITION || !adapter.canReorder(originalPosition) || !adapter.canReorder(targetPosition)) {
                 updateNeighborViewsForId(mMobileItemId);
@@ -760,6 +854,30 @@ public class DynamicGridView extends GridView {
 
             switchCellAnimator.animateSwitchCell(originalPosition, targetPosition);
         }
+    }
+
+    private View getTargetView(View view){
+        float vX = 0;
+        float vY = 0;
+        float xDiff = abs(DynamicGridUtils.getViewX(view) - DynamicGridUtils.getViewX(mMobileView));
+        float yDiff = abs(DynamicGridUtils.getViewY(view) - DynamicGridUtils.getViewY(mMobileView));
+        if (xDiff >= vX && yDiff >= vY) {
+            vX = xDiff;
+            vY = yDiff;
+
+//                        if(left(targetColumnRowPair, mobileColumnRowPair)){
+            return view;
+//                            break;
+//                        } else{
+//                            targetView = view;
+//                        }
+
+        }
+       return null;
+    }
+
+    public void handleDrop() {
+        handleCellSwitch();
     }
 
     private interface SwitchCellAnimator {
@@ -1147,6 +1265,8 @@ public class DynamicGridView extends GridView {
             Collections.reverse(transitions);
             return transitions;
         }
+
     }
+
 }
 

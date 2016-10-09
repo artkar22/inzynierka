@@ -2,7 +2,7 @@ package dynamicGrid;
 
 import android.content.Context;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import dynamicGrid.mapGenerator.map.MapDTO;
@@ -16,27 +16,22 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter {
     private Context mContext;
 
-    private ArrayList<PlaceInMapDTO> mItems = new ArrayList<PlaceInMapDTO>();
+    private LinkedList<PlaceInMapDTO> mItems = new LinkedList<PlaceInMapDTO>();
     private MapDTO currentMap;
 
-    protected BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
-        this.mContext = context;
-        this.currentMap = currentMap;
-    }
-
-    public BaseDynamicGridAdapter(Context context, List<?> items, MapDTO currentMap) {
+    public BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
         mContext = context;
         this.currentMap = currentMap;
         init(currentMap.getPlacesInMap());
     }
 
-    private void init(ArrayList<PlaceInMapDTO> items) {
+    private void init(LinkedList<PlaceInMapDTO> items) {
         addAllStableId(items);
         this.mItems = items;
     }
 
 
-    public void set(ArrayList<PlaceInMapDTO> items) {
+    public void set(LinkedList<PlaceInMapDTO> items) {
         clear();
         init(items);
         notifyDataSetChanged();
@@ -47,25 +42,6 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
         mItems.clear();
         notifyDataSetChanged();
     }
-
-//    public void add(Object item) {
-//        addStableId(item);
-//        mItems.add(item);
-//        notifyDataSetChanged();
-//    }
-//
-//    public void add(int position, Object item) {
-//        addStableId(item);
-//        mItems.add(position, item);
-//        notifyDataSetChanged();
-//    }
-//
-//    public void add(List<?> items) {
-//        addAllStableId(items);
-//        this.mItems.addAll(items);
-//        notifyDataSetChanged();
-//    }
-
 
     public void remove(Object item) {
         mItems.remove(item);
@@ -97,7 +73,8 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
     @Override
     public void reorderItems(int originalPosition, int newPosition) {
         if (newPosition < getCount()) {
-            DynamicGridUtils.reorder(mItems, originalPosition, newPosition);
+//            DynamicGridUtils.reorder(mItems, originalPosition, newPosition);
+            DynamicGridUtils.swap(mItems, originalPosition, newPosition);
             notifyDataSetChanged();
         }
     }
@@ -107,9 +84,6 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
         return true;
     }
 
-//    public List<Object> getItems() {
-//        return mItems;
-//    }
 
     protected Context getContext() {
         return mContext;

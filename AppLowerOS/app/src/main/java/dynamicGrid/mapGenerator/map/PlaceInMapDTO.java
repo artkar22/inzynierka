@@ -1,5 +1,7 @@
 package dynamicGrid.mapGenerator.map;
 
+import Simulets.Simulet;
+
 /**
  * Created by ArturK on 2016-09-24.
  */
@@ -9,6 +11,7 @@ public class PlaceInMapDTO {
     private boolean dropAllowed;
     private boolean alreadyDropped;
     private boolean isItMap;//if not then it is Items container
+    private Simulet simulet;//id of simulet binded to that place
 
     public int getPlaceInMapId() {
         return placeInMapId;
@@ -42,4 +45,10 @@ public class PlaceInMapDTO {
         this.isItMap = isItMap;
     }
 
+    public void setSimulet(final Simulet simulets) {
+        this.simulet = simulets;
+    }
+    public Simulet getSimulet(){
+        return simulet;
+    }
 }

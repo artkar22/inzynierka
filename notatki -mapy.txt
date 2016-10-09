@@ -1,0 +1,33 @@
+maze - ³adowanie mapy - na tej podstawie generowanie pozycji w których mo¿na umieszczaæ przedmioty
+
+przybornik na przedmioty gdzie powinny siê pojawiæ simulety,
+ po upuszczeniu w z³e miejsce przedmiot wraca na swoje miejsce
+mo¿na upuszczaæ przedmioty w okreœlone miejsca
+
+liczbakolumn
+liczbawierszy
+wype³niaæ na pocz¹tku standardowo: 
+jeœli liczbakolumn = 6, liczbawierszy 5:
+rezerwowaæ ostatni¹ kolumnê na przybornik
+wype³niæ domyslnymi id-kami : 
+
+0 1 2 3 4 5 6
+7 8 9 10 11 12 etc ustawiaæ wszystkim domyœlnie flagê ¿e nie mo¿na upuszczaæ tu przedmiotów - liczyæ i co 6 w tym przypadku dawaæ jako przybornik i temu dawaæ domyœlnie ¿e mo¿na upuszczac przedmioty
+
+nastêpnie z jsona wczytywaæ po id rêcznie wprowadzonym przez projektanta które id ma byæ map¹ i ustawiaæ flagê i ¿e mo¿na upuszczaæ przedmioty
+				
+
+mapa mo¿e byæ ArrayList<ArrayList<string>> - lista obiektów - obiekt zawiera
+-id miejsca na mapie 
+-okreœlenie czy mo¿na w tym miejscu coœ upuœciæ
+-czy ju¿ coœ upuszczono w tym miejscu?
+-czy przybornik czy mapa
+
+obok przybornik - podobnie ArrayList<HashMap<String>> - lista obiektów zawieraj¹ca id obiektu i id miejsca w którym obecnie jest?
+chyba to dobre rozwi¹zanie
+
+mapa -  okreœliæ iloœæ kolumn xml czy json?
+okreœlic - id poszczególnych miejsc na mapie stringiem
+- okreœliæ
+
+mapa - 

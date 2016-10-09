@@ -11,6 +11,8 @@ public class Simulet {
 	private String nameOfSimulet;
 	private URI simuletsURI;
 	private Set<WebLink> resources;
+	private int pictureNameOff;
+	private int pictureNameOn;
 	
 	public Simulet( URI simuletsURI)
 	{
@@ -40,5 +42,15 @@ public class Simulet {
 			}
 		}
 		return null;
+	}
+	public void setPictures(final int nameOFF, final int nameON){
+		pictureNameOff = nameOFF;
+		pictureNameOn = nameON;
+	}
+	public int getPictureOff(){
+		return pictureNameOff;
+	}
+	public int getPictureOn(){
+		return pictureNameOn;
 	}
 }

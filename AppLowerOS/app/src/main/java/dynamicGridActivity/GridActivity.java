@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import ApplicationData.ApplicationData;
+import Simulets.Simulet;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
-import dynamicGrid.mapGenerator.map.MapDTO;
 import karolakpochwala.apploweros.R;
 import mainUtils.Consts;
 
@@ -32,26 +32,27 @@ public class GridActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid);
-        //zmiana
         gSON = new Gson();
         String ApplicationDataJSON = getIntent().getStringExtra(Consts.APPLICATION_DATA);
         applicationData = gSON.fromJson(ApplicationDataJSON, ApplicationData.class);
         applicationData.addMap(mapGenerator.loadMap(getAssets(), "map0.json"));//TODO SYSTEM WCZYTYWANIA MAP - POBIERANIE NAZW MAP Z KATALOGU I SYSTEM WCZYTYWANIA KOLEJNYCH
-        //zmiana
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
+
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         gridView.setAdapter(new CheeseDynamicAdapter(this,
-                new ArrayList<String>(Arrays.asList(Cheeses.sCheeseStrings)),
+                applicationData.getSimulets(),
                 applicationData.getAllMaps().get(0))); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        add callback to stop edit mode if needed
-//        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
-//        {
-//            @Override
-//            public void onActionDrop()
-//            {
-//                gridView.stopEditMode();
-//            }
-//        });
+
+        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
+        {
+            @Override
+            public void onActionDrop()
+            {
+                gridView.handleDrop();
+                gridView.stopEditMode();
+            }
+        });
         gridView.setOnDragListener(new DynamicGridView.OnDragListener() {
             @Override
             public void onDragStarted(int position) {
@@ -83,6 +84,7 @@ public class GridActivity extends Activity {
     @Override
     public void onBackPressed() {
         if (gridView.isEditMode()) {
+
             gridView.stopEditMode();
         } else {
             super.onBackPressed();

@@ -1,6 +1,7 @@
 package dynamicGrid.mapGenerator.map;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by ArturK on 2016-09-24.
@@ -10,7 +11,7 @@ public class MapDTO {
     private String mapID;
     private int numberOfColums;
     private int numberOfRows;
-    private ArrayList<PlaceInMapDTO> placesInMap;
+    private LinkedList<PlaceInMapDTO> placesInMap;
 
     public String getMapID() {
         return mapID;
@@ -36,11 +37,11 @@ public class MapDTO {
         this.numberOfRows = numberOfRows;
     }
 
-    public ArrayList<PlaceInMapDTO> getPlacesInMap() {
+    public LinkedList<PlaceInMapDTO> getPlacesInMap() {
         return placesInMap;
     }
 
-    public void setPlacesInMap(final ArrayList<PlaceInMapDTO> placesInMap) {
+    public void setPlacesInMap(final LinkedList<PlaceInMapDTO> placesInMap) {
         this.placesInMap = placesInMap;
     }
 

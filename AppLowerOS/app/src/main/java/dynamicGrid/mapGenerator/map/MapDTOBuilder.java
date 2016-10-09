@@ -1,6 +1,7 @@
 package dynamicGrid.mapGenerator.map;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by ArturK on 2016-09-24.
@@ -15,11 +16,11 @@ public abstract class MapDTOBuilder {
         return dto;
     }
 
-    private static void setSpecialPlacesOnDTO(ArrayList<PlaceInMapDTO> placesInDto, ArrayList<PlaceInMapDTO> specialPlacesInMap) {
+    private static void setSpecialPlacesOnDTO(LinkedList<PlaceInMapDTO> placesInDto, ArrayList<PlaceInMapDTO> specialPlacesInMap) {
         for(PlaceInMapDTO specialPlace : specialPlacesInMap){
             for(PlaceInMapDTO placeInDto:placesInDto){
                 if(specialPlace.getPlaceInMapId() == placeInDto.getPlaceInMapId()){
-                    placeInDto.setIsItMap(specialPlace.isItMap());
+                    placeInDto.setIsItMap(true);
                     placeInDto.setDropAllowed(specialPlace.isDropAllowed());
                     placeInDto.setAlreadyDropped(specialPlace.isAlreadyDropped());
                     break;
@@ -34,14 +35,16 @@ public abstract class MapDTOBuilder {
         dto.setNumberOfColums(numberOfColumns);
         dto.setNumberOfRows(numberOfRows);
         final int numberOfPlacesInMap = numberOfColumns * numberOfRows;
-        final ArrayList<PlaceInMapDTO> placesInMap = new ArrayList<>();
+        final LinkedList<PlaceInMapDTO> placesInMap = new LinkedList<>();
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
             boolean isItMapFlag = true;
+            boolean dropAllowed = false;
             if (checkIfCurrentIndexShouldBeItemCollection(numberOfColumns, currentPlaceInMapIndex)) {
                 isItMapFlag = false;
+                dropAllowed = true;
             }
             final PlaceInMapDTO defaultPlaceInMap =
-                    PlaceInMapDTOBuilder.buildPlaceInMapDto(currentPlaceInMapIndex, false, false, isItMapFlag);
+                    PlaceInMapDTOBuilder.buildPlaceInMapDto(currentPlaceInMapIndex, dropAllowed, false, isItMapFlag);
             placesInMap.add(defaultPlaceInMap);
         }
         dto.setPlacesInMap(placesInMap);
