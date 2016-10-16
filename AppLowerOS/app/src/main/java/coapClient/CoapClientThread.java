@@ -26,6 +26,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import Simulets.IpsoDigitalOutput;
 import Simulets.IpsoLightControl;
 import Simulets.Simulet;
 import karolakpochwala.apploweros.MainActivity;
@@ -199,6 +200,9 @@ public class CoapClientThread implements Runnable {
 
         if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL))) {
             IpsoLightControl simulet = new IpsoLightControl(uri);
+            simulets.add(simulet);
+        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_OUTPUT))) {
+            IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
             simulets.add(simulet);
         }
     }
