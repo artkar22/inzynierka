@@ -395,7 +395,7 @@ public class DynamicGridView extends GridView {
         int draggedPos = getPositionForID(itemId);
         for (int pos = getFirstVisiblePosition(); pos <= getLastVisiblePosition(); pos++) {
 //            if (draggedPos != pos && getAdapterInterface().canReorder(pos)) {
-                idList.add(getId(pos));
+            idList.add(getId(pos));
 //            }
         }
     }
@@ -694,8 +694,8 @@ public class DynamicGridView extends GridView {
 
     }
 
-    private void getAllPositions(){
-        for(Long id:idList){
+    private void getAllPositions() {
+        for (Long id : idList) {
             int[] location = new int[2];
             this.getViewForId(id.intValue()).getLocationOnScreen(location);
             this.positionsOnScreen.add(location);
@@ -709,8 +709,8 @@ public class DynamicGridView extends GridView {
         final int deltaX = mLastEventX - mDownX;
         final int deltaYTotal = mHoverCellOriginalBounds.centerY() + mTotalOffsetY + deltaY;
         final int deltaXTotal = mHoverCellOriginalBounds.centerX() + mTotalOffsetX + deltaX;
-        int currentBestX =0;
-        int currentBestY =0;
+        int currentBestX = 0;
+        int currentBestY = 0;
         int diffX = 0;
         int diffY = 0;
         mMobileView = getViewForId(mMobileItemId);
@@ -718,22 +718,22 @@ public class DynamicGridView extends GridView {
 
         Point mobileColumnRowPair = getColumnAndRowForView(mMobileView);
 //        Long target = new Long(0);
-        int idINDEX =0;
+        int idINDEX = 0;
         Long bestViewIndex = new Long(0);
         double bestVector = 0.0;
         for (Long id : idList) {
             View view = getViewForId(id);
             if (view != null) {
                 Point targetColumnRowPair = getColumnAndRowForView(view);
-                if(id.intValue() == 0){
-                    diffX = abs(mLastEventX-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[0]);
-                    diffY = abs(mLastEventY-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[1]);
-                    bestVector = sqrt(pow(diffX,2)+pow(diffY,2));
-                }else{
-                    int newDiffX = abs(mLastEventX-mOverlapIfSwitchStraightLine-this.positionsOnScreen.get(idINDEX)[0]);
-                    int newDiffY = abs(mLastEventY -mOverlapIfSwitchStraightLine- this.positionsOnScreen.get(idINDEX)[1]);
-                    double newVector = sqrt(pow(newDiffX,2)+pow(newDiffY,2));
-                    if (newVector<bestVector){//newDiffX<diffX  || newDiffY<diffY ){
+                if (id.intValue() == 0) {
+                    diffX = abs(mLastEventX - mOverlapIfSwitchStraightLine - this.positionsOnScreen.get(idINDEX)[0]);
+                    diffY = abs(mLastEventY - mOverlapIfSwitchStraightLine - this.positionsOnScreen.get(idINDEX)[1]);
+                    bestVector = sqrt(pow(diffX, 2) + pow(diffY, 2));
+                } else {
+                    int newDiffX = abs(mLastEventX - mOverlapIfSwitchStraightLine - this.positionsOnScreen.get(idINDEX)[0]);
+                    int newDiffY = abs(mLastEventY - mOverlapIfSwitchStraightLine - this.positionsOnScreen.get(idINDEX)[1]);
+                    double newVector = sqrt(pow(newDiffX, 2) + pow(newDiffY, 2));
+                    if (newVector < bestVector) {//newDiffX<diffX  || newDiffY<diffY ){
                         diffX = newDiffX;
                         diffY = newDiffY;
                         bestVector = newVector;
@@ -821,7 +821,7 @@ public class DynamicGridView extends GridView {
 //                    currentBestX = view.getRight();
 //                    targetView = getTargetView(view);
 //                }
-                idINDEX=idINDEX+1;
+                idINDEX = idINDEX + 1;
             }
         }
         View currentBestView = getViewForId(bestViewIndex);
@@ -847,9 +847,9 @@ public class DynamicGridView extends GridView {
             SwitchCellAnimator switchCellAnimator;
 //
 //            if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
-//                switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
+            switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
 //            else if (isPreLollipop())                   //Before Android 3.0
-                switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
+//                switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
 //            else                                //Android L
 //                switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
 //
@@ -859,7 +859,7 @@ public class DynamicGridView extends GridView {
         }
     }
 
-    private View getTargetView(View view){
+    private View getTargetView(View view) {
         float vX = 0;
         float vY = 0;
         float xDiff = abs(DynamicGridUtils.getViewX(view) - DynamicGridUtils.getViewX(mMobileView));
@@ -876,7 +876,7 @@ public class DynamicGridView extends GridView {
 //                        }
 
         }
-       return null;
+        return null;
     }
 
     public void handleDrop() {
@@ -1048,27 +1048,8 @@ public class DynamicGridView extends GridView {
     private void animateReorder(final int oldPosition, final int newPosition) {
         boolean isForward = newPosition > oldPosition;
         List<Animator> resultList = new LinkedList<Animator>();
-        if (isForward) {
-            for (int pos = Math.min(oldPosition, newPosition); pos < Math.max(oldPosition, newPosition); pos++) {
-                View view = getViewForId(getId(pos));
-                if ((pos + 1) % getColumnCount() == 0) {
-                    resultList.add(createTranslationAnimations(view, -view.getWidth() * (getColumnCount() - 1), 0,
-                            view.getHeight(), 0));
-                } else {
-                    resultList.add(createTranslationAnimations(view, view.getWidth(), 0, 0, 0));
-                }
-            }
-        } else {
-            for (int pos = Math.max(oldPosition, newPosition); pos > Math.min(oldPosition, newPosition); pos--) {
-                View view = getViewForId(getId(pos));
-                if ((pos + getColumnCount()) % getColumnCount() == 0) {
-                    resultList.add(createTranslationAnimations(view, view.getWidth() * (getColumnCount() - 1), 0,
-                            -view.getHeight(), 0));
-                } else {
-                    resultList.add(createTranslationAnimations(view, -view.getWidth(), 0, 0, 0));
-                }
-            }
-        }
+        View view = getViewForId(getId(newPosition));
+        resultList.add(createTranslationAnimations(view, 0, 0, 0, 0));
 
         AnimatorSet resultSet = new AnimatorSet();
         resultSet.playTogether(resultList);
