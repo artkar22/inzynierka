@@ -1,5 +1,7 @@
 package ApplicationData;
 
+import org.eclipse.californium.core.CoapClient;
+
 import java.util.ArrayList;
 
 import Simulets.Simulet;

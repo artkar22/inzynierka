@@ -31,6 +31,7 @@ import Simulets.IpsoLightControl;
 import Simulets.Simulet;
 import karolakpochwala.apploweros.MainActivity;
 import karolakpochwala.apploweros.SendButtonListener;
+import mainUtils.NetworkUtils;
 
 import static ipsoConfig.ipsoDefinitions.*;
 
@@ -48,23 +49,26 @@ public class CoapClientThread implements Runnable {
     private MainActivity mainActivity;
     private ProgressDialog dialog;
 
-    public CoapClientThread(Button sendButton, ArrayList<Simulet> simulets, MainActivity mainActivity) {
+    public CoapClientThread(final Button sendButton, final ArrayList<Simulet> simulets,
+                            final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.simulets = simulets;
         this.sendButton = sendButton;
+        this.client = new CoapClient();
         dialog = new ProgressDialog(mainActivity);
     }
 
     public void run() {
-        int port = 8080;
+        int port = NetworkUtils.PORT;
         //available(port);
         try {
-            InetAddress addr = InetAddress.getByName(getIPofCurrentMachine());
+            InetAddress addr = InetAddress.getByName(NetworkUtils.getIPofCurrentMachine());
             InetSocketAddress adr = new InetSocketAddress(addr, port);
             URI uri = new URI("coap://192.168.2.2:11111");
 //	            URI uri = new URI("coap://192.168.2.2:11111/Lampka");
 //	            //URI uri = new URI("coap://127.0.0.1:11111");
-            client = new CoapClient(uri);
+//            client = new CoapClient(uri);
+            client.setURI(uri.toString());
             CoapEndpoint endpoint = new CoapEndpoint(adr, NetworkConfig.createStandardWithoutFile());
             endpoint.start();
             client = client.setEndpoint(endpoint);
@@ -90,8 +94,8 @@ public class CoapClientThread implements Runnable {
                 dialog.hide();
             }
         });
-        SendButtonListener listener = new SendButtonListener(client, simulets);
-        sendButton.setOnClickListener(listener);
+//        SendButtonListener listener = new SendButtonListener(client, simulets);
+//        sendButton.setOnClickListener(listener);
     }
 
     /**
@@ -130,27 +134,27 @@ public class CoapClientThread implements Runnable {
         return false;
     }
 
-    private String getIPofCurrentMachine() {
-        try {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                NetworkInterface iface = interfaces.nextElement();
-                if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint())
-                    continue;
-
-                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    InetAddress addr = addresses.nextElement();
-
-                    final String ip = addr.getHostAddress();
-                    if (Inet4Address.class == addr.getClass()) return ip;
-                }
-            }
-        } catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
+//    private String getIPofCurrentMachine() {
+//        try {
+//            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+//            while (interfaces.hasMoreElements()) {
+//                NetworkInterface iface = interfaces.nextElement();
+//                if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint())
+//                    continue;
+//
+//                Enumeration<InetAddress> addresses = iface.getInetAddresses();
+//                while (addresses.hasMoreElements()) {
+//                    InetAddress addr = addresses.nextElement();
+//
+//                    final String ip = addr.getHostAddress();
+//                    if (Inet4Address.class == addr.getClass()) return ip;
+//                }
+//            }
+//        } catch (SocketException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return null;
+//    }
 
 
     private void discoverDevices() {

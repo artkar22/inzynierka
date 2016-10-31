@@ -10,6 +10,7 @@ public abstract class MapDTOBuilder {
     public static MapDTO buildMapDto(final String mapId, final int numberOfColumns,
                                      final int numberOfRows, final ArrayList<PlaceInMapDTO> specialPlacesInMap) {
         MapDTO dto = initializeMapDTO(mapId, numberOfColumns, numberOfRows);
+        dto.setSpecialPlacesIds(specialPlacesInMap);
         if (specialPlacesInMap.size() > 0) {
             setSpecialPlacesOnDTO(dto.getPlacesInMap(), specialPlacesInMap);
         }
@@ -17,9 +18,9 @@ public abstract class MapDTOBuilder {
     }
 
     private static void setSpecialPlacesOnDTO(LinkedList<PlaceInMapDTO> placesInDto, ArrayList<PlaceInMapDTO> specialPlacesInMap) {
-        for(PlaceInMapDTO specialPlace : specialPlacesInMap){
-            for(PlaceInMapDTO placeInDto:placesInDto){
-                if(specialPlace.getPlaceInMapId() == placeInDto.getPlaceInMapId()){
+        for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
+            for (PlaceInMapDTO placeInDto : placesInDto) {
+                if (specialPlace.getPlaceInMapId() == placeInDto.getPlaceInMapId()) {
                     placeInDto.setIsItMap(true);
                     placeInDto.setDropAllowed(specialPlace.isDropAllowed());
                     placeInDto.setAlreadyDropped(specialPlace.isAlreadyDropped());
@@ -34,6 +35,7 @@ public abstract class MapDTOBuilder {
         dto.setMapID(mapId);
         dto.setNumberOfColums(numberOfColumns);
         dto.setNumberOfRows(numberOfRows);
+
         final int numberOfPlacesInMap = numberOfColumns * numberOfRows;
         final LinkedList<PlaceInMapDTO> placesInMap = new LinkedList<>();
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {

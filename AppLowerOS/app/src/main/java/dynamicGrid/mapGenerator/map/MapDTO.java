@@ -11,6 +11,7 @@ public class MapDTO {
     private String mapID;
     private int numberOfColums;
     private int numberOfRows;
+    private ArrayList<Integer> specialPlacesIds;//zczytywanie idków gdzie mapaa
     private LinkedList<PlaceInMapDTO> placesInMap;
 
     public String getMapID() {
@@ -44,5 +45,13 @@ public class MapDTO {
     public void setPlacesInMap(final LinkedList<PlaceInMapDTO> placesInMap) {
         this.placesInMap = placesInMap;
     }
-
+    public ArrayList<Integer> getSpecialPlacesIds(){
+        return specialPlacesIds;
+    }
+    public void setSpecialPlacesIds(final ArrayList<PlaceInMapDTO> specialPlacesInMap){
+        specialPlacesIds = new ArrayList<>();
+        for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
+            specialPlacesIds.add(Integer.valueOf(specialPlace.getPlaceInMapId()));
+        }
+    }
 }

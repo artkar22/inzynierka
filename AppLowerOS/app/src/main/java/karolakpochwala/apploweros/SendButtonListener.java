@@ -7,13 +7,13 @@ import android.widget.EditText;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.core.coap.Request;
-import org.eclipse.californium.core.network.CoapEndpoint;
 
 import java.util.ArrayList;
 
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
+import dynamicGrid.mapGenerator.map.MapDTO;
+import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
 /**
  * Created by Inni on 2016-03-05.
@@ -22,28 +22,30 @@ public class SendButtonListener implements View.OnClickListener {
 
     private EditText messageTextView;
     private CoapClient client;
-    private ArrayList<Simulet> simulets;
-    public SendButtonListener(CoapClient client,ArrayList<Simulet> simulets) {
+    private MapDTO currentMap;
+
+    public SendButtonListener(CoapClient client, MapDTO currentMap) {
         super();
-        this.client=client;
-        this.simulets=simulets;
+        this.client = client;
+        this.currentMap = currentMap;
     }
+
     @Override
-    public void onClick(View v)
-    {
-        Log.i("HOWMANYSIMULETS", Integer.toString(simulets.size()));
+    public void onClick(View v) {
+//        Log.i("HOWMANYSIMULETS", Integer.toString(simulets.size())); //TODO przeiterować po mapie, tam gdzie znacznik simuleta wysłać on na simuleta
 //		Set<WebLink> set = client.discover();
 //		System.out.println(set.size());
-        for(Simulet simulet:simulets){
-            client.setURI(simulet.getStatusResource());
-            CoapResponse get = client.get();
-            if(get.getCode().equals(CoAP.ResponseCode.CONTENT)&&get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF))
-            {
-                CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-            }
-            else if(get.getCode().equals(CoAP.ResponseCode.CONTENT)&&get.getResponseText().equals(Comm_Protocol.SWITCHED_ON))
-            {
-                CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
+//        for (PlaceInMapDTO dto : currentMap.getPlacesInMap()) {
+        for(Integer specialPlaceId:currentMap.getSpecialPlacesIds()){
+            PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
+            if (dto.getSimulet() != null) {
+                client.setURI(dto.getSimulet().getStatusResource());
+                CoapResponse get = client.get();
+                if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
+                    CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
+                } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
+                    CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
+                }
             }
         }
     }

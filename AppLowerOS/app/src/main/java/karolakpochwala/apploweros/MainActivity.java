@@ -1,7 +1,5 @@
 package karolakpochwala.apploweros;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,23 +14,6 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.network.CoapEndpoint;
-import org.eclipse.californium.core.network.config.NetworkConfig;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-
 import ApplicationData.ApplicationData;
 import Simulets.Simulet;
 import coapClient.CoapClientThread;
@@ -42,7 +23,6 @@ import mainUtils.Consts;
 public class MainActivity extends AppCompatActivity {
 
     private ApplicationData applicationData;
-    //  private CoapClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
         applicationData = new ApplicationData();
         Button sendButton = (Button) findViewById(R.id.button1);
-        Thread CoapClient = new Thread(new CoapClientThread(sendButton, applicationData.getSimulets(),this));
+        Thread CoapClient = new Thread(new CoapClientThread(sendButton, applicationData.getSimulets(),
+                this));
         CoapClient.start();
 
         Button newGameButton = (Button) findViewById(R.id.newGameButton);
@@ -100,70 +81,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//    public dataLoaderScreen(){
-//        ProgressDialog dialog=new ProgressDialog(this);
-//        dialog.setMessage("message");
-//        dialog.setCancelable(false);
-//        dialog.setInverseBackgroundForced(false);
-//        dialog.show();
-//    }
-//
-//    private void discoverDevices() {
-//
-//        simulets = new ArrayList<Simulet>();
-//        try {
-//            Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
-//            while(interfaces.hasMoreElements())
-//            {
-//                NetworkInterface networkInterface = (NetworkInterface) interfaces.nextElement();
-//                if(networkInterface.isLoopback() || !networkInterface.isUp())
-//                {
-//                    continue;
-//                }
-//
-//                for(InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
-//                    InetAddress broadcast = interfaceAddress.getBroadcast();
-//                    if (broadcast == null) {
-//                        continue;
-//                    }
-////                    String address = "/192.168.2";
-////                    for (int x = 0; x < 255; x++){
-//                        int port = 11110;
-//                    while (port < 11115) {
-//                        URI uri = new URI("coap:/" + broadcast + ":" + Integer.toString(port));
-//                        Log.i("uri", uri.toString());
-//
-//                        client.setURI(uri.toString());
-//                        CoapResponse resp = client.get();
-//                        if (resp != null) {
-//                            Log.i("response", resp.getResponseText());
-//                            Simulet simulet = new Simulet(resp.getResponseText(), uri);
-//                            simulets.add(simulet);
-//                        }
-//                        port++;
-//                    }
-////                }
-//                }
-//            }
-//        } catch (SocketException e) {
-//            e.printStackTrace();
-//        } catch (URISyntaxException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//    }
-//    private void discoverResourcesOfEachDevice()
-//    {
-//        if(simulets.size()>0)
-//        {
-//            for(Simulet simulet : simulets)
-//            {
-//                client.setURI(simulet.getUriOfSimulet().toString());
-//                simulet.setResources(client.discover());
-//            }
-//        }
-//    }
-
 
 }

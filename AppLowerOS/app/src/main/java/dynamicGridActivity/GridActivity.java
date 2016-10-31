@@ -5,19 +5,29 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.network.CoapEndpoint;
+import org.eclipse.californium.core.network.config.NetworkConfig;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 
 import ApplicationData.ApplicationData;
-import Simulets.Simulet;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
 import karolakpochwala.apploweros.R;
+import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
+import mainUtils.NetworkUtils;
 
 public class GridActivity extends Activity {
 
@@ -27,6 +37,8 @@ public class GridActivity extends Activity {
     private ApplicationData applicationData;
     private MapGenerator mapGenerator;
     private Gson gSON;
+    private CoapClient client;
+//    private Button playButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +55,10 @@ public class GridActivity extends Activity {
                 applicationData.getSimulets(),
                 applicationData.getAllMaps().get(0))); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        add callback to stop edit mode if needed
+        this.createNewClient();
+        Button playButton = (Button) findViewById(R.id.playButton);
+        SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0));//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
+        playButton.setOnClickListener(listener);
 
         gridView.setOnDropListener(new DynamicGridView.OnDropListener()
         {
@@ -79,6 +95,8 @@ public class GridActivity extends Activity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     @Override
@@ -88,6 +106,28 @@ public class GridActivity extends Activity {
             gridView.stopEditMode();
         } else {
             super.onBackPressed();
+        }
+    }
+
+    private void createNewClient(){
+        client = new CoapClient();
+        try {
+            InetAddress addr = InetAddress.getByName(NetworkUtils.getIPofCurrentMachine());
+            InetSocketAddress adr = new InetSocketAddress(addr, NetworkUtils.PORT);
+            URI uri = new URI("coap://192.168.2.2:11111");
+//	            URI uri = new URI("coap://192.168.2.2:11111/Lampka");
+//	            //URI uri = new URI("coap://127.0.0.1:11111");
+//            client = new CoapClient(uri);
+            client.setURI(uri.toString());
+            CoapEndpoint endpoint = new CoapEndpoint(adr, NetworkConfig.createStandardWithoutFile());
+            endpoint.start();
+            client = client.setEndpoint(endpoint);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
