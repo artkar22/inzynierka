@@ -837,24 +837,24 @@ public class DynamicGridView extends GridView {
 //            }
             reorderElements(originalPosition, targetPosition);
 
-            if (mUndoSupportEnabled) {
-                mCurrentModification.addTransition(originalPosition, targetPosition);
-            }
+//            if (mUndoSupportEnabled) {
+//                mCurrentModification.addTransition(originalPosition, targetPosition);
+//            }
 
             mDownY = mLastEventY;
             mDownX = mLastEventX;
 
             SwitchCellAnimator switchCellAnimator;
-
-            if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
-                switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
-            else if (isPreLollipop())                   //Before Android 3.0
+//
+//            if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
+//                switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
+//            else if (isPreLollipop())                   //Before Android 3.0
                 switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
-            else                                //Android L
-                switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
-
-            updateNeighborViewsForId(mMobileItemId);
-
+//            else                                //Android L
+//                switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
+//
+//            updateNeighborViewsForId(mMobileItemId);
+//
             switchCellAnimator.animateSwitchCell(originalPosition, targetPosition);
         }
     }
