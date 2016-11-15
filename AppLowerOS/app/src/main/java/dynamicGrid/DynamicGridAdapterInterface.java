@@ -26,6 +26,7 @@ public interface DynamicGridAdapterInterface {
      * (@link android.widget.GridView#getNumColumns() requires api 11)
      */
     MapDTO getCurrentMap();
+
     /**
      * Determines whether the item in the specified <code>position</code> can be reordered.
      */

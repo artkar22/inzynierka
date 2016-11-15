@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.network.serialization;
 
@@ -28,188 +28,188 @@ import java.io.ByteArrayOutputStream;
  */
 public class DatagramWriter {
 
-	// Attributes //////////////////////////////////////////////////////////////
+    // Attributes //////////////////////////////////////////////////////////////
 
-	private ByteArrayOutputStream byteStream;
+    private ByteArrayOutputStream byteStream;
 
-	private byte currentByte;
-	private int currentBitIndex;
-	
-	// Constructors ////////////////////////////////////////////////////////////
+    private byte currentByte;
+    private int currentBitIndex;
 
-	/**
-	 * Initializes a new BitWriter object
-	 */
-	public DatagramWriter() {
+    // Constructors ////////////////////////////////////////////////////////////
 
-		// initialize underlying byte stream
-		byteStream = new ByteArrayOutputStream();
+    /**
+     * Initializes a new BitWriter object
+     */
+    public DatagramWriter() {
 
-		// initialize bit buffer
-		currentByte = 0;
-		currentBitIndex = Byte.SIZE - 1;
-	}
+        // initialize underlying byte stream
+        byteStream = new ByteArrayOutputStream();
 
-	// Methods /////////////////////////////////////////////////////////////////
+        // initialize bit buffer
+        currentByte = 0;
+        currentBitIndex = Byte.SIZE - 1;
+    }
 
-	/**
-	 * Writes a sequence of bits to the stream
-	 * 
-	 * @param data
-	 *            A Long containing the bits to write
-	 * 
-	 * @param numBits
-	 *            The number of bits to write
-	 */
-	public void writeLong(long data, int numBits) {
-		if (numBits < 32 && data >= (1 << numBits)) {
-			throw new RuntimeException(String.format("Truncating value %d to %d-bit integer\n", data, numBits));
-		}
+    // Methods /////////////////////////////////////////////////////////////////
 
-		for (int i = numBits - 1; i >= 0; i--) {
+    /**
+     * Writes a sequence of bits to the stream
+     *
+     * @param data
+     *            A Long containing the bits to write
+     *
+     * @param numBits
+     *            The number of bits to write
+     */
+    public void writeLong(long data, int numBits) {
+        if (numBits < 32 && data >= (1 << numBits)) {
+            throw new RuntimeException(String.format("Truncating value %d to %d-bit integer\n", data, numBits));
+        }
 
-			// test bit
-			boolean bit = (data >> i & 1) != 0;
-			if (bit) {
-				// set bit in current byte
-				currentByte |= (1 << currentBitIndex);
-			}
+        for (int i = numBits - 1; i >= 0; i--) {
 
-			// decrease current bit index
-			--currentBitIndex;
+            // test bit
+            boolean bit = (data >> i & 1) != 0;
+            if (bit) {
+                // set bit in current byte
+                currentByte |= (1 << currentBitIndex);
+            }
 
-			// check if current byte can be written
-			if (currentBitIndex < 0) {
-				writeCurrentByte();
-			}
-		}
-	}
+            // decrease current bit index
+            --currentBitIndex;
 
-	/**
-	 * Writes a sequence of bits to the stream
-	 * 
-	 * @param data
-	 *            An integer containing the bits to write
-	 * 
-	 * @param numBits
-	 *            The number of bits to write
-	 */
-	public void write(int data, int numBits) {
+            // check if current byte can be written
+            if (currentBitIndex < 0) {
+                writeCurrentByte();
+            }
+        }
+    }
 
-		if (numBits < 32 && data >= (1 << numBits)) {
-			throw new RuntimeException(String.format("Truncating value %d to %d-bit integer\n", data, numBits));
-		}
+    /**
+     * Writes a sequence of bits to the stream
+     *
+     * @param data
+     *            An integer containing the bits to write
+     *
+     * @param numBits
+     *            The number of bits to write
+     */
+    public void write(int data, int numBits) {
 
-		for (int i = numBits - 1; i >= 0; i--) {
+        if (numBits < 32 && data >= (1 << numBits)) {
+            throw new RuntimeException(String.format("Truncating value %d to %d-bit integer\n", data, numBits));
+        }
 
-			// test bit
-			boolean bit = (data >> i & 1) != 0;
-			if (bit) {
-				// set bit in current byte
-				currentByte |= (1 << currentBitIndex);
-			}
+        for (int i = numBits - 1; i >= 0; i--) {
 
-			// decrease current bit index
-			--currentBitIndex;
+            // test bit
+            boolean bit = (data >> i & 1) != 0;
+            if (bit) {
+                // set bit in current byte
+                currentByte |= (1 << currentBitIndex);
+            }
 
-			// check if current byte can be written
-			if (currentBitIndex < 0) {
-				writeCurrentByte();
-			}
-		}
-	}
+            // decrease current bit index
+            --currentBitIndex;
 
-	/**
-	 * Writes a sequence of bytes to the stream
-	 * 
-	 * @param bytes
-	 *            The sequence of bytes to write
-	 */
-	public void writeBytes(byte[] bytes) {
+            // check if current byte can be written
+            if (currentBitIndex < 0) {
+                writeCurrentByte();
+            }
+        }
+    }
 
-		// check if anything to do at all
-		if (bytes == null)
-			return;
+    /**
+     * Writes a sequence of bytes to the stream
+     *
+     * @param bytes
+     *            The sequence of bytes to write
+     */
+    public void writeBytes(byte[] bytes) {
 
-		// are there bits left to write in buffer?
-		if (currentBitIndex < Byte.SIZE - 1) {
+        // check if anything to do at all
+        if (bytes == null)
+            return;
 
-			for (int i = 0; i < bytes.length; i++) {
-				write(bytes[i], Byte.SIZE);
-			}
+        // are there bits left to write in buffer?
+        if (currentBitIndex < Byte.SIZE - 1) {
 
-		} else {
+            for (int i = 0; i < bytes.length; i++) {
+                write(bytes[i], Byte.SIZE);
+            }
 
-			// if bit buffer is empty, call can be delegated
-			// to byte stream to increase
-			byteStream.write(bytes, 0, bytes.length);
-		}
-	}
-	
-	/**
-	 * Writes one byte to the stream.
-	 * 
-	 * @param b
-	 *            The byte to be written.
-	 */
-	public void writeByte(byte b) {
-		writeBytes(new byte[] { b });
-	}
+        } else {
 
-	// Functions ///////////////////////////////////////////////////////////////
+            // if bit buffer is empty, call can be delegated
+            // to byte stream to increase
+            byteStream.write(bytes, 0, bytes.length);
+        }
+    }
 
-	/**
-	 * Returns a byte array containing the sequence of bits written
-	 * 
-	 * @return The byte array containing the written bits
-	 */
-	public byte[] toByteArray() {
+    /**
+     * Writes one byte to the stream.
+     *
+     * @param b
+     *            The byte to be written.
+     */
+    public void writeByte(byte b) {
+        writeBytes(new byte[]{b});
+    }
 
-		// write any bits left in the buffer to the stream
-		writeCurrentByte();
+    // Functions ///////////////////////////////////////////////////////////////
 
-		// retrieve the byte array from the stream
-		byte[] byteArray = byteStream.toByteArray();
+    /**
+     * Returns a byte array containing the sequence of bits written
+     *
+     * @return The byte array containing the written bits
+     */
+    public byte[] toByteArray() {
 
-		// reset stream for the sake of consistency
-		byteStream.reset();
+        // write any bits left in the buffer to the stream
+        writeCurrentByte();
 
-		// return the byte array
-		return byteArray;
-	}
+        // retrieve the byte array from the stream
+        byte[] byteArray = byteStream.toByteArray();
 
-	// Utilities ///////////////////////////////////////////////////////////////
+        // reset stream for the sake of consistency
+        byteStream.reset();
 
-	/**
-	 * Writes pending bits to the stream
-	 */
-	private void writeCurrentByte() {
+        // return the byte array
+        return byteArray;
+    }
 
-		if (currentBitIndex < Byte.SIZE - 1) {
+    // Utilities ///////////////////////////////////////////////////////////////
 
-			byteStream.write(currentByte);
+    /**
+     * Writes pending bits to the stream
+     */
+    private void writeCurrentByte() {
 
-			currentByte = 0;
-			currentBitIndex = Byte.SIZE - 1;
-		}
-	}
+        if (currentBitIndex < Byte.SIZE - 1) {
 
-	@Override
-	public String toString() {
-		byte[] byteArray = byteStream.toByteArray();
-		if (byteArray != null && byteArray.length != 0) {
+            byteStream.write(currentByte);
 
-			StringBuilder builder = new StringBuilder(byteArray.length * 3);
-			for (int i = 0; i < byteArray.length; i++) {
-				builder.append(String.format("%02X", 0xFF & byteArray[i]));
+            currentByte = 0;
+            currentBitIndex = Byte.SIZE - 1;
+        }
+    }
 
-				if (i < byteArray.length - 1) {
-					builder.append(' ');
-				}
-			}
-			return builder.toString();
-		} else {
-			return "--";
-		}
-	}
+    @Override
+    public String toString() {
+        byte[] byteArray = byteStream.toByteArray();
+        if (byteArray != null && byteArray.length != 0) {
+
+            StringBuilder builder = new StringBuilder(byteArray.length * 3);
+            for (int i = 0; i < byteArray.length; i++) {
+                builder.append(String.format("%02X", 0xFF & byteArray[i]));
+
+                if (i < byteArray.length - 1) {
+                    builder.append(' ');
+                }
+            }
+            return builder.toString();
+        } else {
+            return "--";
+        }
+    }
 }

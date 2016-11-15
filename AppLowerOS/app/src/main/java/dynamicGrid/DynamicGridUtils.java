@@ -16,7 +16,8 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 public class DynamicGridUtils {
     /**
      * Delete item in <code>list</code> from position <code>indexFrom</code> and insert it to <code>indexTwo</code>
-     *  @param list
+     *
+     * @param list
      * @param indexFrom
      * @param indexTwo
      */

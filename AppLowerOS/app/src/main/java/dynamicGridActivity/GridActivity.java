@@ -60,11 +60,9 @@ public class GridActivity extends Activity {
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0));//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
 
-        gridView.setOnDropListener(new DynamicGridView.OnDropListener()
-        {
+        gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
-            public void onActionDrop()
-            {
+            public void onActionDrop() {
                 gridView.handleDrop();
                 gridView.stopEditMode();
             }
@@ -109,7 +107,7 @@ public class GridActivity extends Activity {
         }
     }
 
-    private void createNewClient(){
+    private void createNewClient() {
         client = new CoapClient();
         try {
             InetAddress addr = InetAddress.getByName(NetworkUtils.getIPofCurrentMachine());

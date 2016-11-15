@@ -36,7 +36,7 @@ public class SendButtonListener implements View.OnClickListener {
 //		Set<WebLink> set = client.discover();
 //		System.out.println(set.size());
 //        for (PlaceInMapDTO dto : currentMap.getPlacesInMap()) {
-        for(Integer specialPlaceId:currentMap.getSpecialPlacesIds()){
+        for (Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
             PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
             if (dto.getSimulet() != null) {
                 client.setURI(dto.getSimulet().getStatusResource());
@@ -51,13 +51,13 @@ public class SendButtonListener implements View.OnClickListener {
             }
         }
     }
-    private void waitSomeSecs(int secs){
+
+    private void waitSomeSecs(int secs) {
         try {
-            synchronized(this){
-                wait(secs*1000);
+            synchronized (this) {
+                wait(secs * 1000);
             }
-        }
-        catch(InterruptedException ex){
+        } catch (InterruptedException ex) {
         }
     }
 }

@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.network.serialization;
 
@@ -28,185 +28,185 @@ import java.io.ByteArrayInputStream;
  */
 public class DatagramReader {
 
-	// Attributes //////////////////////////////////////////////////////////////
+    // Attributes //////////////////////////////////////////////////////////////
 
-	private ByteArrayInputStream byteStream;
+    private ByteArrayInputStream byteStream;
 
-	private byte currentByte;
-	private int currentBitIndex;
-	
-	// Constructors ////////////////////////////////////////////////////////////
+    private byte currentByte;
+    private int currentBitIndex;
 
-	/**
-	 * Initializes a new BitReader object
-	 * 
-	 * @param byteArray
-	 *            The byte array to read from
-	 */
-	public DatagramReader(byte[] byteArray) {
+    // Constructors ////////////////////////////////////////////////////////////
 
-		// initialize underlying byte stream
-		byteStream = new ByteArrayInputStream(byteArray);
+    /**
+     * Initializes a new BitReader object
+     *
+     * @param byteArray
+     *            The byte array to read from
+     */
+    public DatagramReader(byte[] byteArray) {
 
-		// initialize bit buffer
-		currentByte = 0;
-		currentBitIndex = -1; // indicates that no byte read yet
-	}
+        // initialize underlying byte stream
+        byteStream = new ByteArrayInputStream(byteArray);
 
-	// Methods /////////////////////////////////////////////////////////////////
+        // initialize bit buffer
+        currentByte = 0;
+        currentBitIndex = -1; // indicates that no byte read yet
+    }
 
-	/**
-	 * 
-	 * Reads a sequence of bits from the stream
-	 * 
-	 * @param numBits
-	 *            The number of bits to read
-	 * 
-	 * @return A Long containing the bits read
-	 */
-	public long readLong(int numBits) {
+    // Methods /////////////////////////////////////////////////////////////////
 
-		long bits = 0; // initialize all bits to zero
+    /**
+     *
+     * Reads a sequence of bits from the stream
+     *
+     * @param numBits
+     *            The number of bits to read
+     *
+     * @return A Long containing the bits read
+     */
+    public long readLong(int numBits) {
 
-		for (int i = numBits - 1; i >= 0; i--) {
+        long bits = 0; // initialize all bits to zero
 
-			// check whether new byte needs to be read
-			if (currentBitIndex < 0) {
-				readCurrentByte();
-			}
+        for (int i = numBits - 1; i >= 0; i--) {
 
-			// test current bit
-			boolean bit = (currentByte >> currentBitIndex & 1) != 0;
-			if (bit) {
-				// set bit at i-th position
-				bits |= (1L << i);
-			}
+            // check whether new byte needs to be read
+            if (currentBitIndex < 0) {
+                readCurrentByte();
+            }
 
-			// decrease current bit index
-			--currentBitIndex;
+            // test current bit
+            boolean bit = (currentByte >> currentBitIndex & 1) != 0;
+            if (bit) {
+                // set bit at i-th position
+                bits |= (1L << i);
+            }
 
-		}
+            // decrease current bit index
+            --currentBitIndex;
 
-		return bits;
-	}
+        }
 
-	/**
-	 * Reads a sequence of bits from the stream
-	 * 
-	 * @param numBits
-	 *            The number of bits to read
-	 * 
-	 * @return An integer containing the bits read
-	 */
-	public int read(int numBits) {
+        return bits;
+    }
 
-		int bits = 0; // initialize all bits to zero
+    /**
+     * Reads a sequence of bits from the stream
+     *
+     * @param numBits
+     *            The number of bits to read
+     *
+     * @return An integer containing the bits read
+     */
+    public int read(int numBits) {
 
-		for (int i = numBits - 1; i >= 0; i--) {
+        int bits = 0; // initialize all bits to zero
 
-			// check whether new byte needs to be read
-			if (currentBitIndex < 0) {
-				readCurrentByte();
-			}
+        for (int i = numBits - 1; i >= 0; i--) {
 
-			// test current bit
-			boolean bit = (currentByte >> currentBitIndex & 1) != 0;
-			if (bit) {
-				// set bit at i-th position
-				bits |= (1 << i);
-			}
+            // check whether new byte needs to be read
+            if (currentBitIndex < 0) {
+                readCurrentByte();
+            }
 
-			// decrease current bit index
-			--currentBitIndex;
+            // test current bit
+            boolean bit = (currentByte >> currentBitIndex & 1) != 0;
+            if (bit) {
+                // set bit at i-th position
+                bits |= (1 << i);
+            }
 
-		}
+            // decrease current bit index
+            --currentBitIndex;
 
-		return bits;
-	}
+        }
 
-	/**
-	 * Reads a sequence of bytes from the stream
-	 * 
-	 * @param count
-	 *            The number of bytes to read
-	 * 
-	 * @return The sequence of bytes read from the stream
-	 */
-	public byte[] readBytes(int count) {
+        return bits;
+    }
 
-		// for negative count values, read all bytes left
-		if (count < 0)
-			count = byteStream.available();
+    /**
+     * Reads a sequence of bytes from the stream
+     *
+     * @param count
+     *            The number of bytes to read
+     *
+     * @return The sequence of bytes read from the stream
+     */
+    public byte[] readBytes(int count) {
 
-		// allocate byte array
-		byte[] bytes = new byte[count];
+        // for negative count values, read all bytes left
+        if (count < 0)
+            count = byteStream.available();
 
-		// are there bits left to read in buffer?
-		if (currentBitIndex >= 0) {
+        // allocate byte array
+        byte[] bytes = new byte[count];
 
-			for (int i = 0; i < count; i++) {
-				bytes[i] = (byte) read(Byte.SIZE);
-			}
+        // are there bits left to read in buffer?
+        if (currentBitIndex >= 0) {
 
-		} else {
+            for (int i = 0; i < count; i++) {
+                bytes[i] = (byte) read(Byte.SIZE);
+            }
 
-			// if bit buffer is empty, call can be delegated
-			// to byte stream to increase performance
-			byteStream.read(bytes, 0, bytes.length);
-		}
+        } else {
 
-		return bytes;
-	}
+            // if bit buffer is empty, call can be delegated
+            // to byte stream to increase performance
+            byteStream.read(bytes, 0, bytes.length);
+        }
 
-	/**
-	 * Reads the next byte from the stream.
-	 * 
-	 * @return The next byte.
-	 */
-	public byte readNextByte() {
-		byte[] bytes = readBytes(1);
+        return bytes;
+    }
 
-		return bytes[0];
-	}
+    /**
+     * Reads the next byte from the stream.
+     *
+     * @return The next byte.
+     */
+    public byte readNextByte() {
+        byte[] bytes = readBytes(1);
 
-	/**
-	 * Reads the complete sequence of bytes left in the stream
-	 * 
-	 * @return The sequence of bytes left in the stream
-	 */
-	public byte[] readBytesLeft() {
-		return readBytes(-1);
-	}
+        return bytes[0];
+    }
 
-	/**
-	 * 
-	 * @return <code>true</code> if there are bytes left to read,
-	 *         <code>false</code> otherwise.
-	 */
-	public boolean bytesAvailable() {
-		return byteStream.available() > 0;
-	}
+    /**
+     * Reads the complete sequence of bytes left in the stream
+     *
+     * @return The sequence of bytes left in the stream
+     */
+    public byte[] readBytesLeft() {
+        return readBytes(-1);
+    }
 
-	// Utilities ///////////////////////////////////////////////////////////////
+    /**
+     *
+     * @return <code>true</code> if there are bytes left to read,
+     *         <code>false</code> otherwise.
+     */
+    public boolean bytesAvailable() {
+        return byteStream.available() > 0;
+    }
 
-	/**
-	 * Reads new bits from the stream
-	 */
-	private void readCurrentByte() {
+    // Utilities ///////////////////////////////////////////////////////////////
 
-		// try to read from byte stream
-		int val = byteStream.read();
+    /**
+     * Reads new bits from the stream
+     */
+    private void readCurrentByte() {
 
-		if (val >= 0) {
-			// byte successfully read
-			currentByte = (byte) val;
-		} else {
-			// end of stream reached;
-			// return implicit zero bytes
-			currentByte = 0;
-		}
+        // try to read from byte stream
+        int val = byteStream.read();
 
-		// reset current bit index
-		currentBitIndex = Byte.SIZE - 1;
-	}
+        if (val >= 0) {
+            // byte successfully read
+            currentByte = (byte) val;
+        } else {
+            // end of stream reached;
+            // return implicit zero bytes
+            currentByte = 0;
+        }
+
+        // reset current bit index
+        currentBitIndex = Byte.SIZE - 1;
+    }
 }

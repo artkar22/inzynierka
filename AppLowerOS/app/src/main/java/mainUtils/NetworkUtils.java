@@ -11,6 +11,7 @@ import java.util.Enumeration;
  */
 public class NetworkUtils {
     public static final int PORT = 8080;
+
     public static String getIPofCurrentMachine() {
         try {
             Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();

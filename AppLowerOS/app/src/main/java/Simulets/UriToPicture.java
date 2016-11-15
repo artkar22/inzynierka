@@ -10,13 +10,13 @@ public class UriToPicture {
     private static String radioSuffix = "11113";
     private static String samochodSuffix = "11114";
 
-    public static int choosePicture(String uri){
-        if(uri.endsWith(wiatraczekSuffix)){
+    public static int choosePicture(String uri) {
+        if (uri.endsWith(wiatraczekSuffix)) {
             return R.drawable.wiatraczek_off;
-        }else if(uri.endsWith(samochodSuffix)){
-            return R.drawable.samochod_off ;
-        } else if(uri.endsWith(radioSuffix)){
-            return R.drawable.radio_off ;
+        } else if (uri.endsWith(samochodSuffix)) {
+            return R.drawable.samochod_off;
+        } else if (uri.endsWith(radioSuffix)) {
+            return R.drawable.radio_off;
         }
         return R.drawable.ic_launcher;
     }

@@ -48,10 +48,12 @@ public class PlaceInMapDTO {
     public void setSimulet(final Simulet simulets) {
         this.simulet = simulets;
     }
-    public void unbindSimulet(){
+
+    public void unbindSimulet() {
         simulet = null;
     }
-    public Simulet getSimulet(){
+
+    public Simulet getSimulet() {
         return simulet;
     }
 }

@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.network.stack;
 
@@ -62,141 +62,141 @@ import org.eclipse.californium.core.server.MessageDeliverer;
  */
 public interface Layer {
 
-	/**
-	 * Process request before sending.
-	 *
-	 * @param exchange the exchange
-	 * @param request the request
-	 */
-	public void sendRequest(Exchange exchange, Request request);
-	
-	/**
-	 * Send response.
-	 *
-	 * @param exchange the exchange
-	 * @param response the response
-	 */
-	public void sendResponse(Exchange exchange, Response response);
-	
-	/**
-	 * Send empty message.
-	 *
-	 * @param exchange the exchange
-	 * @param emptyMessage the empty message
-	 */
-	public void sendEmptyMessage(Exchange exchange, EmptyMessage emptyMessage);
-	
-	
-	/**
-	 * Receive request.
-	 *
-	 * @param exchange the exchange
-	 * @param request the request
-	 */
-	public void receiveRequest(Exchange exchange, Request request);
-	
-	/**
-	 * Receive response.
-	 *
-	 * @param exchange the exchange
-	 * @param response the response
-	 */
-	public void receiveResponse(Exchange exchange, Response response);
-	
-	/**
-	 * Receive empty message.
-	 *
-	 * @param exchange the exchange
-	 * @param message the message
-	 */
-	public void receiveEmptyMessage(Exchange exchange, EmptyMessage message);
-	
-	
-	/**
-	 * Sets the lower layer.
-	 *
-	 * @param layer the new lower layer
-	 */
-	public void setLowerLayer(Layer layer);
-	
-	/**
-	 * Sets the upper layer.
-	 *
-	 * @param layer the new upper layer
-	 */
-	public void setUpperLayer(Layer layer);
-	
-	/**
-	 * Sets the executor.
-	 *
-	 * @param executor the new executor
-	 */
-	public void setExecutor(ScheduledExecutorService executor);
+    /**
+     * Process request before sending.
+     *
+     * @param exchange the exchange
+     * @param request the request
+     */
+    public void sendRequest(Exchange exchange, Request request);
 
-	public void destroy();
+    /**
+     * Send response.
+     *
+     * @param exchange the exchange
+     * @param response the response
+     */
+    public void sendResponse(Exchange exchange, Response response);
+
+    /**
+     * Send empty message.
+     *
+     * @param exchange the exchange
+     * @param emptyMessage the empty message
+     */
+    public void sendEmptyMessage(Exchange exchange, EmptyMessage emptyMessage);
 
 
-	/**
-	 * A builder that constructs the stack from the top to the bottom. The
-	 * returned list of layers is in the same order as added to the stack.
-	 */
-	public static class TopDownBuilder {
-		
-		/** The stack in order as added */
-		private LinkedList<Layer> stack = new LinkedList<Layer>();
-		
-		/**
-		 * Adds the specified layer below the currently lowest layer.
-		 *
-		 * @param layer the layer
-		 * @return the builder
-		 */
-		public TopDownBuilder add(Layer layer) {
-			if (stack.size() > 0)
-				stack.getLast().setLowerLayer(layer);
-			stack.add(layer);
-			return this;
-		}
-		
-		/**
-		 * Creates the stack.
-		 *
-		 * @return the stack
-		 */
-		public List<Layer> create() {
-			return stack;
-		}
-		
-	}
-	
-	/**
-	 * A builder that constructs the stack from the bottom upwards. The returned
-	 * list of layers is in the same order as added to the stack.
-	 */
-	public static class BottomUpBuilder {
-		
-		/** The layers in order as added. */
-		private LinkedList<Layer> stack = new LinkedList<Layer>();
-		
-		/**
-		 * Adds the specified layer above the currently uppermost layer.
-		 *
-		 * @param layer the layer
-		 * @return the bottom up builder
-		 */
-		public BottomUpBuilder add(Layer layer) {
-			stack.getLast().setUpperLayer(layer);
-			return this;
-		}
-		
-		/**
-		 * Creates the stack
-		 *
-		 * @return the stack
-		 */
-		public List<Layer> create() {
-			return stack;
-		}
-	}
-	
+    /**
+     * Receive request.
+     *
+     * @param exchange the exchange
+     * @param request the request
+     */
+    public void receiveRequest(Exchange exchange, Request request);
+
+    /**
+     * Receive response.
+     *
+     * @param exchange the exchange
+     * @param response the response
+     */
+    public void receiveResponse(Exchange exchange, Response response);
+
+    /**
+     * Receive empty message.
+     *
+     * @param exchange the exchange
+     * @param message the message
+     */
+    public void receiveEmptyMessage(Exchange exchange, EmptyMessage message);
+
+
+    /**
+     * Sets the lower layer.
+     *
+     * @param layer the new lower layer
+     */
+    public void setLowerLayer(Layer layer);
+
+    /**
+     * Sets the upper layer.
+     *
+     * @param layer the new upper layer
+     */
+    public void setUpperLayer(Layer layer);
+
+    /**
+     * Sets the executor.
+     *
+     * @param executor the new executor
+     */
+    public void setExecutor(ScheduledExecutorService executor);
+
+    public void destroy();
+
+
+    /**
+     * A builder that constructs the stack from the top to the bottom. The
+     * returned list of layers is in the same order as added to the stack.
+     */
+    public static class TopDownBuilder {
+
+        /** The stack in order as added */
+        private LinkedList<Layer> stack = new LinkedList<Layer>();
+
+        /**
+         * Adds the specified layer below the currently lowest layer.
+         *
+         * @param layer the layer
+         * @return the builder
+         */
+        public TopDownBuilder add(Layer layer) {
+            if (stack.size() > 0)
+                stack.getLast().setLowerLayer(layer);
+            stack.add(layer);
+            return this;
+        }
+
+        /**
+         * Creates the stack.
+         *
+         * @return the stack
+         */
+        public List<Layer> create() {
+            return stack;
+        }
+
+    }
+
+    /**
+     * A builder that constructs the stack from the bottom upwards. The returned
+     * list of layers is in the same order as added to the stack.
+     */
+    public static class BottomUpBuilder {
+
+        /** The layers in order as added. */
+        private LinkedList<Layer> stack = new LinkedList<Layer>();
+
+        /**
+         * Adds the specified layer above the currently uppermost layer.
+         *
+         * @param layer the layer
+         * @return the bottom up builder
+         */
+        public BottomUpBuilder add(Layer layer) {
+            stack.getLast().setUpperLayer(layer);
+            return this;
+        }
+
+        /**
+         * Creates the stack
+         *
+         * @return the stack
+         */
+        public List<Layer> create() {
+            return stack;
+        }
+    }
+
 }

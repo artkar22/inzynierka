@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core;
 
@@ -36,69 +36,69 @@ import org.eclipse.californium.core.coap.CoAP.ResponseCode;
  */
 public class CoapResponse {
 
-	/** The insternal response. */
-	private Response response;
-	
-	/**
-	 * Instantiates a new coap response.
-	 *
-	 * @param response the response
-	 */
-	protected CoapResponse(Response response) {
-		this.response = response;
-	}
+    /** The insternal response. */
+    private Response response;
 
-	/**
-	 * Gets the response code code.
-	 *
-	 * @return the response code
-	 */
-	public ResponseCode getCode() {
-		return response.getCode();
-	}
-	
-	/**
-	 * Checks if the response code is a successful code.
-	 *
-	 * @return true, if is success
-	 */
-	public boolean isSuccess() {
-		return CoAP.ResponseCode.isSuccess(response.getCode());
-	}
-	
-	/**
-	 * Gets the payload of this response as string.
-	 *
-	 * @return the response text
-	 */
-	public String getResponseText() {
-		return response.getPayloadString();
-	}
-	
-	/**
-	 * Gets the payload of this response as byte array.
-	 *
-	 * @return the payload
-	 */
-	public byte[] getPayload() {
-		return response.getPayload();
-	}
-	
-	/**
-	 * Gets the set of options of this response.
-	 *
-	 * @return the options
-	 */
-	public OptionSet getOptions() {
-		return response.getOptions();
-	}
+    /**
+     * Instantiates a new coap response.
+     *
+     * @param response the response
+     */
+    protected CoapResponse(Response response) {
+        this.response = response;
+    }
 
-	/**
-	 * Gets the internal representation of the response for advanced API calls.
-	 * 
-	 * @return the internal response object
-	 */
-	public Response advanced() {
-		return response;
-	}
+    /**
+     * Gets the response code code.
+     *
+     * @return the response code
+     */
+    public ResponseCode getCode() {
+        return response.getCode();
+    }
+
+    /**
+     * Checks if the response code is a successful code.
+     *
+     * @return true, if is success
+     */
+    public boolean isSuccess() {
+        return CoAP.ResponseCode.isSuccess(response.getCode());
+    }
+
+    /**
+     * Gets the payload of this response as string.
+     *
+     * @return the response text
+     */
+    public String getResponseText() {
+        return response.getPayloadString();
+    }
+
+    /**
+     * Gets the payload of this response as byte array.
+     *
+     * @return the payload
+     */
+    public byte[] getPayload() {
+        return response.getPayload();
+    }
+
+    /**
+     * Gets the set of options of this response.
+     *
+     * @return the options
+     */
+    public OptionSet getOptions() {
+        return response.getOptions();
+    }
+
+    /**
+     * Gets the internal representation of the response for advanced API calls.
+     *
+     * @return the internal response object
+     */
+    public Response advanced() {
+        return response;
+    }
 }

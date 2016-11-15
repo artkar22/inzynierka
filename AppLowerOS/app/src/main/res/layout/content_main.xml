@@ -10,39 +10,55 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="karolakpochwala.apploweros.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main"
+    android:background="#3e3e3e">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:id="@+id/button1"
-        android:layout_below="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_marginTop="134dp" />
+        <ImageView
+            android:src="@drawable/logo1"
+            android:layout_width="wrap_content"
+            android:layout_height="264dp"
+            android:padding="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.01" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/messageText"
-        android:layout_below="@+id/textView"
-        android:layout_alignRight="@+id/button1"
-        android:layout_alignEnd="@+id/button1"
-        android:layout_marginTop="58dp" />
+        <Button
+            android:id="@+id/newGameButton"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/button1"
+            android:layout_alignStart="@+id/button1"
+            android:background="@drawable/play_btn"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nowa gra"
-        android:id="@+id/newGameButton"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignStart="@+id/button1" />
+        <Button
+            android:text="Send"
+            android:id="@+id/button1"
+            android:layout_marginTop="75dp"
+            android:layout_below="@+id/newGameButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="274dp"
+            android:layout_marginEnd="274dp"
+            android:layout_width="108dp"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

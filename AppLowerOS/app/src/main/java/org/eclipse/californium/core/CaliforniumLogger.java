@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core;
 
@@ -36,66 +36,66 @@ import org.eclipse.californium.elements.Connector;
  * specific classes.
  */
 public class CaliforniumLogger {
-	
-	private static final Logger CALIFORNIUM_LOGGER = Logger.getLogger(CaliforniumLogger.class.getPackage().getName());
-	private static final Logger CONNECTOR_LOGGER = Logger.getLogger(Connector.class.getPackage().getName());
-	
-	/**
-	 * Initializes the logger. The resulting format of logged messages is
-	 * 
-	 * <pre>
-	 * {@code
-	 * | Thread ID | Level | Message | Class | Line No | Method | Thread name |
-	 * }
-	 * </pre>
-	 * 
-	 * where Level is the {@link Level} of the message, the <code>Class</code>
-	 * is the class in which the log statement is located, the
-	 * <code>Line No</code> is the line number of the logging statement, the
-	 * <code>Method</code> is the method name in which the statement is located
-	 * and the <code>Thread name</code> is the name of the thread that executed
-	 * the logging statement.
-	 */
-	public static void initialize() {
-		CALIFORNIUM_LOGGER.setUseParentHandlers(false);
-		CALIFORNIUM_LOGGER.addHandler(new CaliforniumHandler());
-		CONNECTOR_LOGGER.setUseParentHandlers(false);
-		CONNECTOR_LOGGER.addHandler(new CaliforniumHandler());
-	}
-	
-	/**
-	 * Disables logging by setting the level of all loggers that have been
-	 * requested over this class to OFF.
-	 */
-	public static void disableLogging() {
-		CALIFORNIUM_LOGGER.setLevel(Level.OFF);
-		CONNECTOR_LOGGER.setLevel(Level.OFF);
-	}
 
-	/**
-	 * Sets the logger level of all loggers that have been requests over this
-	 * class to the specified level and sets this level for all loggers that are
-	 * going to be requested over this class in the future.
-	 * 
-	 * @param level
-	 *            the new logger level
-	 */
-	public static void setLevel(Level level) {
-		CALIFORNIUM_LOGGER.setLevel(level);
-		CONNECTOR_LOGGER.setLevel(level);
-	}
+    private static final Logger CALIFORNIUM_LOGGER = Logger.getLogger(CaliforniumLogger.class.getPackage().getName());
+    private static final Logger CONNECTOR_LOGGER = Logger.getLogger(Connector.class.getPackage().getName());
 
-	private static class CaliforniumHandler extends StreamHandler {
+    /**
+     * Initializes the logger. The resulting format of logged messages is
+     *
+     * <pre>
+     * {@code
+     * | Thread ID | Level | Message | Class | Line No | Method | Thread name |
+     * }
+     * </pre>
+     *
+     * where Level is the {@link Level} of the message, the <code>Class</code>
+     * is the class in which the log statement is located, the
+     * <code>Line No</code> is the line number of the logging statement, the
+     * <code>Method</code> is the method name in which the statement is located
+     * and the <code>Thread name</code> is the name of the thread that executed
+     * the logging statement.
+     */
+    public static void initialize() {
+        CALIFORNIUM_LOGGER.setUseParentHandlers(false);
+        CALIFORNIUM_LOGGER.addHandler(new CaliforniumHandler());
+        CONNECTOR_LOGGER.setUseParentHandlers(false);
+        CONNECTOR_LOGGER.addHandler(new CaliforniumHandler());
+    }
 
-		public CaliforniumHandler() {
-			super(System.out, new CaliforniumFormatter());
-			this.setLevel(Level.ALL);
-		}
+    /**
+     * Disables logging by setting the level of all loggers that have been
+     * requested over this class to OFF.
+     */
+    public static void disableLogging() {
+        CALIFORNIUM_LOGGER.setLevel(Level.OFF);
+        CONNECTOR_LOGGER.setLevel(Level.OFF);
+    }
 
-		@Override
-		public synchronized void publish(LogRecord record) {
-			super.publish(record);
-			super.flush();
-		}
-	}
+    /**
+     * Sets the logger level of all loggers that have been requests over this
+     * class to the specified level and sets this level for all loggers that are
+     * going to be requested over this class in the future.
+     *
+     * @param level
+     *            the new logger level
+     */
+    public static void setLevel(Level level) {
+        CALIFORNIUM_LOGGER.setLevel(level);
+        CONNECTOR_LOGGER.setLevel(level);
+    }
+
+    private static class CaliforniumHandler extends StreamHandler {
+
+        public CaliforniumHandler() {
+            super(System.out, new CaliforniumFormatter());
+            this.setLevel(Level.ALL);
+        }
+
+        @Override
+        public synchronized void publish(LogRecord record) {
+            super.publish(record);
+            super.flush();
+        }
+    }
 }

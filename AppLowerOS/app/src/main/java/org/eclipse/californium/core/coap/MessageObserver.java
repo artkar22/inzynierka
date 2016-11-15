@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.coap;
 
@@ -49,37 +49,37 @@ package org.eclipse.californium.core.coap;
  */
 public interface MessageObserver {
 
-	public void onRetransmission();
-	
-	/**
-	 * Invoked when a response arrives.
-	 * 
-	 * @param response the response that arrives
-	 */
-	public void onResponse(Response response);
+    public void onRetransmission();
 
-	/**
-	 * Invoked when the message has been acknowledged by the remote endpoint.
-	 */
-	public void onAcknowledgement();
+    /**
+     * Invoked when a response arrives.
+     *
+     * @param response the response that arrives
+     */
+    public void onResponse(Response response);
 
-	/**
-	 * Invoked when the message has been rejected by the remote endpoint.
-	 */
-	public void onReject();
+    /**
+     * Invoked when the message has been acknowledged by the remote endpoint.
+     */
+    public void onAcknowledgement();
 
-	/**
-	 * Invoked when the client stops retransmitting the message and still has
-	 * not received anything from the remote endpoint. By default this is the
-	 * case after 5 unsuccessful transmission attempts.
-	 */
-	public void onTimeout();
+    /**
+     * Invoked when the message has been rejected by the remote endpoint.
+     */
+    public void onReject();
 
-	/**
-	 * Invoked when the message has been canceled. For instance, a user might
-	 * cancel a request or a CoAP resource that is being observer might cancel a
-	 * response to send another one instead.
-	 */
-	public void onCancel();
+    /**
+     * Invoked when the client stops retransmitting the message and still has
+     * not received anything from the remote endpoint. By default this is the
+     * case after 5 unsuccessful transmission attempts.
+     */
+    public void onTimeout();
+
+    /**
+     * Invoked when the message has been canceled. For instance, a user might
+     * cancel a request or a CoAP resource that is being observer might cancel a
+     * response to send another one instead.
+     */
+    public void onCancel();
 
 }

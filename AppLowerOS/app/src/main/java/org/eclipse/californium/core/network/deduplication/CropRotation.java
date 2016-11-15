@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.network.deduplication;
 
@@ -43,121 +43,121 @@ import org.eclipse.californium.core.network.config.NetworkConfig;
  */
 public class CropRotation implements Deduplicator {
 
-	private final static Logger LOGGER = Logger.getLogger(CropRotation.class.getCanonicalName());
-	
-	private ScheduledExecutorService executor;
-	
-	private ExchangeMap[] maps;
-	private int first;
-	private int second;
-	
-	private boolean started;
+    private final static Logger LOGGER = Logger.getLogger(CropRotation.class.getCanonicalName());
 
-	private long period;
-	private Rotation rotation;
-	
-	public CropRotation(NetworkConfig config) {
-		this.rotation = new Rotation();
-		maps = new ExchangeMap[3];
-		maps[0] = new ExchangeMap();
-		maps[1] = new ExchangeMap();
-		maps[2] = new ExchangeMap();
-		first = 0;
-		second = 1;
-		period = config.getInt(NetworkConfig.Keys.CROP_ROTATION_PERIOD);
-	}
-	
-	@Override
-	public synchronized void start() {
-		started = true;
-		rotation.schedule();
-	}
+    private ScheduledExecutorService executor;
 
-	@Override
-	public synchronized void stop() {
-		started = false;
-		rotation.cancel();
-		clear();
-	}
+    private ExchangeMap[] maps;
+    private int first;
+    private int second;
 
-	@Override
-	public synchronized void setExecutor(ScheduledExecutorService executor) {
-		started = false;
-		rotation.cancel();
-		this.executor = executor;
-		if (started)
-			start();
-	}
+    private boolean started;
 
-	@Override
-	public Exchange findPrevious(KeyMID key, Exchange exchange) {
-		int f = first;
-		int s = second;
-		Exchange prev = maps[f].putIfAbsent(key, exchange);
-		if (prev != null || f==s) 
-			return prev;
-		prev = maps[s].putIfAbsent(key, exchange);
-		return prev;
-	}
+    private long period;
+    private Rotation rotation;
 
-	@Override
-	public Exchange find(KeyMID key) {
-		int f = first;
-		int s = second;
-		Exchange prev = maps[f].get(key);
-		if (prev != null || f==s)
-			return prev;
-		prev = maps[s].get(key);
-		return prev;
-	}
+    public CropRotation(NetworkConfig config) {
+        this.rotation = new Rotation();
+        maps = new ExchangeMap[3];
+        maps[0] = new ExchangeMap();
+        maps[1] = new ExchangeMap();
+        maps[2] = new ExchangeMap();
+        first = 0;
+        second = 1;
+        period = config.getInt(NetworkConfig.Keys.CROP_ROTATION_PERIOD);
+    }
 
-	@Override
-	public void clear() {
-		maps[0].clear();
-		maps[1].clear();
-		maps[2].clear();
-	}
-	
-	private class Rotation implements Runnable {
-		
-		private ScheduledFuture<?> future;
-		
-		public void run() {
-			try {
-				rotation();
-				System.gc();
-				
-			} catch (Throwable t) {
-				LOGGER.log(Level.WARNING, "Exception in Crop-Rotation algorithm", t);
-			
-			} finally {
-				try {
-					schedule();
-				} catch (Throwable t) {
-					LOGGER.log(Level.WARNING, "Exception while scheduling Crop-Rotation algorithm", t);
-				}
-			}
-		}
-		
-		private void rotation() {
-			int third = first;
-			first = second;
-			second = (second+1)%3;
-			maps[third].clear();
-		}
-		
-		private void schedule() {
-			LOGGER.log(Level.FINE, "CR schedules in {0} ms", period);
-			future = executor.schedule(this, period, TimeUnit.MILLISECONDS);
-		}
-		
-		private void cancel() {
-			if (future != null)
-				future.cancel(true);
-		}
-	}
-	
-	private static class ExchangeMap extends ConcurrentHashMap<KeyMID, Exchange> {
-		private static final long serialVersionUID = 1504940670839294042L;
-	}
+    @Override
+    public synchronized void start() {
+        started = true;
+        rotation.schedule();
+    }
+
+    @Override
+    public synchronized void stop() {
+        started = false;
+        rotation.cancel();
+        clear();
+    }
+
+    @Override
+    public synchronized void setExecutor(ScheduledExecutorService executor) {
+        started = false;
+        rotation.cancel();
+        this.executor = executor;
+        if (started)
+            start();
+    }
+
+    @Override
+    public Exchange findPrevious(KeyMID key, Exchange exchange) {
+        int f = first;
+        int s = second;
+        Exchange prev = maps[f].putIfAbsent(key, exchange);
+        if (prev != null || f == s)
+            return prev;
+        prev = maps[s].putIfAbsent(key, exchange);
+        return prev;
+    }
+
+    @Override
+    public Exchange find(KeyMID key) {
+        int f = first;
+        int s = second;
+        Exchange prev = maps[f].get(key);
+        if (prev != null || f == s)
+            return prev;
+        prev = maps[s].get(key);
+        return prev;
+    }
+
+    @Override
+    public void clear() {
+        maps[0].clear();
+        maps[1].clear();
+        maps[2].clear();
+    }
+
+    private class Rotation implements Runnable {
+
+        private ScheduledFuture<?> future;
+
+        public void run() {
+            try {
+                rotation();
+                System.gc();
+
+            } catch (Throwable t) {
+                LOGGER.log(Level.WARNING, "Exception in Crop-Rotation algorithm", t);
+
+            } finally {
+                try {
+                    schedule();
+                } catch (Throwable t) {
+                    LOGGER.log(Level.WARNING, "Exception while scheduling Crop-Rotation algorithm", t);
+                }
+            }
+        }
+
+        private void rotation() {
+            int third = first;
+            first = second;
+            second = (second + 1) % 3;
+            maps[third].clear();
+        }
+
+        private void schedule() {
+            LOGGER.log(Level.FINE, "CR schedules in {0} ms", period);
+            future = executor.schedule(this, period, TimeUnit.MILLISECONDS);
+        }
+
+        private void cancel() {
+            if (future != null)
+                future.cancel(true);
+        }
+    }
+
+    private static class ExchangeMap extends ConcurrentHashMap<KeyMID, Exchange> {
+        private static final long serialVersionUID = 1504940670839294042L;
+    }
 }

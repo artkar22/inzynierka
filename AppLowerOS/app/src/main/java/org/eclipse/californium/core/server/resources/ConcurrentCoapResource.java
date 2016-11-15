@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.server.resources;
 
@@ -59,7 +59,7 @@ import org.eclipse.californium.core.network.Exchange;
  * server.add(new ConcurrentResource("four-threaded", 4)
  *   .add(new CoapResource("same-as-parent")
  *     .add(new CoapResource("same-as-parent"))));
- * 
+ *
  * server.add(ConcurrentCoapResource.createConcurrentResourceBase(2, new LargeResource("large")));
  * server.start();
  * </pre>
@@ -82,93 +82,93 @@ import org.eclipse.californium.core.network.Exchange;
  * </pre>
  */
 public class ConcurrentCoapResource extends CoapResource {
-	
-	/** The constant 1 for single threaded executors */
-	public static int SINGLE_THREADED = 1;
-	
-	/** The number of threads. */
-	private int threads;
-	
-	/** The executor of this resource or null */
-	private ExecutorService executor;
 
-	/**
-	 * Constructs a new resource that uses an executor with as many threads as
-	 * there are processors available.
-	 * 
-	 * @param name the name
-	 */
-	public ConcurrentCoapResource(String name) {
-		super(name);
-		this.threads = getAvailableProcessors();
-		setExecutor(Executors.newFixedThreadPool(threads));
-	}
-	
-	/**
-	 * Constructs a new resource that uses the specified amount of threads to
-	 * process requests.
-	 * 
-	 * @param name the name
-	 * @param threads the number of threads
-	 */
-	public ConcurrentCoapResource(String name, int threads) {
-		super(name);
-		this.threads = threads;
-		setExecutor(Executors.newFixedThreadPool(threads));
-	}
-	
-	/**
-	 * Sets the specified executor service to the resource.
-	 * 
-	 * @param executor the executor service
-	 */
-	public void setExecutor(ExecutorService executor) {
-		this.executor = executor;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.californium.core.server.resources.CoapResource#getExecutor()
-	 */
-	@Override
-	public ExecutorService getExecutor() {
-		if (executor != null) return executor;
-		else return super.getExecutor();
-	}
-	
-	/**
-	 * Gets the number of available processors.
-	 *
-	 * @return the maximum number of processors available to the virtual
+    /** The constant 1 for single threaded executors */
+    public static int SINGLE_THREADED = 1;
+
+    /** The number of threads. */
+    private int threads;
+
+    /** The executor of this resource or null */
+    private ExecutorService executor;
+
+    /**
+     * Constructs a new resource that uses an executor with as many threads as
+     * there are processors available.
+     *
+     * @param name the name
+     */
+    public ConcurrentCoapResource(String name) {
+        super(name);
+        this.threads = getAvailableProcessors();
+        setExecutor(Executors.newFixedThreadPool(threads));
+    }
+
+    /**
+     * Constructs a new resource that uses the specified amount of threads to
+     * process requests.
+     *
+     * @param name the name
+     * @param threads the number of threads
+     */
+    public ConcurrentCoapResource(String name, int threads) {
+        super(name);
+        this.threads = threads;
+        setExecutor(Executors.newFixedThreadPool(threads));
+    }
+
+    /**
+     * Sets the specified executor service to the resource.
+     *
+     * @param executor the executor service
+     */
+    public void setExecutor(ExecutorService executor) {
+        this.executor = executor;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.californium.core.server.resources.CoapResource#getExecutor()
+     */
+    @Override
+    public ExecutorService getExecutor() {
+        if (executor != null) return executor;
+        else return super.getExecutor();
+    }
+
+    /**
+     * Gets the number of available processors.
+     *
+     * @return the maximum number of processors available to the virtual
      *          machine; never smaller than one
-	 */
-	protected int getAvailableProcessors() {
-		return Runtime.getRuntime().availableProcessors();
-	}
-	
-	/**
-	 * Gets the number of threads
-	 *
-	 * @return the thread count
-	 */
-	public int getThreadCount() {
-		return threads;
-	}
+     */
+    protected int getAvailableProcessors() {
+        return Runtime.getRuntime().availableProcessors();
+    }
 
-	/**
-	 * Wraps the specified implementation in a ConcurrentCoapResource that uses
-	 * the specified number of threads to process requests. This method can be
-	 * used to reuse a given resource but with an own thread-pool.
-	 * 
-	 * @param threads the number of threads
-	 * @param impl the implementation
-	 * @return the wrapping resource
-	 */
-	public static ConcurrentCoapResource createConcurrentCoapResource(int threads, final Resource impl) {
-		return new ConcurrentCoapResource(impl.getName(), threads) {
-			@Override
-			public void handleRequest(Exchange exchange) {
-				impl.handleRequest(exchange);
-			}
-		};
-	}
+    /**
+     * Gets the number of threads
+     *
+     * @return the thread count
+     */
+    public int getThreadCount() {
+        return threads;
+    }
+
+    /**
+     * Wraps the specified implementation in a ConcurrentCoapResource that uses
+     * the specified number of threads to process requests. This method can be
+     * used to reuse a given resource but with an own thread-pool.
+     *
+     * @param threads the number of threads
+     * @param impl the implementation
+     * @return the wrapping resource
+     */
+    public static ConcurrentCoapResource createConcurrentCoapResource(int threads, final Resource impl) {
+        return new ConcurrentCoapResource(impl.getName(), threads) {
+            @Override
+            public void handleRequest(Exchange exchange) {
+                impl.handleRequest(exchange);
+            }
+        };
+    }
 }

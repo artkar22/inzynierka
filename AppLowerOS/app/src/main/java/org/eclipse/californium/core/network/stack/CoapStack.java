@@ -1,23 +1,23 @@
 /*******************************************************************************
  * Copyright (c) 2015, 2016 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
- *    Kai Hudalla (Bosch Software Innovations GmbH) - use Logger's message formatting instead of
- *                                                    explicit String concatenation
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
+ * Kai Hudalla (Bosch Software Innovations GmbH) - use Logger's message formatting instead of
+ * explicit String concatenation
  ******************************************************************************/
 package org.eclipse.californium.core.network.stack;
 
@@ -80,151 +80,151 @@ import org.eclipse.californium.elements.Connector;
  */
 public class CoapStack {
 
-	/** The LOGGER. */
-	final static Logger LOGGER = Logger.getLogger(CoapStack.class.getCanonicalName());
+    /** The LOGGER. */
+    final static Logger LOGGER = Logger.getLogger(CoapStack.class.getCanonicalName());
 
-	private List<Layer> layers;
-	private Outbox outbox;
-	private StackTopAdapter top;
-	private StackBottomAdapter bottom;
-	private MessageDeliverer deliverer;
-	
-	public CoapStack(NetworkConfig config, Outbox outbox) {
-		this.top = new StackTopAdapter();
-		this.outbox = outbox;
-		
-		ReliabilityLayer reliabilityLayer;
-		if (config.getBoolean(NetworkConfig.Keys.USE_CONGESTION_CONTROL) == true) {
-			reliabilityLayer = CongestionControlLayer.newImplementation(config);
-			LOGGER.log(Level.CONFIG, "Enabling congestion control: {0}", reliabilityLayer.getClass().getSimpleName());
-		} else {
-			reliabilityLayer = new ReliabilityLayer(config);
-		}
-		
-		this.layers = 
-				new Layer.TopDownBuilder()
-				.add(top)
-				.add(new ObserveLayer(config))
-				.add(new BlockwiseLayer(config))
-				.add(reliabilityLayer)
-				.add(bottom = new StackBottomAdapter())
-				.create();
-		
-		// make sure the endpoint sets a MessageDeliverer
-	}
-	
-	// delegate to top
-	public void sendRequest(Request request) {
-		top.sendRequest(request);
-	}
+    private List<Layer> layers;
+    private Outbox outbox;
+    private StackTopAdapter top;
+    private StackBottomAdapter bottom;
+    private MessageDeliverer deliverer;
 
-	// delegate to top
-	public void sendResponse(Exchange exchange, Response response) {
-		top.sendResponse(exchange, response);
-	}
+    public CoapStack(NetworkConfig config, Outbox outbox) {
+        this.top = new StackTopAdapter();
+        this.outbox = outbox;
 
-	// delegate to top
-	public void sendEmptyMessage(Exchange exchange, EmptyMessage message) {
-		top.sendEmptyMessage(exchange, message);
-	}
+        ReliabilityLayer reliabilityLayer;
+        if (config.getBoolean(NetworkConfig.Keys.USE_CONGESTION_CONTROL) == true) {
+            reliabilityLayer = CongestionControlLayer.newImplementation(config);
+            LOGGER.log(Level.CONFIG, "Enabling congestion control: {0}", reliabilityLayer.getClass().getSimpleName());
+        } else {
+            reliabilityLayer = new ReliabilityLayer(config);
+        }
 
-	// delegate to bottom
-	public void receiveRequest(Exchange exchange, Request request) {
-		bottom.receiveRequest(exchange, request);
-	}
+        this.layers =
+                new Layer.TopDownBuilder()
+                        .add(top)
+                        .add(new ObserveLayer(config))
+                        .add(new BlockwiseLayer(config))
+                        .add(reliabilityLayer)
+                        .add(bottom = new StackBottomAdapter())
+                        .create();
 
-	// delegate to bottom
-	public void receiveResponse(Exchange exchange, Response response) {
-		bottom.receiveResponse(exchange, response);
-	}
+        // make sure the endpoint sets a MessageDeliverer
+    }
 
-	// delegate to bottom
-	public void receiveEmptyMessage(Exchange exchange, EmptyMessage message) {
-		bottom.receiveEmptyMessage(exchange, message);
-	}
+    // delegate to top
+    public void sendRequest(Request request) {
+        top.sendRequest(request);
+    }
 
-	public void setExecutor(ScheduledExecutorService executor) {
-		for (Layer layer:layers)
-			layer.setExecutor(executor);
-	}
-	
-	public void setDeliverer(MessageDeliverer deliverer) {
-		this.deliverer = deliverer;
-	}
+    // delegate to top
+    public void sendResponse(Exchange exchange, Response response) {
+        top.sendResponse(exchange, response);
+    }
 
-	public void destroy() {
-		for (Layer layer:layers)
-			layer.destroy();
-	}
+    // delegate to top
+    public void sendEmptyMessage(Exchange exchange, EmptyMessage message) {
+        top.sendEmptyMessage(exchange, message);
+    }
 
-	private class StackTopAdapter extends AbstractLayer {
-		
-		public void sendRequest(Request request) {
-			Exchange exchange = new Exchange(request, Origin.LOCAL);
-			sendRequest(exchange, request); // layer method
-		}
-		
-		@Override
-		public void sendRequest(Exchange exchange, Request request) {
-			exchange.setRequest(request);
-			super.sendRequest(exchange, request);
-		}
-		
-		@Override
-		public void sendResponse(Exchange exchange, Response response) {
-			exchange.setResponse(response);
-			super.sendResponse(exchange, response);
-		}
-		
-		@Override
-		public void receiveRequest(Exchange exchange, Request request) {
-			// if there is no BlockwiseLayer we still have to set it
-			if (exchange.getRequest() == null)
-				exchange.setRequest(request);
-			if (deliverer != null) {
-				deliverer.deliverRequest(exchange);
-			} else {
-				LOGGER.severe("Top of CoAP stack has no deliverer to deliver request");
-			}
-		}
+    // delegate to bottom
+    public void receiveRequest(Exchange exchange, Request request) {
+        bottom.receiveRequest(exchange, request);
+    }
 
-		@Override
-		public void receiveResponse(Exchange exchange, Response response) {
-			if (!response.getOptions().hasObserve())
-				exchange.setComplete();
-			if (deliverer != null) {
-				deliverer.deliverResponse(exchange, response); // notify request that response has arrived
-			} else {
-				LOGGER.severe("Top of CoAP stack has no deliverer to deliver response");
-			}
-		}
-		
-		@Override
-		public void receiveEmptyMessage(Exchange exchange, EmptyMessage message) {
-			// When empty messages reach the top of the CoAP stack we can ignore them. 
-		}
-	}
-	
-	private class StackBottomAdapter extends AbstractLayer {
-	
-		@Override
-		public void sendRequest(Exchange exchange, Request request) {
-			outbox.sendRequest(exchange, request);
-		}
+    // delegate to bottom
+    public void receiveResponse(Exchange exchange, Response response) {
+        bottom.receiveResponse(exchange, response);
+    }
 
-		@Override
-		public void sendResponse(Exchange exchange, Response response) {
-			outbox.sendResponse(exchange, response);
-		}
+    // delegate to bottom
+    public void receiveEmptyMessage(Exchange exchange, EmptyMessage message) {
+        bottom.receiveEmptyMessage(exchange, message);
+    }
 
-		@Override
-		public void sendEmptyMessage(Exchange exchange, EmptyMessage message) {
-			outbox.sendEmptyMessage(exchange, message);
-		}
+    public void setExecutor(ScheduledExecutorService executor) {
+        for (Layer layer : layers)
+            layer.setExecutor(executor);
+    }
 
-	}
-	
-	public boolean hasDeliverer() {
-		return deliverer != null;
-	}
+    public void setDeliverer(MessageDeliverer deliverer) {
+        this.deliverer = deliverer;
+    }
+
+    public void destroy() {
+        for (Layer layer : layers)
+            layer.destroy();
+    }
+
+    private class StackTopAdapter extends AbstractLayer {
+
+        public void sendRequest(Request request) {
+            Exchange exchange = new Exchange(request, Origin.LOCAL);
+            sendRequest(exchange, request); // layer method
+        }
+
+        @Override
+        public void sendRequest(Exchange exchange, Request request) {
+            exchange.setRequest(request);
+            super.sendRequest(exchange, request);
+        }
+
+        @Override
+        public void sendResponse(Exchange exchange, Response response) {
+            exchange.setResponse(response);
+            super.sendResponse(exchange, response);
+        }
+
+        @Override
+        public void receiveRequest(Exchange exchange, Request request) {
+            // if there is no BlockwiseLayer we still have to set it
+            if (exchange.getRequest() == null)
+                exchange.setRequest(request);
+            if (deliverer != null) {
+                deliverer.deliverRequest(exchange);
+            } else {
+                LOGGER.severe("Top of CoAP stack has no deliverer to deliver request");
+            }
+        }
+
+        @Override
+        public void receiveResponse(Exchange exchange, Response response) {
+            if (!response.getOptions().hasObserve())
+                exchange.setComplete();
+            if (deliverer != null) {
+                deliverer.deliverResponse(exchange, response); // notify request that response has arrived
+            } else {
+                LOGGER.severe("Top of CoAP stack has no deliverer to deliver response");
+            }
+        }
+
+        @Override
+        public void receiveEmptyMessage(Exchange exchange, EmptyMessage message) {
+            // When empty messages reach the top of the CoAP stack we can ignore them.
+        }
+    }
+
+    private class StackBottomAdapter extends AbstractLayer {
+
+        @Override
+        public void sendRequest(Exchange exchange, Request request) {
+            outbox.sendRequest(exchange, request);
+        }
+
+        @Override
+        public void sendResponse(Exchange exchange, Response response) {
+            outbox.sendResponse(exchange, response);
+        }
+
+        @Override
+        public void sendEmptyMessage(Exchange exchange, EmptyMessage message) {
+            outbox.sendEmptyMessage(exchange, message);
+        }
+
+    }
+
+    public boolean hasDeliverer() {
+        return deliverer != null;
+    }
 }

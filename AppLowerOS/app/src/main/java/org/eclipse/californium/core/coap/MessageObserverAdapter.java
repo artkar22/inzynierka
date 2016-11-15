@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.coap;
 
@@ -47,51 +47,51 @@ package org.eclipse.californium.core.coap;
  */
 public abstract class MessageObserverAdapter implements MessageObserver {
 
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#retransmitting()
-	 */
-	@Override
-	public void onRetransmission() {
-		// empty default implementation
-	}
-	
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#responded(ch.inf.vs.californium.coap.Response)
-	 */
-	@Override
-	public void onResponse(Response response) {
-		// empty default implementation
-	}
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#retransmitting()
+     */
+    @Override
+    public void onRetransmission() {
+        // empty default implementation
+    }
 
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#acknowledged()
-	 */
-	@Override
-	public void onAcknowledgement() {
-		// empty default implementation
-	}
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#responded(ch.inf.vs.californium.coap.Response)
+     */
+    @Override
+    public void onResponse(Response response) {
+        // empty default implementation
+    }
 
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#rejected()
-	 */
-	@Override
-	public void onReject() {
-		// empty default implementation
-	}
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#acknowledged()
+     */
+    @Override
+    public void onAcknowledgement() {
+        // empty default implementation
+    }
 
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#canceled()
-	 */
-	@Override
-	public void onCancel() {
-		// empty default implementation
-	}
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#rejected()
+     */
+    @Override
+    public void onReject() {
+        // empty default implementation
+    }
 
-	/* (non-Javadoc)
-	 * @see ch.inf.vs.californium.coap.MessageObserver#timedOut()
-	 */
-	@Override
-	public void onTimeout() {
-		// empty default implementation
-	}
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#canceled()
+     */
+    @Override
+    public void onCancel() {
+        // empty default implementation
+    }
+
+    /* (non-Javadoc)
+     * @see ch.inf.vs.californium.coap.MessageObserver#timedOut()
+     */
+    @Override
+    public void onTimeout() {
+        // empty default implementation
+    }
 }

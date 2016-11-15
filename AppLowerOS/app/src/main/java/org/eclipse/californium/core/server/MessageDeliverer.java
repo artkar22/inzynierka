@@ -1,21 +1,21 @@
 /*******************************************************************************
  * Copyright (c) 2015 Institute for Pervasive Computing, ETH Zurich and others.
- * 
+ * <p>
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v1.0 which accompany this distribution.
- * 
+ * <p>
  * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
+ * http://www.eclipse.org/legal/epl-v10.html
  * and the Eclipse Distribution License is available at
- *    http://www.eclipse.org/org/documents/edl-v10.html.
- * 
+ * http://www.eclipse.org/org/documents/edl-v10.html.
+ * <p>
  * Contributors:
- *    Matthias Kovatsch - creator and main architect
- *    Martin Lanter - architect and re-implementation
- *    Dominique Im Obersteg - parsers and initial implementation
- *    Daniel Pauli - parsers and initial implementation
- *    Kai Hudalla - logging
+ * Matthias Kovatsch - creator and main architect
+ * Martin Lanter - architect and re-implementation
+ * Dominique Im Obersteg - parsers and initial implementation
+ * Daniel Pauli - parsers and initial implementation
+ * Kai Hudalla - logging
  ******************************************************************************/
 package org.eclipse.californium.core.server;
 
@@ -25,7 +25,7 @@ import org.eclipse.californium.core.network.Exchange;
 
 /**
  * A strategy for delivering inbound CoAP messages to an appropriate processor.
- * 
+ *
  * Implementations should try to deliver incoming CoAP requests to a published
  * resource matching the request's URI. If no such resource exists, implementations
  * should respond with a CoAP {@link ResponseCode#NOT_FOUND}. An incoming CoAP response
@@ -33,22 +33,22 @@ import org.eclipse.californium.core.network.Exchange;
  */
 public interface MessageDeliverer {
 
-	/**
-	 * Delivers an inbound CoAP request to an appropriate resource.
-	 * 
-	 * @param exchange
-	 *            the exchange containing the inbound {@code Request}
-	 */
-	public void deliverRequest(Exchange exchange);
-	
-	/**
-	 * Delivers an inbound CoAP response message to its corresponding request.
-	 * 
-	 * @param exchange
-	 *            the exchange containing the originating CoAP request
-	 * @param response
-	 *            the inbound CoAP response message
-	 */
-	public void deliverResponse(Exchange exchange, Response response);
-	
+    /**
+     * Delivers an inbound CoAP request to an appropriate resource.
+     *
+     * @param exchange
+     *            the exchange containing the inbound {@code Request}
+     */
+    public void deliverRequest(Exchange exchange);
+
+    /**
+     * Delivers an inbound CoAP response message to its corresponding request.
+     *
+     * @param exchange
+     *            the exchange containing the originating CoAP request
+     * @param response
+     *            the inbound CoAP response message
+     */
+    public void deliverResponse(Exchange exchange, Response response);
+
 }

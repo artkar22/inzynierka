@@ -45,10 +45,12 @@ public class MapDTO {
     public void setPlacesInMap(final LinkedList<PlaceInMapDTO> placesInMap) {
         this.placesInMap = placesInMap;
     }
-    public ArrayList<Integer> getSpecialPlacesIds(){
+
+    public ArrayList<Integer> getSpecialPlacesIds() {
         return specialPlacesIds;
     }
-    public void setSpecialPlacesIds(final ArrayList<PlaceInMapDTO> specialPlacesInMap){
+
+    public void setSpecialPlacesIds(final ArrayList<PlaceInMapDTO> specialPlacesInMap) {
         specialPlacesIds = new ArrayList<>();
         for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
             specialPlacesIds.add(Integer.valueOf(specialPlace.getPlaceInMapId()));
