@@ -1,12 +1,12 @@
 package dynamicGridActivity;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -22,8 +22,10 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 
 import ApplicationData.ApplicationData;
+import Simulets.Simulet;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
+import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
@@ -89,8 +91,24 @@ public class GridActivity extends Activity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GridActivity.this, parent.getAdapter().getItem(position).toString(),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(GridActivity.this, parent.getAdapter().getItem(position).toString(),
+//                        Toast.LENGTH_SHORT).show();
+                PlaceInMapDTO placeInMap = (PlaceInMapDTO) parent.getAdapter().getItem(position);
+                View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
+                optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
+                optionsLayout.setVisibility(View.VISIBLE);
+            }
+            private int setBackgroundForOptions(Simulet simulet) {
+                if (simulet.getPictureOff() == R.drawable.wiatraczek_off) {
+                    return Consts.OPTIONS_BACKGROUND_COLOR_WIATRACZEK;
+                } else if (simulet.getPictureOff() == R.drawable.zarowka_off) {
+                    return Consts.OPTIONS_BACKGROUND_COLOR_LAMPKA;
+                } else if (simulet.getPictureOff() == R.drawable.samochod_off) {
+                    return Consts.OPTIONS_BACKGROUND_COLOR_SAMOCHOD;
+                } else if (simulet.getPictureOff() == R.drawable.radio_off) {
+                    return Consts.OPTIONS_BACKGROUND_COLOR_RADIO;
+                }
+                return Color.GRAY;
             }
         });
 

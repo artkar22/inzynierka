@@ -65,26 +65,21 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     }
 
     private class CheeseViewHolder {
-        private TextView titleText;
         private ImageView image;
 
         private CheeseViewHolder(View view) {
-            titleText = (TextView) view.findViewById(R.id.item_title);
             image = (ImageView) view.findViewById(R.id.item_img);
         }
 
         void buildPlaceForSimulet(String title, int pictureOff) {
-            titleText.setText(title);
             image.setImageResource(pictureOff);
         }
 
         void build(String title) {
-            titleText.setText(title);
             image.setImageResource(R.drawable.ic_launcher);
         }
 
         void buildOnlyText(String title) {
-            titleText.setText(title);
             image.setImageResource(R.drawable.ic_launcher);
 
         }

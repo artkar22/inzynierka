@@ -514,7 +514,7 @@ public class DynamicGridView extends GridView {
         return super.onTouchEvent(event);
     }
 
-    private void startDragAtPosition(int position) {
+    public void startDragAtPosition(int position) {
         mTotalOffsetY = 0;
         mTotalOffsetX = 0;
         int itemNum = position - getFirstVisiblePosition();
