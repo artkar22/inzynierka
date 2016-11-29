@@ -94,10 +94,13 @@ public class GridActivity extends Activity {
 //                Toast.makeText(GridActivity.this, parent.getAdapter().getItem(position).toString(),
 //                        Toast.LENGTH_SHORT).show();
                 PlaceInMapDTO placeInMap = (PlaceInMapDTO) parent.getAdapter().getItem(position);
-                View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
-                optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
-                optionsLayout.setVisibility(View.VISIBLE);
+                if (placeInMap.getSimulet() != null) {
+                    View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
+                    optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
+                    optionsLayout.setVisibility(View.VISIBLE);
+                }
             }
+
             private int setBackgroundForOptions(Simulet simulet) {
                 if (simulet.getPictureOff() == R.drawable.wiatraczek_off) {
                     return Consts.OPTIONS_BACKGROUND_COLOR_WIATRACZEK;

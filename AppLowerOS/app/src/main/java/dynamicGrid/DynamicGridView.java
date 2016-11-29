@@ -844,18 +844,18 @@ public class DynamicGridView extends GridView {
             mDownY = mLastEventY;
             mDownX = mLastEventX;
 
-            SwitchCellAnimator switchCellAnimator;
-//
-//            if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
-            switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
-//            else if (isPreLollipop())                   //Before Android 3.0
-//                switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
-//            else                                //Android L
-//                switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
-//
-//            updateNeighborViewsForId(mMobileItemId);
-//
-            switchCellAnimator.animateSwitchCell(originalPosition, targetPosition);
+//            SwitchCellAnimator switchCellAnimator;
+////
+////            if (isPostHoneycomb() && isPreLollipop())   //Between Android 3.0 and Android L
+//            switchCellAnimator = new KitKatSwitchCellAnimator(deltaX, deltaY);
+////            else if (isPreLollipop())                   //Before Android 3.0
+////                switchCellAnimator = new PreHoneycombCellAnimator(deltaX, deltaY);
+////            else                                //Android L
+////                switchCellAnimator = new LSwitchCellAnimator(deltaX, deltaY);
+////
+////            updateNeighborViewsForId(mMobileItemId);
+////
+//            switchCellAnimator.animateSwitchCell(originalPosition, targetPosition);
         }
     }
 
