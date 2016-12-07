@@ -14,6 +14,7 @@ import Protocol.Comm_Protocol;
 import Simulets.Simulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
+import mainUtils.Consts;
 
 /**
  * Created by Inni on 2016-03-05.
@@ -43,10 +44,10 @@ public class SendButtonListener implements View.OnClickListener {
                 CoapResponse get = client.get();
                 if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-                    waitSomeSecs(3);
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS);
                 } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-                    waitSomeSecs(3);
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS);
                 }
             }
         }
