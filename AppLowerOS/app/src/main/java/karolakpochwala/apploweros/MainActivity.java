@@ -31,15 +31,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         applicationData = new ApplicationData();
         Button sendButton = (Button) findViewById(R.id.button1);
         Thread CoapClient = new Thread(new CoapClientThread(sendButton, applicationData.getSimulets(),

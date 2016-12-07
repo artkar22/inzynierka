@@ -24,15 +24,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:visibility="gone">
 
             <Button
                 android:id="@+id/buttonex"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="@drawable/timer"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                android:id="@+id/buttonex"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_launcher" />
+                android:background="@drawable/petla" />
+
+            <Button
+                android:id="@+id/buttonex"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/spray" />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -40,14 +56,14 @@
             android:layout_height="wrap_content"
             android:layout_weight=".50"
             android:orientation="vertical"
-            >
+            android:weightSum="1">
 
             <Button
                 android:id="@+id/playButton"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/play_btn" />
+                android:background="@drawable/play_button"
+                android:layout_width="110dp"
+                android:layout_height="110dp" />
         </LinearLayout>
     </LinearLayout>
 
