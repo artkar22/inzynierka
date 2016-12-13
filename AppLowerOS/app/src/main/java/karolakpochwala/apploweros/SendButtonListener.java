@@ -44,17 +44,17 @@ public class SendButtonListener implements View.OnClickListener {
                 client.setURI(currentSimulet.getStatusResource());
                 CoapResponse get = client.get();
                 if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
                     if(put.isSuccess()){
                         currentSimulet.setSimuletOn(true);
                     }
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                 } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
                     if(put.isSuccess()){
                         currentSimulet.setSimuletOn(false);
                     }
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                 }
             }
         }

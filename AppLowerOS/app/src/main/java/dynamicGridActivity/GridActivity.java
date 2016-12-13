@@ -100,32 +100,45 @@ public class GridActivity extends Activity {
                 PlaceInMapDTO placeInMap = (PlaceInMapDTO) parent.getAdapter().getItem(position);
                 if (placeInMap.getSimulet() != null) {
                     View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
-                    optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
+//                    optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
 //                    optionsLayout.setVisibility(View.VISIBLE);
-                    this.simuletsOptionsLogicExecution(placeInMap.getSimulet(), (ImageView)((ViewGroup) view).getChildAt(0));
+                    this.simuletsOptionsLogicExecution(placeInMap.getSimulet(), (ImageView) ((ViewGroup) view).getChildAt(0));
                 }
             }
 
-            private void simuletsOptionsLogicExecution(final Simulet simulet,final ImageView view) {
-                if(timerButton.getStatus()){
-                    view.setImageResource(simulet.getPictureNameOnTimer());
-                    simulet.getOptionsStatus().setTimer(true);
-                } else{
-                    view.setImageResource(simulet.getPictureOff());
-                    simulet.getOptionsStatus().setTimer(false);
+            private void simuletsOptionsLogicExecution(final Simulet simulet, final ImageView view) {
+                if (timerButton.getStatus()) {
+                    if(simulet.isSimuletOn()){
+                        if (!simulet.getOptionsStatus().isTimer()) {
+                            view.setImageResource(simulet.getPictureNameOnTimer());
+                            simulet.getOptionsStatus().setTimer(true);
+                        } else {
+                            view.setImageResource(simulet.getPictureOn());
+                            simulet.getOptionsStatus().setTimer(false);
+                        }
+                    } else {
+                        if (!simulet.getOptionsStatus().isTimer()) {
+                            view.setImageResource(simulet.getPictureNameOffTimer());
+                            simulet.getOptionsStatus().setTimer(true);
+                        } else {
+                            view.setImageResource(simulet.getPictureOff());
+                            simulet.getOptionsStatus().setTimer(false);
+                        }
+                    }
                 }
+
             }
 
             private int setBackgroundForOptions(Simulet simulet) {
-                if (simulet.getPictureOff() == R.drawable.wiatraczek_off) {
-                    return Consts.OPTIONS_BACKGROUND_COLOR_WIATRACZEK;
-                } else if (simulet.getPictureOff() == R.drawable.zarowka_off) {
-                    return Consts.OPTIONS_BACKGROUND_COLOR_LAMPKA;
-                } else if (simulet.getPictureOff() == R.drawable.samochod_off) {
-                    return Consts.OPTIONS_BACKGROUND_COLOR_SAMOCHOD;
-                } else if (simulet.getPictureOff() == R.drawable.radio_off) {
-                    return Consts.OPTIONS_BACKGROUND_COLOR_RADIO;
-                }
+//                if (simulet.getPictureOff() == R.drawable.wiatraczek_off) {
+//                    return Consts.OPTIONS_BACKGROUND_COLOR_WIATRACZEK;
+//                } else if (simulet.getPictureOff() == R.drawable.zarowka_offf) {
+//                    return Consts.OPTIONS_BACKGROUND_COLOR_LAMPKA;
+//                } else if (simulet.getPictureOff() == R.drawable.samochod_off) {
+//                    return Consts.OPTIONS_BACKGROUND_COLOR_SAMOCHOD;
+//                } else if (simulet.getPictureOff() == R.drawable.radio_off) {
+//                    return Consts.OPTIONS_BACKGROUND_COLOR_RADIO;
+//                }
                 return Color.GRAY;
             }
         });

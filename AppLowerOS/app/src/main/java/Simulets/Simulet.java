@@ -16,6 +16,9 @@ public class Simulet {
     private Set<WebLink> resources;
 
     private int pictureNameOff;
+    private int pictureNameOffPetla;
+    private int pictureNameOffTimer;
+    private int pictureNameOffPetlaTimer;
     private int pictureNameOn;
     private int pictureNameOnPetla;
     private int pictureNameOnTimer;
@@ -62,12 +65,18 @@ public class Simulet {
 
 
     public void setPictures(final int nameOFF,
+                            final int pictureNameOffPetla,
+                            final int pictureNameOffTimer,
+                            final int pictureNameOffPetlaTimer,
                             final int nameON,
                             final int pictureNameOnPetla,
                             final int pictureNameOnTimer,
                             final int pictureNameOnPetlaTimer) {
         pictureNameOff = nameOFF;
         pictureNameOn = nameON;
+        this.pictureNameOffPetla = pictureNameOffPetla;
+        this.pictureNameOffTimer = pictureNameOffTimer;
+        this.pictureNameOffPetlaTimer = pictureNameOffPetlaTimer;
         this.pictureNameOnPetla = pictureNameOnPetla;
         this.pictureNameOnTimer = pictureNameOnTimer;
         this.pictureNameOnPetlaTimer = pictureNameOnPetlaTimer;
@@ -79,6 +88,18 @@ public class Simulet {
 
     public int getPictureOn() {
         return pictureNameOn;
+    }
+
+    public int getPictureNameOffPetla() {
+        return pictureNameOffPetla;
+    }
+
+    public int getPictureNameOffPetlaTimer() {
+        return pictureNameOffPetlaTimer;
+    }
+
+    public int getPictureNameOffTimer() {
+        return pictureNameOffTimer;
     }
 
     public int getPictureNameOnPetla() {
