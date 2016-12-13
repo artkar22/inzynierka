@@ -12,6 +12,7 @@ public class Consts {
     public static int OPTIONS_BACKGROUND_COLOR_LAMPKA = Color.rgb(251, 151, 42);
     public static int OPTIONS_BACKGROUND_COLOR_SAMOCHOD = Color.rgb(239, 234, 225);
     public static int TIME_BEETWEEN_SIMULETS = 2;//W SEKUNDACH
+    public static int TIME_BEETWEEN_SIMULETS_MULTIPLIER = 5; //mnoznik gdy włączona opcja timer
 
 
 }

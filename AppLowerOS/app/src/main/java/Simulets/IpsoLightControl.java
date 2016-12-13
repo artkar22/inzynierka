@@ -10,9 +10,16 @@ import karolakpochwala.apploweros.R;
 public class IpsoLightControl extends Simulet {
     private static final int PICTURE_NAME_OFF = R.drawable.zarowka_off;
     private static final int PICTURE_NAME_ON = R.drawable.zarowka_on;
+    private static final int PICTURE_NAME_ON_PETLA = R.drawable.zarowka_on_petla;
+    private static final int PICTURE_NAME_ON_TIMER = R.drawable.zarowka_on_timer;
+    private static final int PICTURE_NAME_ON_PETLA_TIMER = R.drawable.zarowka_on_petla_timer;
 
     public IpsoLightControl(URI simuletsURI) {
         super(simuletsURI);
-        setPictures(PICTURE_NAME_OFF, PICTURE_NAME_ON);
+        setPictures(PICTURE_NAME_OFF,
+                PICTURE_NAME_ON,
+                PICTURE_NAME_ON_PETLA,
+                PICTURE_NAME_ON_TIMER,
+                PICTURE_NAME_ON_PETLA_TIMER);
     }
 }

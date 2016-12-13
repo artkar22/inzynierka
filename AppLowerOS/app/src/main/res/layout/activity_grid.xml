@@ -24,25 +24,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight=".50"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/buttonex"
+                android:id="@+id/buttonTime"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="@drawable/timer"
+                android:background="@drawable/time"
                 android:layout_gravity="center_horizontal" />
 
             <Button
-                android:id="@+id/buttonex"
+                android:id="@+id/buttonFor"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/petla" />
 
             <Button
-                android:id="@+id/buttonex"
+                android:id="@+id/buttonSpray"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"

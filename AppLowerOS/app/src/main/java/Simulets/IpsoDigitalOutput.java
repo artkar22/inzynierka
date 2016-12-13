@@ -11,6 +11,6 @@ public class IpsoDigitalOutput extends Simulet {
 
     public IpsoDigitalOutput(URI simuletsURI) {
         super(simuletsURI);
-        setPictures(UriToPicture.choosePicture(simuletsURI.toString()), UriToPicture.choosePicture(simuletsURI.toString()));
+        setPictures(UriToPicture.choosePicture(simuletsURI.toString()), UriToPicture.choosePicture(simuletsURI.toString()),-1,-1,-1);//zero do zrobienia(po dodaniu nowych obrazków)
     }
 }

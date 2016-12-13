@@ -2,11 +2,14 @@ package dynamicGridActivity;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.gson.Gson;
 
@@ -30,6 +33,7 @@ import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
 import mainUtils.NetworkUtils;
+import options.timer.TimerButtonListener;
 
 public class GridActivity extends Activity {
 
@@ -40,7 +44,7 @@ public class GridActivity extends Activity {
     private MapGenerator mapGenerator;
     private Gson gSON;
     private CoapClient client;
-//    private Button playButton;
+    private TimerButtonListener timerButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,7 @@ public class GridActivity extends Activity {
         Button playButton = (Button) findViewById(R.id.playButton);
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0));//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
-
+        this.createOptionButtons();
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
             public void onActionDrop() {
@@ -97,7 +101,18 @@ public class GridActivity extends Activity {
                 if (placeInMap.getSimulet() != null) {
                     View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
                     optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
-                    optionsLayout.setVisibility(View.VISIBLE);
+//                    optionsLayout.setVisibility(View.VISIBLE);
+                    this.simuletsOptionsLogicExecution(placeInMap.getSimulet(), (ImageView)((ViewGroup) view).getChildAt(0));
+                }
+            }
+
+            private void simuletsOptionsLogicExecution(final Simulet simulet,final ImageView view) {
+                if(timerButton.getStatus()){
+                    view.setImageResource(simulet.getPictureNameOnTimer());
+                    simulet.getOptionsStatus().setTimer(true);
+                } else{
+                    view.setImageResource(simulet.getPictureOff());
+                    simulet.getOptionsStatus().setTimer(false);
                 }
             }
 
@@ -116,6 +131,12 @@ public class GridActivity extends Activity {
         });
 
 
+    }
+
+    private void createOptionButtons() {
+        this.timerButton = new TimerButtonListener();//add next options
+        Button buttonView = (Button) findViewById(R.id.buttonTime);
+        buttonView.setOnClickListener(timerButton);
     }
 
     @Override

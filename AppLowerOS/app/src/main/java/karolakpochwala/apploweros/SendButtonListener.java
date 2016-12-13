@@ -38,25 +38,36 @@ public class SendButtonListener implements View.OnClickListener {
 //		System.out.println(set.size());
 //        for (PlaceInMapDTO dto : currentMap.getPlacesInMap()) {
         for (Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
-            PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
-            if (dto.getSimulet() != null) {
-                client.setURI(dto.getSimulet().getStatusResource());
+            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
+            final Simulet currentSimulet = dto.getSimulet();
+            if (currentSimulet != null) {
+                client.setURI(currentSimulet.getStatusResource());
                 CoapResponse get = client.get();
                 if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS);
+                    if(put.isSuccess()){
+                        currentSimulet.setSimuletOn(true);
+                    }
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                 } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
                     CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS);
+                    if(put.isSuccess()){
+                        currentSimulet.setSimuletOn(false);
+                    }
+                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
                 }
             }
         }
     }
 
-    private void waitSomeSecs(int secs) {
+    private void waitSomeSecs(final int secs, final boolean simuletsTimerStatus) {
         try {
             synchronized (this) {
-                wait(secs * 1000);
+                if(simuletsTimerStatus){
+                    wait(Consts.TIME_BEETWEEN_SIMULETS_MULTIPLIER * secs * 1000);
+                } else {
+                    wait(secs * 1000);
+                }
             }
         } catch (InterruptedException ex) {
         }
