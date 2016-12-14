@@ -33,6 +33,7 @@ import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
 import mainUtils.NetworkUtils;
+import options.forLoop.ForLoopButtonListener;
 import options.timer.TimerButtonListener;
 
 public class GridActivity extends Activity {
@@ -45,6 +46,7 @@ public class GridActivity extends Activity {
     private Gson gSON;
     private CoapClient client;
     private TimerButtonListener timerButton;
+    private ForLoopButtonListener forLoopButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,7 +110,7 @@ public class GridActivity extends Activity {
 
             private void simuletsOptionsLogicExecution(final Simulet simulet, final ImageView view) {
                 if (timerButton.getStatus()) {
-                    if(simulet.isSimuletOn()){
+                    if (simulet.isSimuletOn()) {
                         if (!simulet.getOptionsStatus().isTimer()) {
                             view.setImageResource(simulet.getPictureNameOnTimer());
                             simulet.getOptionsStatus().setTimer(true);
@@ -147,9 +149,11 @@ public class GridActivity extends Activity {
     }
 
     private void createOptionButtons() {
-        this.timerButton = new TimerButtonListener();//add next options
-        Button buttonView = (Button) findViewById(R.id.buttonTime);
-        buttonView.setOnClickListener(timerButton);
+        this.timerButton = new TimerButtonListener(findViewById(R.id.buttonTime));//add next options
+        (findViewById(R.id.buttonTime)).setOnClickListener(timerButton);
+
+        this.forLoopButton = new ForLoopButtonListener(findViewById(R.id.buttonFor));
+        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
     }
 
     @Override

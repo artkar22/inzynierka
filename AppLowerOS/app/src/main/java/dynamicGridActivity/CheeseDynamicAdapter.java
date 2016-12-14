@@ -47,14 +47,21 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         CheeseViewHolder holder;
+        PlaceInMapDTO currentPlace = currentMap.getPlacesInMap().get(position);
+
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_grid, null);
-            holder = new CheeseViewHolder(convertView);
+            if(currentPlace.getSimulet() != null){
+                holder = new CheeseViewHolder(convertView, currentMap.getPlacesInMap().get(position).getSimulet());
+
+            } else{
+                holder = new CheeseViewHolder(convertView);
+
+            }
             convertView.setTag(holder);
         } else {
             holder = (CheeseViewHolder) convertView.getTag();
         }
-        PlaceInMapDTO currentPlace = currentMap.getPlacesInMap().get(position);
         if (currentPlace.getSimulet() != null) {
             holder.buildPlaceForSimulet(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()),
                     currentPlace.getSimulet().getPictureOff());
@@ -66,13 +73,19 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
     private class CheeseViewHolder {
         private ImageView image;
-
-        private CheeseViewHolder(View view) {
+        private final Simulet simulet;
+        private CheeseViewHolder(View view, Simulet simulet) {
+            this.simulet = simulet;
             image = (ImageView) view.findViewById(R.id.item_img);
         }
 
+        public CheeseViewHolder(View view) {
+            image = (ImageView) view.findViewById(R.id.item_img);
+            simulet = null;
+        }
+
         void buildPlaceForSimulet(String title, int pictureOff) {
-            image.setImageResource(pictureOff);
+            image.setImageResource(getPictureForSimulet());
         }
 
         void build(String title) {
@@ -81,6 +94,23 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
         void buildOnlyText(String title) {
             image.setImageResource(R.drawable.ic_launcher);
+
+        }
+
+        private int getPictureForSimulet(){
+                if(simulet.isSimuletOn()){
+                    if (simulet.getOptionsStatus().isTimer()) {
+                        return simulet.getPictureNameOnTimer();
+                    } else {
+                        return simulet.getPictureOn();
+                    }
+                } else {
+                    if (simulet.getOptionsStatus().isTimer()) {
+                        return simulet.getPictureNameOffTimer();
+                    } else {
+                       return simulet.getPictureOff();
+                    }
+                }
 
         }
     }
