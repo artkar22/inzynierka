@@ -51,10 +51,10 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_grid, null);
-            if(currentPlace.getSimulet() != null){
+            if (currentPlace.getSimulet() != null) {
                 holder = new CheeseViewHolder(convertView, currentMap.getPlacesInMap().get(position).getSimulet());
 
-            } else{
+            } else {
                 holder = new CheeseViewHolder(convertView);
 
             }
@@ -74,6 +74,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     private class CheeseViewHolder {
         private ImageView image;
         private final Simulet simulet;
+
         private CheeseViewHolder(View view, Simulet simulet) {
             this.simulet = simulet;
             image = (ImageView) view.findViewById(R.id.item_img);
@@ -97,21 +98,29 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
         }
 
-        private int getPictureForSimulet(){
-                if(simulet.isSimuletOn()){
-                    if (simulet.getOptionsStatus().isTimer()) {
-                        return simulet.getPictureNameOnTimer();
-                    } else {
-                        return simulet.getPictureOn();
-                    }
-                } else {
-                    if (simulet.getOptionsStatus().isTimer()) {
-                        return simulet.getPictureNameOffTimer();
-                    } else {
-                       return simulet.getPictureOff();
-                    }
+        private int getPictureForSimulet() {
+            if (simulet.isSimuletOn()) {
+                if (simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) { //timer bez loop
+                    return simulet.getPictureNameOnTimer();
+                } else if (simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) { // timer i loop
+                    return simulet.getPictureNameOnPetlaTimer();
+                } else if (!simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) { //loop bez timer
+                    return simulet.getPictureNameOnPetla();
+                } else if (simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) {//bez opcji
+                    return simulet.getPictureOn();
                 }
-
+            } else { //gdy simulet wyłączony
+                if (simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) { //timer bez loop
+                    return simulet.getPictureNameOffTimer();
+                } else if (simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) { // timer i loop
+                    return simulet.getPictureNameOffPetlaTimer();
+                } else if (!simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) { //loop bez timer
+                    return simulet.getPictureNameOffPetla();
+                } else if (!simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) {//bez opcji
+                    return simulet.getPictureOff();
+                }
+            }
+            return simulet.getPictureOff();
         }
     }
 }

@@ -1,39 +1,40 @@
 package options.timer;
 
-import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import karolakpochwala.apploweros.R;
+import options.GlobalOptionsStates;
 
 /**
  * Created by ArturK on 2016-12-13.
  */
 public class TimerButtonListener implements View.OnClickListener {
-    private boolean timerButtonOn;
+//    private boolean timerButtonOn;
     private View buttonView;
     private final static int PICTURE_OFF = R.drawable.time;
     private final static int PICTURE_ON = R.drawable.timer_nasycony;
 
     public TimerButtonListener(View buttonView) {
-        timerButtonOn = false;
+//        timerButtonOn = false;
         this.buttonView = buttonView;
 
     }
 
     @Override
     public void onClick(View v) {
-        if (timerButtonOn == false) {
-            timerButtonOn = true;
+        if (GlobalOptionsStates.TIMER_BUTTON_STATE == false) {
+            GlobalOptionsStates.TIMER_BUTTON_STATE = true;
+            GlobalOptionsStates.FOR_LOOP_BUTTON_STATE = false;
             buttonView.setBackgroundResource(PICTURE_ON);
-        } else if (timerButtonOn == true) {
-            timerButtonOn = false;
+        } else if (GlobalOptionsStates.TIMER_BUTTON_STATE == true) {
+            GlobalOptionsStates.TIMER_BUTTON_STATE = false;
+            GlobalOptionsStates.FOR_LOOP_BUTTON_STATE = false;
             buttonView.setBackgroundResource(PICTURE_OFF);
 
         }
     }
 
-    public boolean getStatus() {
-        return timerButtonOn;
-    }
+//    public boolean getStatus() {
+//        return timerButtonOn;
+//    }
 }
