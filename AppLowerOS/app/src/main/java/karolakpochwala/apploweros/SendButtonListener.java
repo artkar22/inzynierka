@@ -1,5 +1,6 @@
 package karolakpochwala.apploweros;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
@@ -38,37 +41,66 @@ public class SendButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-//        Log.i("HOWMANYSIMULETS", Integer.toString(simulets.size())); //TODO przeiterować po mapie, tam gdzie znacznik simuleta wysłać on na simuleta
-//		Set<WebLink> set = client.discover();
-//		System.out.println(set.size());
-//        for (PlaceInMapDTO dto : currentMap.getPlacesInMap()) {
-
-        for (Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
+        Handler handler1 = new Handler();
+        int delay = 0;
+        for (final Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
             final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
             final Simulet currentSimulet = dto.getSimulet();
             if (currentSimulet != null) {
-                client.setURI(currentSimulet.getStatusResource());
+                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
+                handler1.postDelayed(new Runnable() {
 
-                CoapResponse get = client.get();
-                if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-                    CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-                    if (put.isSuccess()) {
-                        currentSimulet.setSimuletOn(true);
-                        ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-                        gridView.invalidateViews();///TODO not working
-                    }
-                } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-                    waitSomeSecs(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-                    CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-                    if (put.isSuccess()) {
-                        currentSimulet.setSimuletOn(false);
-                        ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-                        gridView.invalidateViews();///TODO not working
+                    @Override
+                    public void run() {
+                        client.setURI(currentSimulet.getStatusResource());
 
+                        CoapResponse get = client.get();
+                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
+                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
+                            if (put.isSuccess()) {
+                                currentSimulet.setSimuletOn(true);
+                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
+
+                            }
+                        } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
+                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
+                            if (put.isSuccess()) {
+                                currentSimulet.setSimuletOn(false);
+                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
+
+                            }
+                        }
                     }
-                }
+                }, delay);
             }
+        }
+//        Handler handler1 = new Handler();
+//        int delay = 0;
+//        for (int a = 0; a < currentMap.getSpecialPlacesIds().size(); a++) {
+//            final Integer specialPlaceId = currentMap.getSpecialPlacesIds().get(a);
+//            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
+//            final Simulet currentSimulet = dto.getSimulet();
+//            if (currentSimulet != null) {
+//                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
+//                handler1.postDelayed(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
+//
+//                    }
+//                }, delay);
+//            }
+//        }
+//
+
+    }
+
+    private int getHowLongToWait(final int secs, final boolean simuletsTimerStatus) {
+        if (simuletsTimerStatus) {
+            return (Consts.TIME_BEETWEEN_SIMULETS_MULTIPLIER * secs * 1000);
+        } else {
+            return (secs * 1000);
         }
     }
 
