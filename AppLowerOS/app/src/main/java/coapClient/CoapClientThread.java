@@ -56,9 +56,10 @@ public class CoapClientThread implements Runnable {
         this.sendButton = sendButton;
         this.client = new CoapClient();
         dialog = new ProgressDialog(mainActivity);
+        setCoap();
     }
 
-    public void run() {
+    private void setCoap() {
         int port = NetworkUtils.PORT;
         //available(port);
         try {
@@ -79,6 +80,9 @@ public class CoapClientThread implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void run() {
         mainActivity.runOnUiThread(new Runnable() {
             public void run() {
                 dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
@@ -94,8 +98,6 @@ public class CoapClientThread implements Runnable {
                 dialog.hide();
             }
         });
-//        SendButtonListener listener = new SendButtonListener(client, simulets);
-//        sendButton.setOnClickListener(listener);
     }
 
     /**

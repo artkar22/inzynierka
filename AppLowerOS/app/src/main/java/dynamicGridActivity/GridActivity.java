@@ -1,6 +1,7 @@
 package dynamicGridActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -230,7 +231,10 @@ public class GridActivity extends Activity {
 
             gridView.stopEditMode();
         } else {
-            super.onBackPressed();
+            Intent intent=new Intent();
+            setResult(0, intent);
+            finish();//finishing activity
+//            super.onBackPressed();
         }
     }
 

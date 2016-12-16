@@ -21,8 +21,11 @@ import dynamicGridActivity.GridActivity;
 import mainUtils.Consts;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final int BACK_TO_MAIN_MENU_AND_TRIGGER_SIMULET_SEARCHING = 0;
     private ApplicationData applicationData;
+    private Thread coapClient;
+    private CoapClientThread coapRunnable;
+    private Button sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         applicationData = new ApplicationData();
-        Button sendButton = (Button) findViewById(R.id.button1);
-        Thread CoapClient = new Thread(new CoapClientThread(sendButton, applicationData.getSimulets(),
-                this));
-        CoapClient.start();
+        sendButton = (Button) findViewById(R.id.button1);
+        coapRunnable = new CoapClientThread(sendButton, applicationData.getSimulets(),
+                this);
+        coapClient = new Thread(coapRunnable);
+        coapClient.start();
 
         Button newGameButton = (Button) findViewById(R.id.newGameButton);
         newGameButton.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
                 String appDataGson = gS.toJson(applicationData);
                 newGame.putExtra(Consts.APPLICATION_DATA, appDataGson);
                 newGame.setClass(MainActivity.this, GridActivity.class);
-                startActivity(newGame);
+                startActivityForResult(newGame, BACK_TO_MAIN_MENU_AND_TRIGGER_SIMULET_SEARCHING);
+
             }
         });
     }
@@ -73,4 +78,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == BACK_TO_MAIN_MENU_AND_TRIGGER_SIMULET_SEARCHING) {
+//            applicationData.removeAllSimulets(); TODO wyszukiwanie po wstecz
+////            coapRunnable.runDiscovering();
+////            coapClient.run();
+////            Thread.State state = coapClient.getState();
+////            state.name();
+//            coapClient.notify();
+//            coapRunnable = new CoapClientThread(sendButton, applicationData.getSimulets(),
+//                    this);
+//            coapClient = new Thread(coapRunnable);
+//            coapClient.start();
+        }
+    }
 }

@@ -43,4 +43,7 @@ public class ApplicationData {
         //TODO gdy utrace łączność usuwam simulet
     }
 
+    public void removeAllSimulets() {
+        simulets = new ArrayList<>();
+    }
 }
