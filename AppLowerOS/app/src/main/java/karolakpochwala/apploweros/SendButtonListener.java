@@ -1,7 +1,6 @@
 package karolakpochwala.apploweros;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -10,10 +9,6 @@ import android.widget.LinearLayout;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
-
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
@@ -74,26 +69,6 @@ public class SendButtonListener implements View.OnClickListener {
                 }, delay);
             }
         }
-//        Handler handler1 = new Handler();
-//        int delay = 0;
-//        for (int a = 0; a < currentMap.getSpecialPlacesIds().size(); a++) {
-//            final Integer specialPlaceId = currentMap.getSpecialPlacesIds().get(a);
-//            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
-//            final Simulet currentSimulet = dto.getSimulet();
-//            if (currentSimulet != null) {
-//                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-//                handler1.postDelayed(new Runnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                    }
-//                }, delay);
-//            }
-//        }
-//
-
     }
 
     private int getHowLongToWait(final int secs, final boolean simuletsTimerStatus) {

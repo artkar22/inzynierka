@@ -4,6 +4,11 @@
   "numberOfRows": 4,
   "map": [
     {
+      "id": 12,
+      "dropAllowed": "true",
+      "alreadyDropped": "false"
+    },
+    {
       "id": 13,
       "dropAllowed": "true",
       "alreadyDropped": "false"
