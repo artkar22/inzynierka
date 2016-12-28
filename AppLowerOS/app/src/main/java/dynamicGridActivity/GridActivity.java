@@ -2,7 +2,6 @@ package dynamicGridActivity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.network.CoapEndpoint;
@@ -30,15 +30,17 @@ import java.util.ArrayList;
 import ApplicationData.ApplicationData;
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
+import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.TriggerSimuletButtonListener;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
+import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
 import mainUtils.NetworkUtils;
 import options.GlobalOptionsStates;
-import options.forLoop.ForLoopButtonListener;
 import options.timer.TimerButtonListener;
 
 public class GridActivity extends Activity {
@@ -51,7 +53,7 @@ public class GridActivity extends Activity {
     private Gson gSON;
     private CoapClient client;
     private TimerButtonListener timerButton;
-    private ForLoopButtonListener forLoopButton;
+//    private ForLoopButtonListener forLoopButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,10 +66,14 @@ public class GridActivity extends Activity {
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
 
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
+        createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
         gridView.setAdapter(new CheeseDynamicAdapter(this,
                 applicationData.getSimulets(),
-                applicationData.getAllMaps().get(0))); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+                applicationData.getTriggers().get(0),
+                applicationData.getAllMaps().get(0),
+                true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        add callback to stop edit mode if needed
+        createMapForEachTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
         this.createNewClient();
         this.setInitialStatusForSimulets();
         Button playButton = (Button) findViewById(R.id.playButton);
@@ -117,9 +123,10 @@ public class GridActivity extends Activity {
             private void simuletsOptionsLogicExecution(final Simulet simulet, final ImageView view) {
                 if (GlobalOptionsStates.TIMER_BUTTON_STATE) {//ustawiam timerbutton na simulecie
                     timerButtonLogic(simulet, view);
-                } else if (GlobalOptionsStates.FOR_LOOP_BUTTON_STATE) {
-                    forLoopButtonLogic(simulet, view);
                 }
+//                else if (GlobalOptionsStates.FOR_LOOP_BUTTON_STATE) { ////NO_LONGER_ACTIVE
+//                    forLoopButtonLogic(simulet, view);
+//                }
 
             }
 
@@ -155,53 +162,53 @@ public class GridActivity extends Activity {
                 }
             }
 
-            private void forLoopButtonLogic(final Simulet simulet, final ImageView view) {
-                if (simulet.isSimuletOn()) {
-                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
-                        view.setImageResource(simulet.getPictureNameOnPetla());
-                        simulet.getOptionsStatus().setForLoop(true);
-                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
-                        view.setImageResource(simulet.getPictureNameOnPetlaTimer());
-                        simulet.getOptionsStatus().setForLoop(true);
-                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
-                        view.setImageResource(simulet.getPictureOn());
-                        simulet.getOptionsStatus().setForLoop(false);
-                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
-                        view.setImageResource(simulet.getPictureNameOnTimer());
-                        simulet.getOptionsStatus().setForLoop(false);
-                    }
-                } else { //tu wszystko jak wyżej tylko dla wyłączonego simuletu
-                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
-                        view.setImageResource(simulet.getPictureNameOffPetla());
-                        simulet.getOptionsStatus().setForLoop(true);
-                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
-                        view.setImageResource(simulet.getPictureNameOffPetlaTimer());
-                        simulet.getOptionsStatus().setForLoop(true);
-                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
-                        view.setImageResource(simulet.getPictureOff());
-                        simulet.getOptionsStatus().setForLoop(false);
-                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
-                        view.setImageResource(simulet.getPictureNameOffTimer());
-                        simulet.getOptionsStatus().setForLoop(false);
-                    }
-                }
-            }
-
-            private int setBackgroundForOptions(Simulet simulet) {
-//                if (simulet.getPictureOff() == R.drawable.wiatraczek_off) {
-//                    return Consts.OPTIONS_BACKGROUND_COLOR_WIATRACZEK;
-//                } else if (simulet.getPictureOff() == R.drawable.zarowka_offf) {
-//                    return Consts.OPTIONS_BACKGROUND_COLOR_LAMPKA;
-//                } else if (simulet.getPictureOff() == R.drawable.samochod_off) {
-//                    return Consts.OPTIONS_BACKGROUND_COLOR_SAMOCHOD;
-//                } else if (simulet.getPictureOff() == R.drawable.radio_off) {
-//                    return Consts.OPTIONS_BACKGROUND_COLOR_RADIO;
+//            private void forLoopButtonLogic(final Simulet simulet, final ImageView view) {
+//                if (simulet.isSimuletOn()) {
+//                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
+//                        view.setImageResource(simulet.getPictureNameOnPetla());
+//                        simulet.getOptionsStatus().setForLoop(true);
+//                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
+//                        view.setImageResource(simulet.getPictureNameOnPetlaTimer());
+//                        simulet.getOptionsStatus().setForLoop(true);
+//                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
+//                        view.setImageResource(simulet.getPictureOn());
+//                        simulet.getOptionsStatus().setForLoop(false);
+//                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
+//                        view.setImageResource(simulet.getPictureNameOnTimer());
+//                        simulet.getOptionsStatus().setForLoop(false);
+//                    }
+//                } else { //tu wszystko jak wyżej tylko dla wyłączonego simuletu
+//                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
+//                        view.setImageResource(simulet.getPictureNameOffPetla());
+//                        simulet.getOptionsStatus().setForLoop(true);
+//                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
+//                        view.setImageResource(simulet.getPictureNameOffPetlaTimer());
+//                        simulet.getOptionsStatus().setForLoop(true);
+//                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
+//                        view.setImageResource(simulet.getPictureOff());
+//                        simulet.getOptionsStatus().setForLoop(false);
+//                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
+//                        view.setImageResource(simulet.getPictureNameOffTimer());
+//                        simulet.getOptionsStatus().setForLoop(false);
+//                    }
 //                }
-                return Color.GRAY;
-            }
+//            }
+
         });
 
 
+    }
+
+    private void createMapForFirstTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
+        if (triggers.size() > 0) {
+            triggers.get(0).setMyPlacesInMap(currentMap.getPlacesInMap());
+        }
+    }
+
+    private void createMapForEachTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
+        for (int x = 1; x < triggers.size(); x++) {
+            triggers.get(x).deepCopyOfPlacesInMap(triggers.get(0).getMyPlacesInMap());
+        }
     }
 
     private void setInitialStatusForSimulets() {
@@ -215,14 +222,42 @@ public class GridActivity extends Activity {
                 simulet.setSimuletOn(false);
             }
         }
+        for (TriggerSimulet trigger : applicationData.getTriggers()) {
+            client.setURI(trigger.getStatusResource());
+            client.observe(new CoapHandler() {
+                @Override
+                public void onLoad(CoapResponse response) {
+                    response.getResponseText();
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+        }
     }
 
     private void createOptionButtons() {
+        for (int x = 0; x < this.applicationData.getTriggers().size(); x++) {//TODO bezsensowne rozwiązanie ale nie mam chwilowo pomysłu
+            if (x == 0) {
+                TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(findViewById(R.id.trigger0),
+                        gridView, this.applicationData.getTriggers().get(x), this.applicationData);
+                (findViewById(R.id.trigger0)).setOnClickListener(listener);
+                findViewById(R.id.trigger0).setVisibility(View.VISIBLE);
+            } else if (x == 1) {
+                TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(findViewById(R.id.trigger1),
+                        gridView, this.applicationData.getTriggers().get(x), this.applicationData);
+                (findViewById(R.id.trigger1)).setOnClickListener(listener);
+                findViewById(R.id.trigger1).setVisibility(View.VISIBLE);
+            }
+
+        }
         this.timerButton = new TimerButtonListener(findViewById(R.id.buttonTime));//add next options
         (findViewById(R.id.buttonTime)).setOnClickListener(timerButton);
 
-        this.forLoopButton = new ForLoopButtonListener(findViewById(R.id.buttonFor));
-        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
+//        this.forLoopButton = new ForLoopButtonListener(findViewById(R.id.buttonFor));
+//        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
     }
 
     @Override
@@ -231,7 +266,7 @@ public class GridActivity extends Activity {
 
             gridView.stopEditMode();
         } else {
-            Intent intent=new Intent();
+            Intent intent = new Intent();
             setResult(0, intent);
             finish();//finishing activity
 //            super.onBackPressed();

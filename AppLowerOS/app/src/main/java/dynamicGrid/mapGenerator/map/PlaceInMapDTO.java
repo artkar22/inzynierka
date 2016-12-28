@@ -56,4 +56,5 @@ public class PlaceInMapDTO {
     public Simulet getSimulet() {
         return simulet;
     }
+
 }

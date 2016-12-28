@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Button;
 
 import org.eclipse.californium.core.CoapClient;
+import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.network.config.NetworkConfig;
@@ -29,6 +30,7 @@ import java.util.Enumeration;
 import Simulets.IpsoDigitalOutput;
 import Simulets.IpsoLightControl;
 import Simulets.Simulet;
+import TriggerSimulets.TriggerSimulet;
 import karolakpochwala.apploweros.MainActivity;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.NetworkUtils;
@@ -45,14 +47,16 @@ public class CoapClientThread implements Runnable {
     private static final int MAX_PORT_NUMBER = 12000;
     private Button sendButton;
     private ArrayList<Simulet> simulets;
+    private ArrayList<TriggerSimulet> triggers;
     private CoapClient client;
     private MainActivity mainActivity;
     private ProgressDialog dialog;
 
     public CoapClientThread(final Button sendButton, final ArrayList<Simulet> simulets,
-                            final MainActivity mainActivity) {
+                            final ArrayList<TriggerSimulet> triggers, final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.simulets = simulets;
+        this.triggers = triggers;
         this.sendButton = sendButton;
         this.client = new CoapClient();
         dialog = new ProgressDialog(mainActivity);
@@ -176,7 +180,7 @@ public class CoapClientThread implements Runnable {
                     }
                     if (broadcast.getClass().equals(Inet4Address.class)) {
                         int port = 11110;
-                        while (port < 11115) {
+                        while (port < 11118) {
                             URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/id");
 
                             Log.i("uri", uriOfSimuletsId.toString());
@@ -210,6 +214,9 @@ public class CoapClientThread implements Runnable {
         } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_OUTPUT))) {
             IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
             simulets.add(simulet);
+        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_INPUT))) {
+            TriggerSimulet trigger = new TriggerSimulet(uri);
+            triggers.add(trigger);
         }
     }
 
@@ -218,6 +225,12 @@ public class CoapClientThread implements Runnable {
             for (Simulet simulet : simulets) {
                 client.setURI(simulet.getUriOfSimulet().toString());
                 simulet.setResources(client.discover());
+            }
+        }
+        if (triggers.size() > 0) {
+            for (TriggerSimulet trigger : triggers) {
+                client.setURI(trigger.getUriOfTrigger().toString());
+                trigger.setResources(client.discover());
             }
         }
     }

@@ -5,6 +5,7 @@ import org.eclipse.californium.core.CoapClient;
 import java.util.ArrayList;
 
 import Simulets.Simulet;
+import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 
 /**
@@ -14,11 +15,13 @@ public class ApplicationData {
 
     private ArrayList<MapDTO> allMaps;
     private ArrayList<Simulet> simulets;
+    private ArrayList<TriggerSimulet> triggers;
 
 
     public ApplicationData() {
         allMaps = new ArrayList<>();
         simulets = new ArrayList<>();
+        triggers = new ArrayList<>();
     }
 
     public void addMap(final MapDTO newMap) {
@@ -45,5 +48,9 @@ public class ApplicationData {
 
     public void removeAllSimulets() {
         simulets = new ArrayList<>();
+    }
+
+    public ArrayList<TriggerSimulet> getTriggers() {
+        return triggers;
     }
 }

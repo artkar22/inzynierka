@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
+import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
@@ -18,16 +19,24 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
 
     private LinkedList<PlaceInMapDTO> mItems = new LinkedList<PlaceInMapDTO>();
     private MapDTO currentMap;
+    private TriggerSimulet triggerSimulet;
 
-    public BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
+    public BaseDynamicGridAdapter(Context context, MapDTO currentMap, TriggerSimulet triggerSimulet) {
         mContext = context;
         this.currentMap = currentMap;
-        init(currentMap.getPlacesInMap());
+        this.triggerSimulet = triggerSimulet;
+        init(triggerSimulet.getMyPlacesInMap());
     }
 
     private void init(LinkedList<PlaceInMapDTO> items) {
         addAllStableId(items);
         this.mItems = items;
+    }
+    public void setItems(LinkedList<PlaceInMapDTO> items){
+        clear();
+        addAllStableId(items);
+        this.mItems = items;
+        notifyDataSetChanged();
     }
 
 
@@ -42,6 +51,7 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
         mItems.clear();
         notifyDataSetChanged();
     }
+
 
 //    public void remove(Object item) {
 //        mItems.remove(item);

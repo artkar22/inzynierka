@@ -6,7 +6,10 @@ package dynamicGrid;
  * Time: 23:44
  */
 
+import java.util.LinkedList;
+
 import dynamicGrid.mapGenerator.map.MapDTO;
+import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
 /**
  * Any adapter used with DynamicGridView must implement DynamicGridAdapterInterface.
@@ -32,4 +35,5 @@ public interface DynamicGridAdapterInterface {
      */
     boolean canReorder(int position);
 
+    void setItems(LinkedList<PlaceInMapDTO> items);
 }

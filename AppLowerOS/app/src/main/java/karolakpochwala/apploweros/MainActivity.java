@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
         applicationData = new ApplicationData();
         sendButton = (Button) findViewById(R.id.button1);
-        coapRunnable = new CoapClientThread(sendButton, applicationData.getSimulets(),
+        coapRunnable = new CoapClientThread(sendButton, applicationData.getSimulets(), applicationData.getTriggers(),
                 this);
         coapClient = new Thread(coapRunnable);
         coapClient.start();

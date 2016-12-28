@@ -27,6 +27,22 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/trigger0"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/spray"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/trigger1"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/petla"
+                android:visibility="gone"/>
+
+            <Button
                 android:id="@+id/buttonTime"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -38,15 +54,8 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/petla" />
-
-            <Button
-                android:id="@+id/buttonSpray"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/spray" />
-
+                android:background="@drawable/petla"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

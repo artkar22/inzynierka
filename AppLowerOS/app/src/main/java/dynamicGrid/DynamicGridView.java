@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 
 import static java.lang.Math.abs;
@@ -133,6 +134,13 @@ public class DynamicGridView extends GridView {
 
     public void setOnDragListener(OnDragListener dragListener) {
         this.mDragListener = dragListener;
+    }
+
+    /**
+     * Metoda która ma umożliwić podmianę mapy dla różnych triggerów
+     */
+    public void switchView(LinkedList<PlaceInMapDTO> items) {
+        getAdapterInterface().setItems(items);
     }
 
     /**
@@ -740,87 +748,7 @@ public class DynamicGridView extends GridView {
                         bestViewIndex = id;
 //                        currentBestView = view;
                     }
-//                    if(abs(deltaY)>abs(deltaX)){
-//                        if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
-//                                  newDiffY<diffY  ){
-//                            diffY = newDiffY;
-//                            currentBestView = view;
-//                        }
-//                    } else {
-//                        if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
-//                                newDiffX<diffX  ){
-//                            diffX = newDiffX;
-//                            currentBestView = view;
-//                        }
-//                    }
-//                    if (//aboveRight(targetColumnRowPair, mobileColumnRowPair) &&
-//                            newDiffX<diffX && newDiffY<diffY  ){
-//                        diffX = newDiffX;
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                    }
-// else if(aboveLeft(targetColumnRowPair, mobileColumnRowPair)
-//                            && newDiffX<diffX && newDiffY<diffY
-//                            ){
-//                        diffX = newDiffX;
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                    } else if(belowRight(targetColumnRowPair, mobileColumnRowPair)
-//                            && newDiffX<diffX && newDiffY<diffY){
-//                        diffX = newDiffX;
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                } else if(belowLeft(targetColumnRowPair, mobileColumnRowPair)
-//                            && newDiffX<diffX && newDiffY<diffY){
-//                        diffX = newDiffX;
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                    } else if(above(targetColumnRowPair, mobileColumnRowPair)
-//                            && newDiffY<diffY){
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                    } else if(below(targetColumnRowPair, mobileColumnRowPair)
-//                            && newDiffY<diffY){
-//                        diffY = newDiffY;
-//                        currentBestView = view;
-//                } else if(right(targetColumnRowPair, mobileColumnRowPair)
-//                        && newDiffX<diffX){
-//                        diffX = newDiffX;
-//                        currentBestView = view;
-//                } else if(left(targetColumnRowPair, mobileColumnRowPair)
-//                        && newDiffX<diffX){
-//                        diffX = newDiffX;
-//                        currentBestView = view;
-//                }
                 }
-//                if (aboveRight(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal < view.getBottom() && deltaXTotal > view.getLeft()){
-//                    targetView = getTargetView(view);
-//                } else if(aboveLeft(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal < view.getBottom() && deltaXTotal < view.getRight()
-//                        ){
-//                    targetView = getTargetView(view);
-//                } else if(belowRight(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal > view.getTop() && deltaXTotal > view.getLeft()){
-//                    targetView = getTargetView(view);
-//                } else if(belowLeft(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal > view.getTop() && deltaXTotal < view.getRight()){
-//                    targetView = getTargetView(view);
-//                } else if(above(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal < view.getBottom() - mOverlapIfSwitchStraightLine){
-//                    targetView = getTargetView(view);
-//                } else if(below(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaYTotal > view.getTop() + mOverlapIfSwitchStraightLine){
-//                    targetView = getTargetView(view);
-//                } else if(right(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaXTotal > view.getLeft() + mOverlapIfSwitchStraightLine){
-//                    targetView = getTargetView(view);
-//                } else if(left(targetColumnRowPair, mobileColumnRowPair)
-//                        && deltaXTotal < view.getRight() - mOverlapIfSwitchStraightLine &&
-//                        (currentBestX==0 || (currentBestX!=0 && view.getRight()<currentBestX))){
-//                    currentBestX = view.getRight();
-//                    targetView = getTargetView(view);
-//                }
                 idINDEX = idINDEX + 1;
             }
         }
