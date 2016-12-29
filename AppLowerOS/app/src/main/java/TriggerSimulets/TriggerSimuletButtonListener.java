@@ -34,7 +34,7 @@ public class TriggerSimuletButtonListener implements View.OnClickListener {
                 appData.getSimulets(),
                 triggerSimulet,
                 appData.getAllMaps().get(0),
-                false)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+                false));
 //        gridView.switchView(triggerSimulet.getMyPlacesInMap());
     }
 

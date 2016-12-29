@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import ApplicationData.ApplicationData;
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
+import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
 import TriggerSimulets.TriggerSimuletButtonListener;
 import dynamicGrid.DynamicGridView;
@@ -53,6 +54,8 @@ public class GridActivity extends Activity {
     private Gson gSON;
     private CoapClient client;
     private TimerButtonListener timerButton;
+    private TriggerActionThread triggerActionThread;
+    private Thread triggerThread;
 //    private ForLoopButtonListener forLoopButton;
 
     @Override
@@ -80,6 +83,9 @@ public class GridActivity extends Activity {
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
         this.createOptionButtons();
+        triggerActionThread = new TriggerActionThread(gridView, applicationData, this, client);
+        triggerThread = new Thread(triggerActionThread);
+        triggerThread.start();
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
             public void onActionDrop() {
@@ -222,12 +228,24 @@ public class GridActivity extends Activity {
                 simulet.setSimuletOn(false);
             }
         }
-        for (TriggerSimulet trigger : applicationData.getTriggers()) {
+        for (final TriggerSimulet trigger : applicationData.getTriggers()) {
             client.setURI(trigger.getStatusResource());
             client.observe(new CoapHandler() {
                 @Override
                 public void onLoad(CoapResponse response) {
-                    response.getResponseText();
+//                    response.getResponseText();
+                    if (!response.getResponseText().equals("no_action")) {
+                        triggerActionThread.addToQueue(trigger);
+                        triggerActionThread.run();
+//                        if(triggerThread.getState().equals(Thread.State.TERMINATED)){
+//                            triggerThread.start();
+//                        }
+//                        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
+//                                applicationData.getSimulets(),
+//                                trigger,
+//                                applicationData.getAllMaps().get(0),
+//                                false));
+                    }
                 }
 
                 @Override
