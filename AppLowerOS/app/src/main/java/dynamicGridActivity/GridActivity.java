@@ -70,11 +70,19 @@ public class GridActivity extends Activity {
 
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
-        gridView.setAdapter(new CheeseDynamicAdapter(this,
-                applicationData.getSimulets(),
-                applicationData.getTriggers().get(0),
-                applicationData.getAllMaps().get(0),
-                true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+        if(applicationData.getTriggers().size()>0){
+            gridView.setAdapter(new CheeseDynamicAdapter(this,
+                    applicationData.getSimulets(),
+                    applicationData.getTriggers().get(0),
+                    applicationData.getAllMaps().get(0),
+                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+        } else{
+            gridView.setAdapter(new CheeseDynamicAdapter(this,
+                    applicationData.getSimulets(),
+                    null,
+                    applicationData.getAllMaps().get(0),
+                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+        }
 //        add callback to stop edit mode if needed
         createMapForEachTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
         this.createNewClient();

@@ -106,12 +106,17 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         CheeseViewHolder holder;
-        PlaceInMapDTO currentPlace = trigger.getMyPlacesInMap().get(position);
+        PlaceInMapDTO currentPlace;
+        if(trigger != null){
+            currentPlace = trigger.getMyPlacesInMap().get(position);
+        }else{
+            currentPlace = currentMap.getPlacesInMap().get(position);
+        }
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_grid, null);
             if (currentPlace.getSimulet() != null) {
-                holder = new CheeseViewHolder(convertView, trigger.getMyPlacesInMap().get(position).getSimulet());
+                holder = new CheeseViewHolder(convertView, currentPlace.getSimulet());
 
             } else {
                 holder = new CheeseViewHolder(convertView);
