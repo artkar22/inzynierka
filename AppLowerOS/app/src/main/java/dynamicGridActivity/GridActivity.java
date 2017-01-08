@@ -53,7 +53,6 @@ public class GridActivity extends Activity {
     private MapGenerator mapGenerator;
     private Gson gSON;
     private CoapClient client;
-    private TimerButtonListener timerButton;
     private TriggerActionThread triggerActionThread;
     private Thread triggerThread;
 //    private ForLoopButtonListener forLoopButton;
@@ -69,14 +68,14 @@ public class GridActivity extends Activity {
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
 
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
-        createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
-        if(applicationData.getTriggers().size()>0){
+        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
+        if (applicationData.getTriggers().size() > 0) {
             gridView.setAdapter(new CheeseDynamicAdapter(this,
                     applicationData.getSimulets(),
                     applicationData.getTriggers().get(0),
                     applicationData.getAllMaps().get(0),
                     true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
-        } else{
+        } else {
             gridView.setAdapter(new CheeseDynamicAdapter(this,
                     applicationData.getSimulets(),
                     null,
@@ -84,16 +83,18 @@ public class GridActivity extends Activity {
                     true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
         }
 //        add callback to stop edit mode if needed
-        createMapForEachTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
+        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
         this.createNewClient();
-        this.setInitialStatusForSimulets();
+        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
         Button playButton = (Button) findViewById(R.id.playButton);
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
-        this.createOptionButtons();
+        OptionButtonsUtils.createOptionButtons(this, gridView, applicationData);
         triggerActionThread = new TriggerActionThread(gridView, applicationData, this, client);
         triggerThread = new Thread(triggerActionThread);
         triggerThread.start();
+        refreshButtonHandling();
+
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
             public void onActionDrop() {
@@ -213,77 +214,13 @@ public class GridActivity extends Activity {
 
     }
 
-    private void createMapForFirstTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
-        if (triggers.size() > 0) {
-            triggers.get(0).setMyPlacesInMap(currentMap.getPlacesInMap());
+    private void refreshButtonHandling() {
+        final Button refreshButton = (Button) findViewById(R.id.refresh);
+        if (applicationData.getSimulets().size() < 4 || applicationData.getTriggers().size() < 2) {
+            refreshButton.setVisibility(View.VISIBLE);
         }
-    }
-
-    private void createMapForEachTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
-        for (int x = 1; x < triggers.size(); x++) {
-            triggers.get(x).deepCopyOfPlacesInMap(triggers.get(0).getMyPlacesInMap());
-        }
-    }
-
-    private void setInitialStatusForSimulets() {
-        final ArrayList<Simulet> listOfSimulets = applicationData.getSimulets();
-        for (Simulet simulet : listOfSimulets) {
-            client.setURI(simulet.getStatusResource());
-            CoapResponse get = client.get();
-            if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-                simulet.setSimuletOn(true);
-            } else {
-                simulet.setSimuletOn(false);
-            }
-        }
-        for (final TriggerSimulet trigger : applicationData.getTriggers()) {
-            client.setURI(trigger.getStatusResource());
-            client.observe(new CoapHandler() {
-                @Override
-                public void onLoad(CoapResponse response) {
-//                    response.getResponseText();
-                    if (!response.getResponseText().equals("no_action")) {
-                        triggerActionThread.addToQueue(trigger);
-                        triggerActionThread.run();
-//                        if(triggerThread.getState().equals(Thread.State.TERMINATED)){
-//                            triggerThread.start();
-//                        }
-//                        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
-//                                applicationData.getSimulets(),
-//                                trigger,
-//                                applicationData.getAllMaps().get(0),
-//                                false));
-                    }
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            });
-        }
-    }
-
-    private void createOptionButtons() {
-        for (int x = 0; x < this.applicationData.getTriggers().size(); x++) {//TODO bezsensowne rozwiązanie ale nie mam chwilowo pomysłu
-            if (x == 0) {
-                TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(findViewById(R.id.trigger0),
-                        gridView, this.applicationData.getTriggers().get(x), this.applicationData);
-                (findViewById(R.id.trigger0)).setOnClickListener(listener);
-                findViewById(R.id.trigger0).setVisibility(View.VISIBLE);
-            } else if (x == 1) {
-                TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(findViewById(R.id.trigger1),
-                        gridView, this.applicationData.getTriggers().get(x), this.applicationData);
-                (findViewById(R.id.trigger1)).setOnClickListener(listener);
-                findViewById(R.id.trigger1).setVisibility(View.VISIBLE);
-            }
-
-        }
-        this.timerButton = new TimerButtonListener(findViewById(R.id.buttonTime));//add next options
-        (findViewById(R.id.buttonTime)).setOnClickListener(timerButton);
-
-//        this.forLoopButton = new ForLoopButtonListener(findViewById(R.id.buttonFor));
-//        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
+        refreshButton.setVisibility(View.VISIBLE);//TODO usunąć, na potrzeby testów
+        refreshButton.setOnClickListener(new RefreshButtonListener(applicationData, this, client, triggerActionThread));
     }
 
     @Override

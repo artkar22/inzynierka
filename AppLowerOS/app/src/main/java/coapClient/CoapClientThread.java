@@ -31,6 +31,7 @@ import Simulets.IpsoDigitalOutput;
 import Simulets.IpsoLightControl;
 import Simulets.Simulet;
 import TriggerSimulets.TriggerSimulet;
+import dynamicGridActivity.GridActivity;
 import karolakpochwala.apploweros.MainActivity;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.NetworkUtils;
@@ -45,22 +46,30 @@ public class CoapClientThread implements Runnable {
 
     private static final int MIN_PORT_NUMBER = 0;
     private static final int MAX_PORT_NUMBER = 12000;
-    private Button sendButton;
     private ArrayList<Simulet> simulets;
     private ArrayList<TriggerSimulet> triggers;
     private CoapClient client;
     private MainActivity mainActivity;
+    private GridActivity gridActivity;
     private ProgressDialog dialog;
 
-    public CoapClientThread(final Button sendButton, final ArrayList<Simulet> simulets,
-                            final ArrayList<TriggerSimulet> triggers, final MainActivity mainActivity) {
+    public CoapClientThread(final ArrayList<Simulet> simulets, final ArrayList<TriggerSimulet> triggers,
+                            final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
         this.simulets = simulets;
         this.triggers = triggers;
-        this.sendButton = sendButton;
         this.client = new CoapClient();
         dialog = new ProgressDialog(mainActivity);
         setCoap();
+    }
+
+    public CoapClientThread(final ArrayList<Simulet> simulets, final ArrayList<TriggerSimulet> triggers,
+                            final GridActivity gridActivity, final CoapClient client) {
+        this.gridActivity = gridActivity;
+        this.simulets = simulets;
+        this.triggers = triggers;
+        this.client = client;
+        dialog = new ProgressDialog(gridActivity);
     }
 
     private void setCoap() {
@@ -87,21 +96,39 @@ public class CoapClientThread implements Runnable {
     }
 
     public void run() {
-        mainActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
-                dialog.setCancelable(false);
-                dialog.setInverseBackgroundForced(false);
-                dialog.show();
-            }
-        });
-        discoverDevices();
-        discoverResourcesOfEachDevice();
-        mainActivity.runOnUiThread(new Runnable() {
-            public void run() {
-                dialog.hide();
-            }
-        });
+        if (mainActivity != null) {
+            mainActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
+                    dialog.setCancelable(false);
+                    dialog.setInverseBackgroundForced(false);
+                    dialog.show();
+                }
+            });
+            discoverDevices();
+            discoverResourcesOfEachDevice();
+            mainActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    dialog.hide();
+                }
+            });
+        } else if (gridActivity != null) {
+            gridActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
+                    dialog.setCancelable(false);
+//                    dialog.setInverseBackgroundForced(false);
+                    dialog.show();
+                }
+            });
+            discoverDevices();
+            discoverResourcesOfEachDevice();
+            gridActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    dialog.hide();
+                }
+            });
+        }
     }
 
     /**
