@@ -2,12 +2,9 @@ package coapClient;
 
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.util.Log;
-import android.widget.Button;
 
 import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.network.config.NetworkConfig;
@@ -33,7 +30,6 @@ import Simulets.Simulet;
 import TriggerSimulets.TriggerSimulet;
 import dynamicGridActivity.GridActivity;
 import karolakpochwala.apploweros.MainActivity;
-import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.NetworkUtils;
 
 import static ipsoConfig.ipsoDefinitions.*;
@@ -109,25 +105,15 @@ public class CoapClientThread implements Runnable {
             discoverResourcesOfEachDevice();
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    dialog.hide();
+                    dialog.dismiss();
                 }
             });
         } else if (gridActivity != null) {
-            gridActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
-                    dialog.setCancelable(false);
-//                    dialog.setInverseBackgroundForced(false);
-                    dialog.show();
-                }
-            });
-            discoverDevices();
-            discoverResourcesOfEachDevice();
-            gridActivity.runOnUiThread(new Runnable() {
-                public void run() {
-                    dialog.hide();
-                }
-            });
+            dialog = new ProgressDialog(gridActivity);
+            dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");
+            dialog.setCancelable(false);
+            dialog.setInverseBackgroundForced(false);
+            dialog.show();
         }
     }
 

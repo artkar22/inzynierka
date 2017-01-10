@@ -26,7 +26,7 @@ import options.timer.TimerButtonListener;
 public class OptionButtonsUtils {
 
 
-    static void createOptionButtons(final GridActivity activity, final DynamicGridView gridView, final ApplicationData applicationData) {
+    public static void createOptionButtons(final GridActivity activity, final DynamicGridView gridView, final ApplicationData applicationData) {
         for (int x = 0; x < applicationData.getTriggers().size(); x++) {//TODO bezsensowne rozwiązanie ale nie mam chwilowo pomysłu
             if (x == 0) {
                 TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(activity.findViewById(R.id.trigger0),
@@ -48,20 +48,20 @@ public class OptionButtonsUtils {
 //        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
     }
 
-    static void createMapForFirstTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
+    public static void createMapForFirstTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
         if (triggers.size() > 0) {
             triggers.get(0).deepCopyOfPlacesInMap(currentMap.getPlacesInMap());
         }
     }
 
-    static void createMapForEachTrigger(ArrayList<TriggerSimulet> triggers) {
+    public static void createMapForEachTrigger(ArrayList<TriggerSimulet> triggers) {
         for (int x = 1; x < triggers.size(); x++) {
             triggers.get(x).deepCopyOfPlacesInMap(triggers.get(0).getMyPlacesInMap());
         }
     }
 
-    static void setInitialStatusForSimulets(final ApplicationData applicationData, final CoapClient client,
-                                            final TriggerActionThread triggerActionThread) {
+    public static void setInitialStatusForSimulets(final ApplicationData applicationData, final CoapClient client,
+                                                   final TriggerActionThread triggerActionThread) {
         final ArrayList<Simulet> listOfSimulets = applicationData.getSimulets();
         for (Simulet simulet : listOfSimulets) {
             client.setURI(simulet.getStatusResource());
