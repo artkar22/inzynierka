@@ -11,7 +11,7 @@ public class Simulet {
 
     private static final String STATUS = "on_off";
     private boolean simuletOn;
-    private String nameOfSimulet;
+    private String id;
     private URI simuletsURI;
     private Set<WebLink> resources;
 
@@ -27,13 +27,17 @@ public class Simulet {
     private OptionsStatus optionsStatus;
 
     public Simulet(URI simuletsURI) {
-        //this.nameOfSimulet = nameOfSimulet;
+        //this.id = id;
         this.simuletsURI = simuletsURI;
         optionsStatus = new OptionsStatus();
     }
 
-    public String getNameOfSimulet() {
-        return nameOfSimulet;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public URI getUriOfSimulet() {

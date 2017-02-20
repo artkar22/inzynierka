@@ -223,12 +223,15 @@ public class CoapClientThread implements Runnable {
 
         if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL))) {
             IpsoLightControl simulet = new IpsoLightControl(uri);
+            simulet.setId(resp.getResponseText());
             simulets.add(simulet);
         } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_OUTPUT))) {
             IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
+            simulet.setId(resp.getResponseText());
             simulets.add(simulet);
         } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_INPUT))) {
             TriggerSimulet trigger = new TriggerSimulet(uri);
+            trigger.setId(resp.getResponseText());
             triggers.add(trigger);
         }
     }

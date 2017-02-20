@@ -26,18 +26,24 @@ import options.timer.TimerButtonListener;
 public class OptionButtonsUtils {
 
 
-    public static void createOptionButtons(final GridActivity activity, final DynamicGridView gridView, final ApplicationData applicationData) {
+    public static void createOptionButtons(final GridActivity activity, final DynamicGridView gridView,
+                                           final ApplicationData applicationData, final CoapClient client) {
         for (int x = 0; x < applicationData.getTriggers().size(); x++) {//TODO bezsensowne rozwiązanie ale nie mam chwilowo pomysłu
+            final TriggerSimulet currentTrigger = applicationData.getTriggers().get(x);
+            client.setURI(currentTrigger.getNameResource());
+            currentTrigger.setName(client.get().getResponseText());
             if (x == 0) {
                 TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(activity.findViewById(R.id.trigger0),
-                        gridView, applicationData.getTriggers().get(x), applicationData);
+                        gridView, currentTrigger, applicationData);
                 (activity.findViewById(R.id.trigger0)).setOnClickListener(listener);
                 activity.findViewById(R.id.trigger0).setVisibility(View.VISIBLE);
+                setPictureForOption(currentTrigger, activity.findViewById(R.id.trigger0));
             } else if (x == 1) {
                 TriggerSimuletButtonListener listener = new TriggerSimuletButtonListener(activity.findViewById(R.id.trigger1),
-                        gridView, applicationData.getTriggers().get(x), applicationData);
+                        gridView, currentTrigger, applicationData);
                 (activity.findViewById(R.id.trigger1)).setOnClickListener(listener);
                 activity.findViewById(R.id.trigger1).setVisibility(View.VISIBLE);
+                setPictureForOption(currentTrigger, activity.findViewById(R.id.trigger1));
             }
 
         }
@@ -46,6 +52,14 @@ public class OptionButtonsUtils {
 
 //        this.forLoopButton = new ForLoopButtonListener(findViewById(R.id.buttonFor));
 //        (findViewById(R.id.buttonFor)).setOnClickListener(forLoopButton);
+    }
+
+    private static void setPictureForOption(final TriggerSimulet currentTrigger, final View viewById) {
+        if (currentTrigger.getName().equals("Trigger_1")) {
+                viewById.setBackgroundResource(R.drawable.trigger_1_off);
+        } else if (currentTrigger.getName().equals("Trigger_2")) {
+            viewById.setBackgroundResource(R.drawable.trigger_2_off);
+        }
     }
 
     public static void createMapForFirstTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {

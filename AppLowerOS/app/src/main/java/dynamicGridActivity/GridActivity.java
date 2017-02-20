@@ -85,14 +85,15 @@ public class GridActivity extends Activity {
 //        add callback to stop edit mode if needed
         OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
         this.createNewClient();
-        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
         Button playButton = (Button) findViewById(R.id.playButton);
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
-        OptionButtonsUtils.createOptionButtons(this, gridView, applicationData);
         triggerActionThread = new TriggerActionThread(gridView, applicationData, this, client);
         triggerThread = new Thread(triggerActionThread);
         triggerThread.start();
+        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
+        OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
+
         refreshButtonHandling();
 
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {

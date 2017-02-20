@@ -15,9 +15,11 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
  */
 public class TriggerSimulet {
     private static final String STATUS = "on_off";
+    private static final String NAME = "NAME";
 
     private boolean triggerOn;
-    private String nameOfTrigger;
+    private String id;
+    private String name;
     private URI triggersURI;
     private Set<WebLink> resources;
 
@@ -26,6 +28,22 @@ public class TriggerSimulet {
     public TriggerSimulet(URI triggersURI) {
         //this.nameOfSimulet = nameOfSimulet;
         this.triggersURI = triggersURI;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public URI getUriOfTrigger() {
@@ -39,6 +57,15 @@ public class TriggerSimulet {
     public String getStatusResource() {
         for (WebLink weblink : resources) {
             if (weblink.getURI().endsWith(STATUS)) {
+                return triggersURI + weblink.getURI();
+            }
+        }
+        return null;
+    }
+
+    public String getNameResource() {
+        for (WebLink weblink : resources) {
+            if (weblink.getURI().endsWith(NAME)) {
                 return triggersURI + weblink.getURI();
             }
         }

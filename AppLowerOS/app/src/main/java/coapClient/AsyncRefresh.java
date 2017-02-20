@@ -73,7 +73,7 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
                 true));
         OptionButtonsUtils.createMapForEachTrigger(triggers);
         OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
-        OptionButtonsUtils.createOptionButtons(gridActivity, gridView, applicationData);
+        OptionButtonsUtils.createOptionButtons(gridActivity, gridView, applicationData, client);
         dialog.dismiss();
     }
 
