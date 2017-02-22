@@ -2,7 +2,10 @@ package coapClient;
 
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ImageView;
 
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
@@ -103,6 +106,7 @@ public class CoapClientThread implements Runnable {
             });
             discoverDevices();
             discoverResourcesOfEachDevice();
+            getMainIcons();
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     dialog.dismiss();
@@ -152,28 +156,6 @@ public class CoapClientThread implements Runnable {
 
         return false;
     }
-
-//    private String getIPofCurrentMachine() {
-//        try {
-//            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-//            while (interfaces.hasMoreElements()) {
-//                NetworkInterface iface = interfaces.nextElement();
-//                if (iface.isLoopback() || !iface.isUp() || iface.isVirtual() || iface.isPointToPoint())
-//                    continue;
-//
-//                Enumeration<InetAddress> addresses = iface.getInetAddresses();
-//                while (addresses.hasMoreElements()) {
-//                    InetAddress addr = addresses.nextElement();
-//
-//                    final String ip = addr.getHostAddress();
-//                    if (Inet4Address.class == addr.getClass()) return ip;
-//                }
-//            }
-//        } catch (SocketException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return null;
-//    }
 
 
     private void discoverDevices() {
@@ -247,6 +229,27 @@ public class CoapClientThread implements Runnable {
             for (TriggerSimulet trigger : triggers) {
                 client.setURI(trigger.getUriOfTrigger().toString());
                 trigger.setResources(client.discover());
+            }
+        }
+    }
+    private void getMainIcons() {
+        if (simulets.size() > 0) {
+            for (Simulet simulet : simulets) {
+                client.setURI(simulet.getMainIconResource());
+                CoapResponse resp = client.get();
+                BitmapFactory.Options opt = new BitmapFactory.Options();
+                opt.inDither = true;
+                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                byte[] imageByteArray = resp.getPayload();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
+                simulet.setMainIconBitmap(bitmap);
+
+            }
+        }
+        if (triggers.size() > 0) {
+            for (TriggerSimulet trigger : triggers) {
+                client.setURI(trigger.getMainIconResource());
+                CoapResponse resp = client.get();
             }
         }
     }

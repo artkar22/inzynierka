@@ -1,19 +1,27 @@
 package Simulets;
 
+import android.graphics.Bitmap;
+
 import java.net.URI;
 import java.util.Set;
 
 import org.eclipse.californium.core.WebLink;
 
+import ExceptionHandling.ExceptionCodes;
 import options.OptionsStatus;
+
+import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
+import static karolakpochwala.apploweros.ResourcesList.MAIN_ICON_RESOURCE_ID;
+
 
 public class Simulet {
 
-    private static final String STATUS = "on_off";
     private boolean simuletOn;
     private String id;
     private URI simuletsURI;
     private Set<WebLink> resources;
+
+    private Bitmap mainIconBitmap;
 
     private int pictureNameOff;
     private int pictureNameOffPetla;
@@ -50,11 +58,20 @@ public class Simulet {
 
     public String getStatusResource() {
         for (WebLink weblink : resources) {
-            if (weblink.getURI().endsWith(STATUS)) {
+            if (weblink.getURI().endsWith(STATUS_RESOURCE_ID)) {
                 return simuletsURI + weblink.getURI();
             }
         }
-        return null;
+        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
+    }
+
+    public String getMainIconResource() {
+        for (WebLink weblink : resources) {
+            if (weblink.getURI().endsWith(MAIN_ICON_RESOURCE_ID)) {
+                return simuletsURI + weblink.getURI();
+            }
+        }
+        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
     }
 
     //get on or off
@@ -84,6 +101,14 @@ public class Simulet {
         this.pictureNameOnPetla = pictureNameOnPetla;
         this.pictureNameOnTimer = pictureNameOnTimer;
         this.pictureNameOnPetlaTimer = pictureNameOnPetlaTimer;
+    }
+
+    public Bitmap getMainIconBitmap() {
+        return mainIconBitmap;
+    }
+
+    public void setMainIconBitmap(Bitmap mainIconBitmap) {
+        this.mainIconBitmap = mainIconBitmap;
     }
 
     public int getPictureOff() {

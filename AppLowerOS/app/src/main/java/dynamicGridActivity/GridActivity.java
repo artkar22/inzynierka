@@ -2,13 +2,16 @@ package dynamicGridActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.graphics.drawable.DrawableUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 
@@ -95,6 +98,16 @@ public class GridActivity extends Activity {
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
 
         refreshButtonHandling();
+
+        LinearLayout simuletsBar = (LinearLayout)findViewById(R.id.simulet_options);
+        for(int i=0;i<this.applicationData.getSimulets().size();i++)
+        {
+            ImageView ii= new ImageView(this);
+            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
+            simuletsBar.addView(ii);
+        }
+
+
 
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override

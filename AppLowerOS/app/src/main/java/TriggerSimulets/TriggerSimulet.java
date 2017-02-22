@@ -8,13 +8,15 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.Set;
 
+import ExceptionHandling.ExceptionCodes;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
+import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
+import static karolakpochwala.apploweros.ResourcesList.MAIN_ICON_RESOURCE_ID;
 
 /**
  * Created by ArturK on 2016-12-27.
  */
 public class TriggerSimulet {
-    private static final String STATUS = "on_off";
     private static final String NAME = "NAME";
 
     private boolean triggerOn;
@@ -56,7 +58,7 @@ public class TriggerSimulet {
 
     public String getStatusResource() {
         for (WebLink weblink : resources) {
-            if (weblink.getURI().endsWith(STATUS)) {
+            if (weblink.getURI().endsWith(STATUS_RESOURCE_ID)) {
                 return triggersURI + weblink.getURI();
             }
         }
@@ -70,6 +72,15 @@ public class TriggerSimulet {
             }
         }
         return null;
+    }
+
+    public String getMainIconResource() {
+        for (WebLink weblink : resources) {
+            if (weblink.getURI().endsWith(MAIN_ICON_RESOURCE_ID)) {
+                return triggersURI + weblink.getURI();
+            }
+        }
+        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
     }
 
     public LinkedList<PlaceInMapDTO> getMyPlacesInMap() {
