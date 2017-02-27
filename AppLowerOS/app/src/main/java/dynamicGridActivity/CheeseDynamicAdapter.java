@@ -27,46 +27,20 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     public CheeseDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets,
                                 TriggerSimulet trigger, MapDTO currentMap, boolean bindSimulets) {
         super(context, currentMap, trigger);
-        this.trigger = trigger;
+        this.trigger = trigger;//TODO to zastąpić na listę triggerów i robić z nimi to co z normalnymi simuletami
 //        createMapForEachTrigger(triggers, currentMap);
         this.listOfSimulets = listOfSimulets;
 //        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
         this.currentMap = currentMap;//TODO tymczasowo pierwsza mapa tylko
-//        bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap);
-        if(bindSimulets){
-            bindPlacesInMapToSimulets(this.listOfSimulets);
-        }
+        bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap);
+
     }
 
-//    private void createMapForEachTrigger(ArrayList<TriggerSimulet> triggers, MapDTO currentMap) {
-//        for (int x = 0; x < triggers.size(); x++) {
-//            if (x != 0) {
-//                triggers.get(x).deepCopyOfPlacesInMap(currentMap.getPlacesInMap());
-//            } else {
-//                triggers.get(x).setMyPlacesInMap(currentMap.getPlacesInMap());
-//            }
-//        }
-//    }
-
-//    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets, MapDTO currentMap) {
-//        int x = 0;
-//        for (Simulet simulet : listOfSimulets) {
-//            for (int index = x; index < currentMap.getPlacesInMap().size(); index++) {
-//                PlaceInMapDTO place = currentMap.getPlacesInMap().get(index);
-//                if (place.isDropAllowed() && !place.isItMap() && place.getSimulet() == null) {
-//                    place.setSimulet(simulet);
-//                    break;
-//                }
-//                x++;
-//            }
-//        }
-//    }
-
-    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets) {
+    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets, MapDTO currentMap) {
         int x = 0;
         for (Simulet simulet : listOfSimulets) {
-            for (int index = x; index < trigger.getMyPlacesInMap().size(); index++) {
-                PlaceInMapDTO place = trigger.getMyPlacesInMap().get(index);
+            for (int index = x; index < currentMap.getPlacesInMap().size(); index++) {
+                PlaceInMapDTO place = currentMap.getPlacesInMap().get(index);
                 if (place.isDropAllowed() && !place.isItMap() && place.getSimulet() == null) {
                     place.setSimulet(simulet);
                     break;
@@ -75,6 +49,20 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             }
         }
     }
+
+//    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets) {
+//        int x = 0;
+//        for (Simulet simulet : listOfSimulets) {
+//            for (int index = x; index < trigger.getMyPlacesInMap().size(); index++) {
+//                PlaceInMapDTO place = trigger.getMyPlacesInMap().get(index);
+//                if (place.isDropAllowed() && !place.isItMap() && place.getSimulet() == null) {
+//                    place.setSimulet(simulet);
+//                    break;
+//                }
+//                x++;
+//            }
+//        }
+//    }
 
 //    @Override
 //    public View getView(int position, View convertView, ViewGroup parent) {

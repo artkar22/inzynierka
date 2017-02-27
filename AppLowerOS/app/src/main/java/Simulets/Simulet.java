@@ -3,6 +3,7 @@ package Simulets;
 import android.graphics.Bitmap;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.californium.core.WebLink;
@@ -10,6 +11,7 @@ import org.eclipse.californium.core.WebLink;
 import ExceptionHandling.ExceptionCodes;
 import options.OptionsStatus;
 
+import static karolakpochwala.apploweros.ResourcesList.STATES_LIST_RESOURCE;
 import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
 import static karolakpochwala.apploweros.ResourcesList.MAIN_ICON_RESOURCE_ID;
 
@@ -22,6 +24,7 @@ public class Simulet {
     private Set<WebLink> resources;
 
     private Bitmap mainIconBitmap;
+    private List<SimuletsState> states;
 
     private int pictureNameOff;
     private int pictureNameOffPetla;
@@ -74,6 +77,15 @@ public class Simulet {
         throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
     }
 
+    public String getStatesListResource() {
+        for (WebLink weblink : resources) {
+            if (weblink.getURI().endsWith(STATES_LIST_RESOURCE)) {
+                return simuletsURI + weblink.getURI();
+            }
+        }
+        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
+    }
+
     //get on or off
     public boolean isSimuletOn() {
         return simuletOn;
@@ -109,6 +121,14 @@ public class Simulet {
 
     public void setMainIconBitmap(Bitmap mainIconBitmap) {
         this.mainIconBitmap = mainIconBitmap;
+    }
+
+    public List<SimuletsState> getStates() {
+        return states;
+    }
+
+    public void setStates(List<SimuletsState> states) {
+        this.states = states;
     }
 
     public int getPictureOff() {

@@ -58,7 +58,6 @@ public class GridActivity extends Activity {
     private CoapClient client;
     private TriggerActionThread triggerActionThread;
     private Thread triggerThread;
-//    private ForLoopButtonListener forLoopButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,22 +70,22 @@ public class GridActivity extends Activity {
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
 
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
-        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
-        if (applicationData.getTriggers().size() > 0) {
-            gridView.setAdapter(new CheeseDynamicAdapter(this,
-                    applicationData.getSimulets(),
-                    applicationData.getTriggers().get(0),
-                    applicationData.getAllMaps().get(0),
-                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
-        } else {
+//        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
+//        if (applicationData.getTriggers().size() > 0) {
+//            gridView.setAdapter(new CheeseDynamicAdapter(this,
+//                    applicationData.getSimulets(),
+//                    applicationData.getTriggers().get(0),
+//                    applicationData.getAllMaps().get(0),
+//                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+//        } else {
             gridView.setAdapter(new CheeseDynamicAdapter(this,
                     applicationData.getSimulets(),
                     null,
                     applicationData.getAllMaps().get(0),
                     true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
-        }
-//        add callback to stop edit mode if needed
-        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
+//        }
+////        add callback to stop edit mode if needed
+//        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
         this.createNewClient();
         Button playButton = (Button) findViewById(R.id.playButton);
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
@@ -98,14 +97,7 @@ public class GridActivity extends Activity {
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
 
         refreshButtonHandling();
-
-        LinearLayout simuletsBar = (LinearLayout)findViewById(R.id.simulet_options);
-        for(int i=0;i<this.applicationData.getSimulets().size();i++)
-        {
-            ImageView ii= new ImageView(this);
-            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
-            simuletsBar.addView(ii);
-        }
+        createSimuletsAndTriggersBar();
 
 
 
@@ -228,6 +220,22 @@ public class GridActivity extends Activity {
 
     }
 
+    private void createSimuletsAndTriggersBar() {
+        LinearLayout simuletsBar = (LinearLayout)findViewById(R.id.simulet_options);
+        for(int i=0;i<this.applicationData.getTriggers().size();i++)
+        {
+            ImageView ii= new ImageView(this);
+            ii.setImageBitmap(this.applicationData.getTriggers().get(i).getMainIconBitmap());
+            simuletsBar.addView(ii);
+        }
+        for(int i=0;i<this.applicationData.getSimulets().size();i++)
+        {
+            ImageView ii= new ImageView(this);
+            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
+            simuletsBar.addView(ii);
+        }
+    }
+
     private void refreshButtonHandling() {
         final Button refreshButton = (Button) findViewById(R.id.refresh);
         if (applicationData.getSimulets().size() < 4 || applicationData.getTriggers().size() < 2) {
@@ -256,9 +264,6 @@ public class GridActivity extends Activity {
             InetAddress addr = InetAddress.getByName(NetworkUtils.getIPofCurrentMachine());
             InetSocketAddress adr = new InetSocketAddress(addr, NetworkUtils.PORT);
             URI uri = new URI("coap://192.168.2.2:11111");
-//	            URI uri = new URI("coap://192.168.2.2:11111/Lampka");
-//	            //URI uri = new URI("coap://127.0.0.1:11111");
-//            client = new CoapClient(uri);
             client.setURI(uri.toString());
             CoapEndpoint endpoint = new CoapEndpoint(adr, NetworkConfig.createStandardWithoutFile());
             endpoint.start();

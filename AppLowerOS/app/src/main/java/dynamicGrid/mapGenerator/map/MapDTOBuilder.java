@@ -41,7 +41,7 @@ public abstract class MapDTOBuilder {
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
             boolean isItMapFlag = true;
             boolean dropAllowed = false;
-            if (checkIfCurrentIndexShouldBeItemCollection(numberOfColumns, currentPlaceInMapIndex)) {
+            if (checkIfCurrentIndexShouldBeItemCollection(numberOfColumns, numberOfRows, currentPlaceInMapIndex)) {
                 isItMapFlag = false;
                 dropAllowed = true;
             }
@@ -53,8 +53,9 @@ public abstract class MapDTOBuilder {
         return dto;
     }
 
-    private static boolean checkIfCurrentIndexShouldBeItemCollection(final int numberOfColumns, final int currentPlaceInMapIndex) {
-        if (currentPlaceInMapIndex + 1 >= numberOfColumns && ((currentPlaceInMapIndex + 1) % (numberOfColumns)) == 0) {
+    private static boolean checkIfCurrentIndexShouldBeItemCollection(final int numberOfColumns, final int numberOfRows, final int currentPlaceInMapIndex) {
+        final int halfOfTheMap = (numberOfColumns * numberOfRows)/2;
+        if (currentPlaceInMapIndex <halfOfTheMap) {
             return true;
         }
         return false;

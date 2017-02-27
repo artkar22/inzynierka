@@ -1,5 +1,7 @@
 package TriggerSimulets;
 
+import android.graphics.Bitmap;
+
 import com.rits.cloning.Cloner;
 
 import org.eclipse.californium.core.WebLink;
@@ -24,6 +26,7 @@ public class TriggerSimulet {
     private String name;
     private URI triggersURI;
     private Set<WebLink> resources;
+    private Bitmap mainIconBitmap;
 
     private LinkedList<PlaceInMapDTO> myPlacesInMap;
 
@@ -96,4 +99,13 @@ public class TriggerSimulet {
         myPlacesInMap = cloner.deepClone(placesInMap);
 
     }
+
+    public Bitmap getMainIconBitmap() {
+        return mainIconBitmap;
+    }
+
+    public void setMainIconBitmap(Bitmap mainIconBitmap) {
+        this.mainIconBitmap = mainIconBitmap;
+    }
+
 }
