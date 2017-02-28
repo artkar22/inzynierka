@@ -1,27 +1,6 @@
 {
   "mapID": "firstMap",
   "numberOfColumns": 7,
-  "numberOfRows": 4,
-  "map": [
-    {
-      "id": 12,
-      "dropAllowed": "true",
-      "alreadyDropped": "false"
-    },
-    {
-      "id": 13,
-      "dropAllowed": "true",
-      "alreadyDropped": "false"
-    },
-    {
-      "id": 14,
-      "dropAllowed": "true",
-      "alreadyDropped": "false"
-    },
-    {
-      "id": 15,
-      "dropAllowed": "true",
-      "alreadyDropped": "false"
-    }
-  ]
+  "numberOfRows": 5,
+  "numberOfStateRows":2
 }

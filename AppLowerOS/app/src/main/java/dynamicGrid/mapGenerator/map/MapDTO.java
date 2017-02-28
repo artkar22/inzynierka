@@ -11,6 +11,7 @@ public class MapDTO {
     private String mapID;
     private int numberOfColums;
     private int numberOfRows;
+    private int numberOfStatesRows;
     private ArrayList<Integer> specialPlacesIds;//zczytywanie idków gdzie mapaa
     private LinkedList<PlaceInMapDTO> placesInMap;
 
@@ -55,5 +56,9 @@ public class MapDTO {
         for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
             specialPlacesIds.add(Integer.valueOf(specialPlace.getPlaceInMapId()));
         }
+    }
+
+    public void setNumberOfStatesRows(int numberOfStatesRows) {
+        this.numberOfStatesRows = numberOfStatesRows;
     }
 }

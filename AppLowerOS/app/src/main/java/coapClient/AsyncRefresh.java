@@ -64,17 +64,17 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-        OptionButtonsUtils.createMapForFirstTrigger(triggers, allMaps.get(0));
-        final DynamicGridView gridView = (DynamicGridView) gridActivity.findViewById(R.id.dynamic_grid);
-        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
-                simulets,
-                triggers.get(0),
-                allMaps.get(0),
-                true));
-        OptionButtonsUtils.createMapForEachTrigger(triggers);
-        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
-        OptionButtonsUtils.createOptionButtons(gridActivity, gridView, applicationData, client);
-        dialog.dismiss();
+//        OptionButtonsUtils.createMapForFirstTrigger(triggers, allMaps.get(0));
+//        final DynamicGridView gridView = (DynamicGridView) gridActivity.findViewById(R.id.dynamic_grid);
+//        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
+//                simulets,
+//                triggers.get(0),
+//                allMaps.get(0),
+//                true));
+//        OptionButtonsUtils.createMapForEachTrigger(triggers);
+//        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
+//        OptionButtonsUtils.createOptionButtons(gridActivity, gridView, applicationData, client);
+//        dialog.dismiss();
     }
 
     private void discoverDevices() {

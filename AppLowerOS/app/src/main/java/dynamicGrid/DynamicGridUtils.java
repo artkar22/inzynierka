@@ -36,12 +36,12 @@ public class DynamicGridUtils {
      * @param secondIndex The position of the second item in the list.
      */
     public static void swap(LinkedList<PlaceInMapDTO> list, int firstIndex, int secondIndex) {
-        if (list.get(secondIndex).isDropAllowed() && list.get(firstIndex).isDropAllowed()) {
+//        if (list.get(secondIndex).isDropAllowed() && list.get(firstIndex).isDropAllowed()) { TODO ODPOWIEDNI WARUNEK
 //            PlaceInMapDTO firstObject = list.get(firstIndex);
             PlaceInMapDTO secondObject = list.get(secondIndex);
 //            list.set(firstIndex, secondObject);
             list.set(secondIndex, list.set(firstIndex, secondObject));
-        }
+//        }
 
     }
 

@@ -29,9 +29,10 @@ public class MapGenerator {
             final String mapID = reader.getString(Consts.MAP_ID);
             final int numberOfColumns = reader.getInt(Consts.NUMBER_OF_COLUMNS);
             final int numberOfRows = reader.getInt(Consts.NUMBER_OF_ROWS);
-            final JSONArray jsonMapPlaces = reader.getJSONArray(Consts.MAP);
-            final ArrayList<PlaceInMapDTO> specialPlacesInMap = getSpecialPlacesFromJson(jsonMapPlaces);
-            return MapDTOBuilder.buildMapDto(mapID, numberOfColumns, numberOfRows, specialPlacesInMap);
+            final int numberOfStateRows = reader.getInt(Consts.NUMBER_OF_STATE_ROWS);
+//            final JSONArray jsonMapPlaces = reader.getJSONArray(Consts.MAP);
+//            final ArrayList<PlaceInMapDTO> specialPlacesInMap = getSpecialPlacesFromJson(jsonMapPlaces);
+            return MapDTOBuilder.buildMapDto(mapID, numberOfColumns, numberOfRows, numberOfStateRows);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -56,22 +57,22 @@ public class MapGenerator {
         return json;
     }
 
-    private static ArrayList<PlaceInMapDTO> getSpecialPlacesFromJson(JSONArray jsonMapPlaces) {
-        ArrayList<PlaceInMapDTO> places = new ArrayList<>();
-        for (int x = 0; x < jsonMapPlaces.length(); x++) {
-            try {
-                JSONObject jsonPlace = jsonMapPlaces.getJSONObject(x);
-                PlaceInMapDTO placeDto = PlaceInMapDTOBuilder
-                        .buildPlaceInMapDto(jsonPlace.getInt(Consts.ID),
-                                jsonPlace.getBoolean(Consts.DROP_ALLOWED),
-                                jsonPlace.getBoolean(Consts.ALREADY_DROPPED),
-                                false);
-                places.add(placeDto);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return places;
-            }
-        }
-        return places;
-    }
+//    private static ArrayList<PlaceInMapDTO> getSpecialPlacesFromJson(JSONArray jsonMapPlaces) {
+//        ArrayList<PlaceInMapDTO> places = new ArrayList<>();
+//        for (int x = 0; x < jsonMapPlaces.length(); x++) {
+//            try {
+//                JSONObject jsonPlace = jsonMapPlaces.getJSONObject(x);
+//                PlaceInMapDTO placeDto = PlaceInMapDTOBuilder
+//                        .buildPlaceInMapDto(jsonPlace.getInt(Consts.ID),
+//                                jsonPlace.getBoolean(Consts.DROP_ALLOWED),
+//                                jsonPlace.getBoolean(Consts.ALREADY_DROPPED),
+//                                false);
+//                places.add(placeDto);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//                return places;
+//            }
+//        }
+//        return places;
+//    }
 }

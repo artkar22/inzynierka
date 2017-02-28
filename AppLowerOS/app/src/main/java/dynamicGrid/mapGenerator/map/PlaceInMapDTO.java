@@ -1,6 +1,7 @@
 package dynamicGrid.mapGenerator.map;
 
 import Simulets.Simulet;
+import Simulets.SimuletsState;
 
 /**
  * Created by ArturK on 2016-09-24.
@@ -8,10 +9,10 @@ import Simulets.Simulet;
 public class PlaceInMapDTO {
 
     private int placeInMapId;
-    private boolean dropAllowed;
-    private boolean alreadyDropped;
+//    private boolean dropAllowed;
+//    private boolean alreadyDropped;
     private boolean isItMap;//if not then it is Items container
-    private Simulet simulet;//id of simulet binded to that place
+    private SimuletsState simuletsState; //stateBindedToThatPlace
 
     public int getPlaceInMapId() {
         return placeInMapId;
@@ -21,21 +22,21 @@ public class PlaceInMapDTO {
         this.placeInMapId = placeInMapId;
     }
 
-    public boolean isDropAllowed() {
-        return dropAllowed;
-    }
-
-    public void setDropAllowed(final boolean dropAllowed) {
-        this.dropAllowed = dropAllowed;
-    }
-
-    public boolean isAlreadyDropped() {
-        return alreadyDropped;
-    }
-
-    public void setAlreadyDropped(final boolean alreadyDropped) {
-        this.alreadyDropped = alreadyDropped;
-    }
+//    public boolean isDropAllowed() {
+//        return dropAllowed;
+//    }
+//
+//    public void setDropAllowed(final boolean dropAllowed) {
+//        this.dropAllowed = dropAllowed;
+//    }
+//
+//    public boolean isAlreadyDropped() {
+//        return alreadyDropped;
+//    }
+//
+//    public void setAlreadyDropped(final boolean alreadyDropped) {
+//        this.alreadyDropped = alreadyDropped;
+//    }
 
     public boolean isItMap() {
         return isItMap;
@@ -45,16 +46,16 @@ public class PlaceInMapDTO {
         this.isItMap = isItMap;
     }
 
-    public void setSimulet(final Simulet simulets) {
-        this.simulet = simulets;
+    public void setSimuletState(final SimuletsState simuletState) {
+        this.simuletsState = simuletState;
     }
 
-    public void unbindSimulet() {
-        simulet = null;
+    public void unbindSimuletState() {
+        simuletsState = null;
     }
 
-    public Simulet getSimulet() {
-        return simulet;
+    public SimuletsState getSimuletState() {
+        return simuletsState;
     }
 
 }

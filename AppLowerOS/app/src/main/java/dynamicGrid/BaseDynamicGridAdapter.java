@@ -19,17 +19,11 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
 
     private LinkedList<PlaceInMapDTO> mItems = new LinkedList<PlaceInMapDTO>();
     private MapDTO currentMap;
-    private TriggerSimulet triggerSimulet;
 
-    public BaseDynamicGridAdapter(Context context, MapDTO currentMap, TriggerSimulet triggerSimulet) {
+    public BaseDynamicGridAdapter(Context context, MapDTO currentMap) {
         mContext = context;
         this.currentMap = currentMap;
-        this.triggerSimulet = triggerSimulet;
-        if (this.triggerSimulet != null) {
-            init(triggerSimulet.getMyPlacesInMap());
-        } else {
-            init(currentMap.getPlacesInMap());
-        }
+        init(currentMap.getPlacesInMap());
     }
 
     private void init(LinkedList<PlaceInMapDTO> items) {

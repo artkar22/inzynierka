@@ -8,10 +8,14 @@ import org.eclipse.californium.core.WebLink;
 
 import java.net.URI;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import ExceptionHandling.ExceptionCodes;
+import Simulets.SimuletsState;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
+
+import static karolakpochwala.apploweros.ResourcesList.STATES_LIST_RESOURCE;
 import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
 import static karolakpochwala.apploweros.ResourcesList.MAIN_ICON_RESOURCE_ID;
 
@@ -29,6 +33,7 @@ public class TriggerSimulet {
     private Bitmap mainIconBitmap;
 
     private LinkedList<PlaceInMapDTO> myPlacesInMap;
+    private List<SimuletsState> states;
 
     public TriggerSimulet(URI triggersURI) {
         //this.nameOfSimulet = nameOfSimulet;
@@ -86,6 +91,15 @@ public class TriggerSimulet {
         throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
     }
 
+    public String getStatesListResource() {
+        for (WebLink weblink : resources) {
+            if (weblink.getURI().endsWith(STATES_LIST_RESOURCE)) {
+                return triggersURI + weblink.getURI();
+            }
+        }
+        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
+    }
+
     public LinkedList<PlaceInMapDTO> getMyPlacesInMap() {
         return myPlacesInMap;
     }
@@ -108,4 +122,10 @@ public class TriggerSimulet {
         this.mainIconBitmap = mainIconBitmap;
     }
 
+    public void setStates(List<SimuletsState> states) {
+        this.states = states;
+    }
+    public List<SimuletsState> getStates() {
+        return states;
+    }
 }

@@ -109,8 +109,8 @@ public class CoapClientThread implements Runnable {
             });
             discoverDevices();
             discoverResourcesOfEachDevice();
-            getMainIcons();
-            getStateLists();
+//            getMainIcons();
+//            getStateLists();
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
                     dialog.dismiss();
@@ -236,72 +236,4 @@ public class CoapClientThread implements Runnable {
             }
         }
     }
-
-    private void getMainIcons() {
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getMainIconResource());
-                CoapResponse resp = client.get();
-                BitmapFactory.Options opt = new BitmapFactory.Options();
-                opt.inDither = true;
-                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                byte[] imageByteArray = resp.getPayload();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-                simulet.setMainIconBitmap(bitmap);
-
-            }
-        }
-        if (triggers.size() > 0) {
-            for (TriggerSimulet trigger : triggers) {
-                client.setURI(trigger.getMainIconResource());
-                CoapResponse resp = client.get();
-                BitmapFactory.Options opt = new BitmapFactory.Options();
-                opt.inDither = true;
-                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                byte[] imageByteArray = resp.getPayload();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-                trigger.setMainIconBitmap(bitmap);
-            }
-        }
-    }
-
-    private void getStateLists() {
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getStatesListResource());
-                CoapResponse resp = client.get();
-                final SimuletsStateToSend[] recieved = SerializationUtils.deserialize(resp.getPayload());
-                simulet.setStates(createListOfStates(recieved));
-            }
-        }
-//        if (triggers.size() > 0) { TODO
-//            for (TriggerSimulet trigger : triggers) {
-//                client.setURI(trigger.getMainIconResource());
-//                CoapResponse resp = client.get();
-//                BitmapFactory.Options opt = new BitmapFactory.Options();
-//                opt.inDither = true;
-//                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                byte[] imageByteArray = resp.getPayload();
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-//                trigger.setMainIconBitmap(bitmap);
-//            }
-//        }
-    }
-
-    private List<SimuletsState> createListOfStates(final SimuletsStateToSend[] recieved) {
-        final List<SimuletsState> states = new ArrayList<>();
-        for (int x = 0; x < recieved.length; x++) {
-            SimuletsState state = new SimuletsState(recieved[x].getStateId(), convertMiniatureToBitmap(recieved[x].getMiniature()));
-            states.add(state);
-        }
-        return states;
-    }
-
-    private Bitmap convertMiniatureToBitmap(final byte[] miniature) {
-        BitmapFactory.Options opt = new BitmapFactory.Options();
-        opt.inDither = true;
-        opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeByteArray(miniature, 0, miniature.length, opt);
-    }
-
 }

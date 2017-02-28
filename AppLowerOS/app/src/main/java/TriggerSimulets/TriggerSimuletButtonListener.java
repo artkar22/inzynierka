@@ -30,11 +30,11 @@ public class TriggerSimuletButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
-                appData.getSimulets(),
-                triggerSimulet,
-                appData.getAllMaps().get(0),
-                false));
+//        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
+//                appData.getSimulets(),
+//                triggerSimulet,
+//                appData.getAllMaps().get(0),
+//                false));
 //        gridView.switchView(triggerSimulet.getMyPlacesInMap());
     }
 

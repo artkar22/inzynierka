@@ -64,12 +64,14 @@ public class GridActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grid);
         gSON = new Gson();
-        String ApplicationDataJSON = getIntent().getStringExtra(Consts.APPLICATION_DATA);
+        final String ApplicationDataJSON = getIntent().getStringExtra(Consts.APPLICATION_DATA);
         applicationData = gSON.fromJson(ApplicationDataJSON, ApplicationData.class);
         applicationData.addMap(mapGenerator.loadMap(getAssets(), "map0.json"));//TODO SYSTEM WCZYTYWANIA MAP - POBIERANIE NAZW MAP Z KATALOGU I SYSTEM WCZYTYWANIA KOLEJNYCH
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
-
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
+        this.createNewClient();
+        final GraphicalResourcesService resourcesService = new GraphicalResourcesService();
+        resourcesService.refreshSimuletsAndTriggersGraphics(client, applicationData.getTriggers(), applicationData.getSimulets());
 //        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
 //        if (applicationData.getTriggers().size() > 0) {
 //            gridView.setAdapter(new CheeseDynamicAdapter(this,
@@ -80,7 +82,7 @@ public class GridActivity extends Activity {
 //        } else {
             gridView.setAdapter(new CheeseDynamicAdapter(this,
                     applicationData.getSimulets(),
-                    null,
+                    applicationData.getTriggers(),
                     applicationData.getAllMaps().get(0),
                     true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        }
@@ -132,13 +134,13 @@ public class GridActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(GridActivity.this, parent.getAdapter().getItem(position).toString(),
 //                        Toast.LENGTH_SHORT).show();
-                PlaceInMapDTO placeInMap = (PlaceInMapDTO) parent.getAdapter().getItem(position);
-                if (placeInMap.getSimulet() != null) {
-                    View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
-//                    optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
-//                    optionsLayout.setVisibility(View.VISIBLE);
-                    this.simuletsOptionsLogicExecution(placeInMap.getSimulet(), (ImageView) ((ViewGroup) view).getChildAt(0));
-                }
+//                PlaceInMapDTO placeInMap = (PlaceInMapDTO) parent.getAdapter().getItem(position);
+//                if (placeInMap.getSimulet() != null) {
+//                    View optionsLayout = ((View) view.getParent().getParent()).findViewById(R.id.simulet_options);
+////                    optionsLayout.setBackgroundColor(setBackgroundForOptions(placeInMap.getSimulet()));
+////                    optionsLayout.setVisibility(View.VISIBLE);
+//                    this.simuletsOptionsLogicExecution(placeInMap.getSimulet(), (ImageView) ((ViewGroup) view).getChildAt(0));
+//                }
             }
 
             private void simuletsOptionsLogicExecution(final Simulet simulet, final ImageView view) {

@@ -35,40 +35,40 @@ public class SendButtonListener implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
-        Handler handler1 = new Handler();
-        int delay = 0;
-        for (final Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
-            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
-            final Simulet currentSimulet = dto.getSimulet();
-            if (currentSimulet != null) {
-                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-                handler1.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        client.setURI(currentSimulet.getStatusResource());
-
-                        CoapResponse get = client.get();
-                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-                            if (put.isSuccess()) {
-                                currentSimulet.setSimuletOn(true);
-                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-
-                            }
-                        } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-                            if (put.isSuccess()) {
-                                currentSimulet.setSimuletOn(false);
-                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-
-                            }
-                        }
-                    }
-                }, delay);
-            }
-        }
+    public void onClick(View v) { //TODO SEND BUTTON
+//        Handler handler1 = new Handler();
+//        int delay = 0;
+//        for (final Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
+//            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
+//            final Simulet currentSimulet = dto.getSimulet();
+//            if (currentSimulet != null) {
+//                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
+//                handler1.postDelayed(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        client.setURI(currentSimulet.getStatusResource());
+//
+//                        CoapResponse get = client.get();
+//                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
+//                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
+//                            if (put.isSuccess()) {
+//                                currentSimulet.setSimuletOn(true);
+//                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
+//
+//                            }
+//                        } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
+//                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
+//                            if (put.isSuccess()) {
+//                                currentSimulet.setSimuletOn(false);
+//                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
+//
+//                            }
+//                        }
+//                    }
+//                }, delay);
+//            }
+//        }
     }
 
     private int getHowLongToWait(final int secs, final boolean simuletsTimerStatus) {
