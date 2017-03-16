@@ -8,24 +8,26 @@
     android:weightSum="1">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0.30"
         android:orientation="vertical"
-        android:layout_weight=".30">
+        android:weightSum="1">
 
         <LinearLayout
             android:id="@+id/simulet_options"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"
+            android:layout_height="60dp"
+            android:layout_weight="0.78"
+            android:background="@android:color/holo_blue_dark"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonTime"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/time"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/time" />
 
         </LinearLayout>
     </LinearLayout>
@@ -34,9 +36,12 @@
         android:id="@+id/dynamic_grid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_weight="0.70"
+        android:background="@drawable/gradient_background"
+        android:elevation="1dp"
         android:numColumns="@integer/column_count"
-        android:orientation="vertical"
-        android:layout_weight=".70"/>
+        android:orientation="vertical" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,16 +51,23 @@
 
         <Button
             android:id="@+id/playButton"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/play_button"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
-        <Button
-            android:id="@+id/refresh"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/refresh"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:visibility="gone"/>
+            android:background="@drawable/play_button" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="103dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <Button
+                android:id="@+id/refresh"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="right"
+                android:background="@drawable/refresh" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
