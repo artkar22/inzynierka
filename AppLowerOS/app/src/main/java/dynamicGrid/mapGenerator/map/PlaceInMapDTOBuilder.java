@@ -14,10 +14,10 @@ public abstract class PlaceInMapDTOBuilder {
 //        return placeDTO;
 //    }
 
-    public static PlaceInMapDTO buildPlaceInMapDto(final int placeInMapId, final boolean isItMap) {
+    public static PlaceInMapDTO buildPlaceInMapDto(final int placeInMapId, final String typeOfPlace) {
         final PlaceInMapDTO placeDTO = new PlaceInMapDTO();
         placeDTO.setPlaceInMapId(placeInMapId);
-        placeDTO.setIsItMap(isItMap);
+        placeDTO.setTypeOfPlace(typeOfPlace);
         return placeDTO;
     }
 }

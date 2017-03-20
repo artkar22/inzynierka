@@ -1,5 +1,7 @@
 package dynamicGrid.mapGenerator.map;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -12,8 +14,9 @@ public class MapDTO {
     private int numberOfColums;
     private int numberOfRows;
     private int numberOfStatesRows;
-    private ArrayList<Integer> specialPlacesIds;//zczytywanie idków gdzie mapaa
+    private ArrayList<String> placesTypes;//zczytywanie idków gdzie mapaa
     private LinkedList<PlaceInMapDTO> placesInMap;
+    private LinkedList<Integer> triggersIndexes;
 
     public String getMapID() {
         return mapID;
@@ -47,18 +50,33 @@ public class MapDTO {
         this.placesInMap = placesInMap;
     }
 
-    public ArrayList<Integer> getSpecialPlacesIds() {
-        return specialPlacesIds;
-    }
-
-    public void setSpecialPlacesIds(final ArrayList<PlaceInMapDTO> specialPlacesInMap) {
-        specialPlacesIds = new ArrayList<>();
-        for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
-            specialPlacesIds.add(Integer.valueOf(specialPlace.getPlaceInMapId()));
-        }
-    }
-
     public void setNumberOfStatesRows(int numberOfStatesRows) {
         this.numberOfStatesRows = numberOfStatesRows;
+    }
+
+    public LinkedList<Integer> getTriggersIndexes() {
+        return triggersIndexes;
+    }
+
+    public void setTriggersIndexes(final LinkedList<Integer> triggersIndexes) {
+        this.triggersIndexes = triggersIndexes;
+    }
+
+    public boolean checkIfTriggersIndexesContainsValue(final int val) {
+        if (triggersIndexes != null) {
+            for (Integer ind : this.triggersIndexes) {
+                if(ind.intValue() == val){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public ArrayList<String> getPlacesTypes() {
+        return placesTypes;
+    }
+
+    public void setPlacesTypes(final ArrayList<String> placesTypes) {
+        this.placesTypes = placesTypes;
     }
 }

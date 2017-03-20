@@ -15,7 +15,9 @@ import Simulets.Simulet;
 import Simulets.SimuletsState;
 import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.BaseDynamicGridAdapter;
+import dynamicGrid.mapGenerator.MapGenerator;
 import dynamicGrid.mapGenerator.map.MapDTO;
+import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 
@@ -27,7 +29,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
     public CheeseDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets,
                                 ArrayList<TriggerSimulet> triggers, MapDTO currentMap, boolean bindSimulets) {
-        super(context, currentMap);
+        super(context, currentMap, listOfSimulets, triggers);
         this.listOfTriggers = triggers;
         this.listOfSimulets = listOfSimulets;
 //        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
@@ -41,7 +43,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             final TriggerSimulet currentSim = listOfTriggers.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
                 final PlaceInMapDTO place = currentMap.getPlacesInMap().get(x + (y * currentMap.getNumberOfColums()));
-                if (!place.isItMap() && place.getSimuletState() == null) {
+                if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
                     place.setSimuletState(currentSim.getStates().get(y));
                 }
             }
@@ -52,7 +54,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             final Simulet currentSim = listOfSimulets.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
                 final PlaceInMapDTO place = currentMap.getPlacesInMap().get(numberOfTriggers + x + (y * currentMap.getNumberOfColums()));
-                if (!place.isItMap() && place.getSimuletState() == null) {
+                if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
                     place.setSimuletState(currentSim.getStates().get(y));
                 }
             }
@@ -90,10 +92,15 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             convertView.setTag(holder);
         } else {
             holder = (CheeseViewHolder) convertView.getTag();
+            if(currentPlace.getSimuletState()!=null && holder.simuletState == null){
+                holder.simuletState = currentPlace.getSimuletState();
+            }
         }
         if (currentPlace.getSimuletState() != null) {
             holder.buildPlaceForSimulet();
-        } else if (currentMap.getPlacesInMap().get(position).isItMap()) {
+        } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.SIMULET_PLACE)) {
+            holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
+        } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.TRIGGER_PLACE)) {
             holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
         }
         return convertView;
@@ -133,7 +140,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
     private class CheeseViewHolder {
         private ImageView image;
-        private final SimuletsState simuletState;
+        private SimuletsState simuletState;
 
         private CheeseViewHolder(View view, SimuletsState simuletState) {
             this.simuletState = simuletState;
@@ -146,6 +153,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         }
 
         void buildPlaceForSimulet() {
+            if(simuletState.getMiniature() != null)
             image.setImageBitmap(simuletState.getMiniature());
         }
 

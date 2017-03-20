@@ -9,9 +9,10 @@ import Simulets.SimuletsState;
 public class PlaceInMapDTO {
 
     private int placeInMapId;
-//    private boolean dropAllowed;
+    //    private boolean dropAllowed;
 //    private boolean alreadyDropped;
-    private boolean isItMap;//if not then it is Items container
+//    private boolean isItMap;//if not then it is Items container
+    private String TypeOfPlace;//CONTAINER/SIMULET/TRIGGER używane tylko przy pierwszym tworzeniu, w zasadzie zbędne
     private SimuletsState simuletsState; //stateBindedToThatPlace
 
     public int getPlaceInMapId() {
@@ -22,7 +23,7 @@ public class PlaceInMapDTO {
         this.placeInMapId = placeInMapId;
     }
 
-//    public boolean isDropAllowed() {
+    //    public boolean isDropAllowed() {
 //        return dropAllowed;
 //    }
 //
@@ -37,13 +38,12 @@ public class PlaceInMapDTO {
 //    public void setAlreadyDropped(final boolean alreadyDropped) {
 //        this.alreadyDropped = alreadyDropped;
 //    }
-
-    public boolean isItMap() {
-        return isItMap;
+    public String getTypeOfPlace() {
+        return TypeOfPlace;
     }
 
-    public void setIsItMap(final boolean isItMap) {
-        this.isItMap = isItMap;
+    public void setTypeOfPlace(String typeOfPlace) {
+        TypeOfPlace = typeOfPlace;
     }
 
     public void setSimuletState(final SimuletsState simuletState) {

@@ -1,12 +1,20 @@
 package dynamicGrid.mapGenerator.map;
 
+import android.util.Pair;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import dynamicGrid.mapGenerator.MapGenerator;
 
 /**
  * Created by ArturK on 2016-09-24.
  */
 public abstract class MapDTOBuilder {
+    public static final String CONTAINER = "CONTAINER";
+    public static final String TRIGGER_PLACE = "TRIGGER_PLACE";
+    public static final String SIMULET_PLACE = "SIMULET_PLACE";
+
     public static MapDTO buildMapDto(final String mapId, final int numberOfColumns,
                                      final int numberOfRows, final int numberOfStateRows) {
         MapDTO dto = initializeMapDTO(mapId, numberOfColumns, numberOfRows, numberOfStateRows);
@@ -37,22 +45,38 @@ public abstract class MapDTOBuilder {
         dto.setNumberOfColums(numberOfColumns);
         dto.setNumberOfRows(numberOfRows);
         dto.setNumberOfStatesRows(numberOfStateRows);
+        dto.setTriggersIndexes(calculateIndexesForTriggers(numberOfColumns, numberOfRows));
 
         final int numberOfPlacesInMap = numberOfColumns * numberOfRows;
         final int numberOfPlacesForAnItemContainer = numberOfStateRows * numberOfColumns;
         final LinkedList<PlaceInMapDTO> placesInMap = new LinkedList<>();
+        final ArrayList<String> placesTypes = new ArrayList<>();
 
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
-            boolean isItMapFlag = true;
+            String type;
             if (currentPlaceInMapIndex < numberOfPlacesForAnItemContainer) {
-                isItMapFlag = false;
+                type = CONTAINER;
+            } else if (dto.checkIfTriggersIndexesContainsValue(currentPlaceInMapIndex)) {
+                type = TRIGGER_PLACE;
+            } else {
+                type = SIMULET_PLACE;
             }
             final PlaceInMapDTO defaultPlaceInMap =
-                    PlaceInMapDTOBuilder.buildPlaceInMapDto(currentPlaceInMapIndex, isItMapFlag);
+                    PlaceInMapDTOBuilder.buildPlaceInMapDto(currentPlaceInMapIndex, type);
             placesInMap.add(defaultPlaceInMap);
+            placesTypes.add(type);
         }
         dto.setPlacesInMap(placesInMap);
+        dto.setPlacesTypes(placesTypes);
         return dto;
+    }
+
+    private static LinkedList<Integer> calculateIndexesForTriggers(final int numberOfColumns, final int numberOfRows) {
+        final LinkedList<Integer> triggersIndexes = new LinkedList<>();
+        for (int x = 2; x < numberOfRows; x++) {
+            triggersIndexes.add(new Integer(x * numberOfColumns));
+        }
+        return triggersIndexes;
     }
 
 //    private static boolean checkIfCurrentIndexShouldBeItemCollection(final int numberOfColumns, final int numberOfRows, final int currentPlaceInMapIndex) {

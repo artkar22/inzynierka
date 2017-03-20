@@ -1,5 +1,6 @@
 package dynamicGridActivity;
 
+import android.util.Pair;
 import android.view.View;
 
 import org.eclipse.californium.core.CoapClient;
@@ -92,18 +93,10 @@ public class OptionButtonsUtils {
             client.observe(new CoapHandler() {
                 @Override
                 public void onLoad(CoapResponse response) {
-//                    response.getResponseText();
                     if (!response.getResponseText().equals("no_action")) {
-                        triggerActionThread.addToQueue(trigger);
+                        triggerActionThread.addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
                         triggerActionThread.run();
-//                        if(triggerThread.getState().equals(Thread.State.TERMINATED)){
-//                            triggerThread.start();
-//                        }
-//                        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
-//                                applicationData.getSimulets(),
-//                                trigger,
-//                                applicationData.getAllMaps().get(0),
-//                                false));
+
                     }
                 }
 
