@@ -39,6 +39,7 @@ import TriggerSimulets.TriggerSimuletButtonListener;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
 import dynamicGrid.mapGenerator.map.MapDTO;
+import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.SendButtonListener;
@@ -80,11 +81,11 @@ public class GridActivity extends Activity {
 //                    applicationData.getAllMaps().get(0),
 //                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        } else {
-            gridView.setAdapter(new CheeseDynamicAdapter(this,
-                    applicationData.getSimulets(),
-                    applicationData.getTriggers(),
-                    applicationData.getAllMaps().get(0),
-                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
+        gridView.setAdapter(new CheeseDynamicAdapter(this,
+                applicationData.getSimulets(),
+                applicationData.getTriggers(),
+                applicationData.getAllMaps().get(0),
+                true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        }
 ////        add callback to stop edit mode if needed
 //        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
@@ -100,7 +101,6 @@ public class GridActivity extends Activity {
 
         refreshButtonHandling();
         createSimuletsAndTriggersBar();
-
 
 
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
@@ -124,7 +124,10 @@ public class GridActivity extends Activity {
         gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                gridView.startEditMode(position);
+                if (!applicationData.getAllMaps().get(0).getPlacesInMap().get(position).getTypeOfPlace()
+                        .equals(MapDTOBuilder.ARROW_PLACE)) {
+                    gridView.startEditMode(position);
+                }
                 return true;
             }
         });
@@ -223,16 +226,14 @@ public class GridActivity extends Activity {
     }
 
     private void createSimuletsAndTriggersBar() {
-        LinearLayout simuletsBar = (LinearLayout)findViewById(R.id.simulet_options);
-        for(int i=0;i<this.applicationData.getTriggers().size();i++)
-        {
-            ImageView ii= new ImageView(this);
+        LinearLayout simuletsBar = (LinearLayout) findViewById(R.id.simulet_options);
+        for (int i = 0; i < this.applicationData.getTriggers().size(); i++) {
+            ImageView ii = new ImageView(this);
             ii.setImageBitmap(this.applicationData.getTriggers().get(i).getMainIconBitmap());
             simuletsBar.addView(ii);
         }
-        for(int i=0;i<this.applicationData.getSimulets().size();i++)
-        {
-            ImageView ii= new ImageView(this);
+        for (int i = 0; i < this.applicationData.getSimulets().size(); i++) {
+            ImageView ii = new ImageView(this);
             ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
             simuletsBar.addView(ii);
         }

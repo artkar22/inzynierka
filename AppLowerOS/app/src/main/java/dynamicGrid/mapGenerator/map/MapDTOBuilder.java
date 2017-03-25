@@ -14,6 +14,7 @@ public abstract class MapDTOBuilder {
     public static final String CONTAINER = "CONTAINER";
     public static final String TRIGGER_PLACE = "TRIGGER_PLACE";
     public static final String SIMULET_PLACE = "SIMULET_PLACE";
+    public static final String ARROW_PLACE = "ARROW_PLACE";//strzałeczki pomiedzy triggerami a sekwencja simuletow
 
     public static MapDTO buildMapDto(final String mapId, final int numberOfColumns,
                                      final int numberOfRows, final int numberOfStateRows) {
@@ -46,7 +47,7 @@ public abstract class MapDTOBuilder {
         dto.setNumberOfRows(numberOfRows);
         dto.setNumberOfStatesRows(numberOfStateRows);
         dto.setTriggersIndexes(calculateIndexesForTriggers(numberOfColumns, numberOfRows));
-
+        dto.setArrowsIndexes(calculateIndexesForArrows(dto.getTriggersIndexes()));
         final int numberOfPlacesInMap = numberOfColumns * numberOfRows;
         final int numberOfPlacesForAnItemContainer = numberOfStateRows * numberOfColumns;
         final LinkedList<PlaceInMapDTO> placesInMap = new LinkedList<>();
@@ -58,6 +59,8 @@ public abstract class MapDTOBuilder {
                 type = CONTAINER;
             } else if (dto.checkIfTriggersIndexesContainsValue(currentPlaceInMapIndex)) {
                 type = TRIGGER_PLACE;
+            }else if (dto.checkIfArrowsIndexesContainsValue(currentPlaceInMapIndex)) {
+                type = ARROW_PLACE;
             } else {
                 type = SIMULET_PLACE;
             }
@@ -69,6 +72,14 @@ public abstract class MapDTOBuilder {
         dto.setPlacesInMap(placesInMap);
         dto.setPlacesTypes(placesTypes);
         return dto;
+    }
+
+    private static LinkedList<Integer> calculateIndexesForArrows(LinkedList<Integer> triggersIndexes) {
+        final LinkedList<Integer> arrowsIndexes = new LinkedList<>();
+        for(Integer index: triggersIndexes){
+            arrowsIndexes.add(new Integer(index.intValue() + 1));
+        }
+        return arrowsIndexes;
     }
 
     private static LinkedList<Integer> calculateIndexesForTriggers(final int numberOfColumns, final int numberOfRows) {

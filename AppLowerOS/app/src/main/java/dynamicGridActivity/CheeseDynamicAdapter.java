@@ -102,6 +102,8 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
         } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.TRIGGER_PLACE)) {
             holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
+        } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.ARROW_PLACE)) {
+            holder.buildArrow(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
         }
         return convertView;
     }
@@ -159,6 +161,9 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
         void build(String title) {
             image.setImageResource(R.drawable.ic_launcher);
+        }
+        void buildArrow(String title) {
+            image.setImageResource(R.drawable.petla);
         }
 
         void buildOnlyText(String title) {

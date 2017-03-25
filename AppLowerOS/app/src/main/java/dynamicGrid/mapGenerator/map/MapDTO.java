@@ -17,6 +17,7 @@ public class MapDTO {
     private ArrayList<String> placesTypes;//zczytywanie idków gdzie mapaa
     private LinkedList<PlaceInMapDTO> placesInMap;
     private LinkedList<Integer> triggersIndexes;
+    private LinkedList<Integer> arrowsIndexes;
 
     public String getMapID() {
         return mapID;
@@ -58,8 +59,16 @@ public class MapDTO {
         return triggersIndexes;
     }
 
+    public LinkedList<Integer> getArrowsIndexes() {
+        return arrowsIndexes;
+    }
+
     public void setTriggersIndexes(final LinkedList<Integer> triggersIndexes) {
         this.triggersIndexes = triggersIndexes;
+    }
+
+    public void setArrowsIndexes(final LinkedList<Integer> arrowsIndexes) {
+        this.arrowsIndexes = arrowsIndexes;
     }
 
     public boolean checkIfTriggersIndexesContainsValue(final int val) {
@@ -72,6 +81,18 @@ public class MapDTO {
         }
         return false;
     }
+
+    public boolean checkIfArrowsIndexesContainsValue(final int val) {
+        if (arrowsIndexes != null) {
+            for (Integer ind : this.arrowsIndexes) {
+                if(ind.intValue() == val){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public ArrayList<String> getPlacesTypes() {
         return placesTypes;
     }
