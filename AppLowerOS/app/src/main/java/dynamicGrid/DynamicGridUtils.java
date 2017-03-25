@@ -57,8 +57,9 @@ public class DynamicGridUtils {
             PlaceInMapDTO secondObject = list.get(secondIndex);
 //            list.set(firstIndex, secondObject);
             list.set(secondIndex, list.set(firstIndex, secondObject));
-        } else if ((placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.TRIGGER_PLACE) && firstType.equals(TRIGGER) && !secondType.equals(TRIGGER)) ||
-                (placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && firstType.equals(SIMULET) && !secondType.equals(SIMULET))) {
+        } else if ((placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.TRIGGER_PLACE) && firstType.equals(TRIGGER)) ||
+                (placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && firstType.equals(SIMULET))) {
+
             PlaceInMapDTO secondObject = list.get(secondIndex);
             PlaceInMapDTO firstObject = list.get(firstIndex);
             SimuletsState copy = new SimuletsState(firstObject.getSimuletState().getStateId(),

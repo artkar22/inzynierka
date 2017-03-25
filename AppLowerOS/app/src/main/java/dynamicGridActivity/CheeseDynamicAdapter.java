@@ -92,7 +92,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
             convertView.setTag(holder);
         } else {
             holder = (CheeseViewHolder) convertView.getTag();
-            if(currentPlace.getSimuletState()!=null && holder.simuletState == null){
+            if(currentPlace.getSimuletState()!=null ){
                 holder.simuletState = currentPlace.getSimuletState();
             }
         }
