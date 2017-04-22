@@ -12,12 +12,14 @@ public class SimuletsState {
 
     private final String StateId;
     private final Bitmap miniature;
+    private final Bitmap highlightedMiniature;
     private URI simuletsURI;
 
-    public SimuletsState(final String StateId, final Bitmap miniature, final URI simuletsURI) {
+    public SimuletsState(final String StateId, final Bitmap miniature, final Bitmap highlightedMiniature, final URI simuletsURI) {
         this.StateId = StateId;
         this.miniature = miniature;
         this.simuletsURI = simuletsURI;
+        this.highlightedMiniature = highlightedMiniature;
     }
 
     public String getStateId() {
@@ -30,5 +32,9 @@ public class SimuletsState {
 
     public URI getSimuletsURI() {
         return simuletsURI;
+    }
+
+    public Bitmap getHighlightedMiniature() {
+        return highlightedMiniature;
     }
 }

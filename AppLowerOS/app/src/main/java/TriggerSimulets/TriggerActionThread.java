@@ -107,34 +107,15 @@ public class TriggerActionThread implements Runnable {
         int index = indexVal + 1;
         Handler handler1 = new Handler();
         int delay = 0;
-        while (index < lastColumnIndex) {
+        while (index < lastColumnIndex+1) {
             final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
             final SimuletsState currentSimulet = dto.getSimuletState();
             if (currentSimulet != null) {
                 delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                handler1.postDelayed(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        client.setURI(currentSimulet.getSimuletsURI() + "/current_status");//status_resource - tak będzie szybciej XD
-
-//                        CoapResponse get = client.get();
-//                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-                        CoapResponse post = client.post(currentSimulet.getStateId(), 0);
-//                            if (put.isSuccess()) {
-//
-//                            }
-//                        }
-//                        else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-//                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-//                            if (put.isSuccess()) {
-//                                currentSimulet.setSimuletOn(false);
-//                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                            }
-//                        }
-                    }
-                }, delay);
+                handler1.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
+            } else {
+                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                handler1.postDelayed(new PostDelayedIconChange(index,gridView, currentMap, indexVal), delay);
             }
 
             index++;

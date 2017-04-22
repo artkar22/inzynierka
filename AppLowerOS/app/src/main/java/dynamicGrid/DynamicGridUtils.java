@@ -64,6 +64,7 @@ public class DynamicGridUtils {
             PlaceInMapDTO firstObject = list.get(firstIndex);
             SimuletsState copy = new SimuletsState(firstObject.getSimuletState().getStateId(),
                     firstObject.getSimuletState().getMiniature(),
+                    firstObject.getSimuletState().getHighlightedMiniature(),
                     firstObject.getSimuletState().getSimuletsURI());
             secondObject.setSimuletState(copy);
             list.set(secondIndex, list.set(firstIndex, secondObject));

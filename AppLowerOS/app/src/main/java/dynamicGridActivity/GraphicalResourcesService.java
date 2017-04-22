@@ -79,7 +79,7 @@ public class GraphicalResourcesService {
     private List<SimuletsState> createListOfStates(final SimuletsStateToSend[] recieved, final URI uriOfSimulet) {
         final List<SimuletsState> states = new ArrayList<>();
         for (int x = 0; x < recieved.length; x++) {
-            SimuletsState state = new SimuletsState(recieved[x].getStateId(), convertMiniatureToBitmap(recieved[x].getMiniature()), uriOfSimulet);
+            SimuletsState state = new SimuletsState(recieved[x].getStateId(), convertMiniatureToBitmap(recieved[x].getMiniature()), convertMiniatureToBitmap(recieved[x].getHighlightedMiniature()), uriOfSimulet);
             states.add(state);
         }
         return states;
