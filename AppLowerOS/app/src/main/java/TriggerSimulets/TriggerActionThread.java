@@ -116,7 +116,7 @@ public class TriggerActionThread implements Runnable {
 
                     @Override
                     public void run() {
-                        client.setURI(currentSimulet.getSimuletsURI() + "/on_off");//status_resource - tak będzie szybciej XD
+                        client.setURI(currentSimulet.getSimuletsURI() + "/current_status");//status_resource - tak będzie szybciej XD
 
 //                        CoapResponse get = client.get();
 //                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
