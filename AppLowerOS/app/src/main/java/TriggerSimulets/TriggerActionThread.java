@@ -120,7 +120,7 @@ public class TriggerActionThread implements Runnable {
 
 //                        CoapResponse get = client.get();
 //                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-                        CoapResponse put = client.put(currentSimulet.getStateId(), 0);
+                        CoapResponse post = client.post(currentSimulet.getStateId(), 0);
 //                            if (put.isSuccess()) {
 //
 //                            }
