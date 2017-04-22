@@ -15,6 +15,7 @@ public abstract class MapDTOBuilder {
     public static final String TRIGGER_PLACE = "TRIGGER_PLACE";
     public static final String SIMULET_PLACE = "SIMULET_PLACE";
     public static final String ARROW_PLACE = "ARROW_PLACE";//strzałeczki pomiedzy triggerami a sekwencja simuletow
+    public static final String SPACE_BEETWEEN = "SPACE_BEETWEEN"; //miejsce miedzy simuletami a sekwencjami
 
     public static MapDTO buildMapDto(final String mapId, final int numberOfColumns,
                                      final int numberOfRows, final int numberOfStateRows) {
@@ -48,6 +49,7 @@ public abstract class MapDTOBuilder {
         dto.setNumberOfStatesRows(numberOfStateRows);
         dto.setTriggersIndexes(calculateIndexesForTriggers(numberOfColumns, numberOfRows));
         dto.setArrowsIndexes(calculateIndexesForArrows(dto.getTriggersIndexes()));
+        dto.setSpaceBeetweenIndexes(calculateIndexesForSpaceBeetween(numberOfColumns));
         final int numberOfPlacesInMap = numberOfColumns * numberOfRows;
         final int numberOfPlacesForAnItemContainer = numberOfStateRows * numberOfColumns;
         final LinkedList<PlaceInMapDTO> placesInMap = new LinkedList<>();
@@ -61,6 +63,8 @@ public abstract class MapDTOBuilder {
                 type = TRIGGER_PLACE;
             }else if (dto.checkIfArrowsIndexesContainsValue(currentPlaceInMapIndex)) {
                 type = ARROW_PLACE;
+            } else if(dto.checkIfSpaceBeetweenIndexesContainsValue(currentPlaceInMapIndex)){
+              type = SPACE_BEETWEEN;
             } else {
                 type = SIMULET_PLACE;
             }
@@ -84,10 +88,19 @@ public abstract class MapDTOBuilder {
 
     private static LinkedList<Integer> calculateIndexesForTriggers(final int numberOfColumns, final int numberOfRows) {
         final LinkedList<Integer> triggersIndexes = new LinkedList<>();
-        for (int x = 2; x < numberOfRows; x++) {
+        for (int x = 3; x < numberOfRows; x++) {
             triggersIndexes.add(new Integer(x * numberOfColumns));
         }
         return triggersIndexes;
+    }
+
+    private static LinkedList<Integer> calculateIndexesForSpaceBeetween(int numberOfColumns) {
+        final LinkedList<Integer> spacesBeetween = new LinkedList<>();
+        int lastIndex = 3*numberOfColumns;
+        for(int firstIndex = 2*numberOfColumns; firstIndex<lastIndex; firstIndex++) {
+            spacesBeetween.add(new Integer(firstIndex));
+        }
+        return spacesBeetween;
     }
 
 //    private static boolean checkIfCurrentIndexShouldBeItemCollection(final int numberOfColumns, final int numberOfRows, final int currentPlaceInMapIndex) {

@@ -23,7 +23,7 @@ public class Simulet {
     private URI simuletsURI;
     private Set<WebLink> resources;
 
-    private Bitmap mainIconBitmap;
+//    private Bitmap mainIconBitmap;
     private List<SimuletsState> states;
 
     private int pictureNameOff;
@@ -68,14 +68,14 @@ public class Simulet {
         throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
     }
 
-    public String getMainIconResource() {
-        for (WebLink weblink : resources) {
-            if (weblink.getURI().endsWith(MAIN_ICON_RESOURCE_ID)) {
-                return simuletsURI + weblink.getURI();
-            }
-        }
-        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
-    }
+//    public String getMainIconResource() {
+//        for (WebLink weblink : resources) {
+//            if (weblink.getURI().endsWith(MAIN_ICON_RESOURCE_ID)) {
+//                return simuletsURI + weblink.getURI();
+//            }
+//        }
+//        throw new RuntimeException(ExceptionCodes.NO_SUCH_RESOURCE);
+//    }
 
     public String getStatesListResource() {
         for (WebLink weblink : resources) {
@@ -115,13 +115,13 @@ public class Simulet {
         this.pictureNameOnPetlaTimer = pictureNameOnPetlaTimer;
     }
 
-    public Bitmap getMainIconBitmap() {
-        return mainIconBitmap;
-    }
+//    public Bitmap getMainIconBitmap() {
+//        return mainIconBitmap;
+//    }
 
-    public void setMainIconBitmap(Bitmap mainIconBitmap) {
-        this.mainIconBitmap = mainIconBitmap;
-    }
+//    public void setMainIconBitmap(Bitmap mainIconBitmap) {
+//        this.mainIconBitmap = mainIconBitmap;
+//    }
 
     public List<SimuletsState> getStates() {
         return states;

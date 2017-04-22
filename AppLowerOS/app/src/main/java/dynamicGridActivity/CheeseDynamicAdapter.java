@@ -5,17 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
 import Simulets.Simulet;
 import Simulets.SimuletsState;
 import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.BaseDynamicGridAdapter;
-import dynamicGrid.mapGenerator.MapGenerator;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
@@ -101,7 +98,9 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.SIMULET_PLACE)) {
             holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
         } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.TRIGGER_PLACE)) {
-            holder.build(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
+            holder.buildTriggerPlace(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
+        } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.SPACE_BEETWEEN)) {
+            holder.buildSpaceBeetween(position);
         } else if (currentMap.getPlacesInMap().get(position).getTypeOfPlace().equals(MapDTOBuilder.ARROW_PLACE)) {
             holder.buildArrow(Integer.toString(((PlaceInMapDTO) getItem(position)).getPlaceInMapId()));
         }
@@ -162,10 +161,34 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         void build(String title) {
             image.setImageResource(R.drawable.ic_launcher);
         }
+        void buildTriggerPlace(String title) {
+            image.setImageResource(R.drawable.ic_square_launcher);
+        }
         void buildArrow(String title) {
             image.setImageResource(R.drawable.ic_arrow_launcher);
         }
-
+        void buildSpaceBeetween(int position) {
+            if(position == 15){
+                image.setImageResource(R.drawable.ic_finger_0);
+                return;
+            }
+            if(position == 16){
+                image.setImageResource(R.drawable.ic_finger_1);
+                return;
+            }
+            if(position == 17){
+                image.setImageResource(R.drawable.ic_finger_2);
+                return;
+            }
+            if(position == 18){
+                image.setImageResource(R.drawable.ic_finger_3);
+                return;
+            }
+            if(position == 19){
+                image.setImageResource(R.drawable.ic_finger_4);
+                return;
+            }
+        }
         void buildOnlyText(String title) {
             image.setImageResource(R.drawable.ic_launcher);
 

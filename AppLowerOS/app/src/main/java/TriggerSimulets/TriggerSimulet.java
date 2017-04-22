@@ -30,7 +30,7 @@ public class TriggerSimulet {
     private String name;
     private URI triggersURI;
     private Set<WebLink> resources;
-    private Bitmap mainIconBitmap;
+//    private Bitmap mainIconBitmap;
 
     private LinkedList<PlaceInMapDTO> myPlacesInMap;
     private List<SimuletsState> states;
@@ -114,13 +114,13 @@ public class TriggerSimulet {
 
     }
 
-    public Bitmap getMainIconBitmap() {
-        return mainIconBitmap;
-    }
+//    public Bitmap getMainIconBitmap() {
+//        return mainIconBitmap;
+//    }
 
-    public void setMainIconBitmap(Bitmap mainIconBitmap) {
-        this.mainIconBitmap = mainIconBitmap;
-    }
+//    public void setMainIconBitmap(Bitmap mainIconBitmap) {
+//        this.mainIconBitmap = mainIconBitmap;
+//    }
 
     public void setStates(List<SimuletsState> states) {
         this.states = states;

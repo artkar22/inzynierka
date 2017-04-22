@@ -18,6 +18,7 @@ public class MapDTO {
     private LinkedList<PlaceInMapDTO> placesInMap;
     private LinkedList<Integer> triggersIndexes;
     private LinkedList<Integer> arrowsIndexes;
+    private LinkedList<Integer> spaceBeetweenIndexes;
 
     public String getMapID() {
         return mapID;
@@ -93,11 +94,29 @@ public class MapDTO {
         return false;
     }
 
+    public boolean checkIfSpaceBeetweenIndexesContainsValue(final int val){
+        if (spaceBeetweenIndexes != null) {
+            for (Integer ind : this.spaceBeetweenIndexes) {
+                if(ind.intValue() == val){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public ArrayList<String> getPlacesTypes() {
         return placesTypes;
     }
 
     public void setPlacesTypes(final ArrayList<String> placesTypes) {
         this.placesTypes = placesTypes;
+    }
+
+    public LinkedList<Integer> getSpaceBeetweenIndexes() {
+        return spaceBeetweenIndexes;
+    }
+
+    public void setSpaceBeetweenIndexes(LinkedList<Integer> spaceBeetweenIndexes) {
+        this.spaceBeetweenIndexes = spaceBeetweenIndexes;
     }
 }

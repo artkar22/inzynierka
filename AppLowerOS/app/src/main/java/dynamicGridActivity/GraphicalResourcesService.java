@@ -23,39 +23,39 @@ import modules.SimuletsStateToSend;
 public class GraphicalResourcesService {
 
     public void refreshSimuletsAndTriggersGraphics(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets){
-        getMainIcons(client, triggers, simulets);
+//        getMainIcons(client, triggers, simulets);
         getStateLists(client, triggers, simulets);
     }
 
-    private void getMainIcons(final CoapClient client,
-                              final List<TriggerSimulet> triggers,
-                              final List<Simulet> simulets) {
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getMainIconResource());
-                CoapResponse resp = client.get();
-                BitmapFactory.Options opt = new BitmapFactory.Options();
-                opt.inDither = true;
-                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                byte[] imageByteArray = resp.getPayload();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-                simulet.setMainIconBitmap(bitmap);
-
-            }
-        }
-        if (triggers.size() > 0) {
-            for (TriggerSimulet trigger : triggers) {
-                client.setURI(trigger.getMainIconResource());
-                CoapResponse resp = client.get();
-                BitmapFactory.Options opt = new BitmapFactory.Options();
-                opt.inDither = true;
-                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                byte[] imageByteArray = resp.getPayload();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-                trigger.setMainIconBitmap(bitmap);
-            }
-        }
-    }
+//    private void getMainIcons(final CoapClient client,
+//                              final List<TriggerSimulet> triggers,
+//                              final List<Simulet> simulets) {
+//        if (simulets.size() > 0) {
+//            for (Simulet simulet : simulets) {
+//                client.setURI(simulet.getMainIconResource());
+//                CoapResponse resp = client.get();
+//                BitmapFactory.Options opt = new BitmapFactory.Options();
+//                opt.inDither = true;
+//                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                byte[] imageByteArray = resp.getPayload();
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
+//                simulet.setMainIconBitmap(bitmap);
+//
+//            }
+//        }
+//        if (triggers.size() > 0) {
+//            for (TriggerSimulet trigger : triggers) {
+//                client.setURI(trigger.getMainIconResource());
+//                CoapResponse resp = client.get();
+//                BitmapFactory.Options opt = new BitmapFactory.Options();
+//                opt.inDither = true;
+//                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                byte[] imageByteArray = resp.getPayload();
+//                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
+//                trigger.setMainIconBitmap(bitmap);
+//            }
+//        }
+//    }
 
     private void getStateLists(CoapClient client, List<TriggerSimulet> triggers, List<Simulet> simulets) {
         if (simulets.size() > 0) {

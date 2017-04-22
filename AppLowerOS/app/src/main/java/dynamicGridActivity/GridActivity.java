@@ -100,7 +100,7 @@ public class GridActivity extends Activity {
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
 
         refreshButtonHandling();
-        createSimuletsAndTriggersBar();
+//        createSimuletsAndTriggersBar();
 
 
         gridView.setOnDropListener(new DynamicGridView.OnDropListener() {
@@ -125,7 +125,8 @@ public class GridActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (!applicationData.getAllMaps().get(0).getPlacesInMap().get(position).getTypeOfPlace()
-                        .equals(MapDTOBuilder.ARROW_PLACE)) {
+                        .equals(MapDTOBuilder.ARROW_PLACE) && !applicationData.getAllMaps().get(0).getPlacesInMap().get(position).getTypeOfPlace()
+                        .equals(MapDTOBuilder.SPACE_BEETWEEN)) {
                     gridView.startEditMode(position);
                 }
                 return true;
@@ -225,19 +226,19 @@ public class GridActivity extends Activity {
 
     }
 
-    private void createSimuletsAndTriggersBar() {
-        LinearLayout simuletsBar = (LinearLayout) findViewById(R.id.simulet_options);
-        for (int i = 0; i < this.applicationData.getTriggers().size(); i++) {
-            ImageView ii = new ImageView(this);
-            ii.setImageBitmap(this.applicationData.getTriggers().get(i).getMainIconBitmap());
-            simuletsBar.addView(ii);
-        }
-        for (int i = 0; i < this.applicationData.getSimulets().size(); i++) {
-            ImageView ii = new ImageView(this);
-            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
-            simuletsBar.addView(ii);
-        }
-    }
+//    private void createSimuletsAndTriggersBar() {
+//        LinearLayout simuletsBar = (LinearLayout) findViewById(R.id.simulet_options);
+//        for (int i = 0; i < this.applicationData.getTriggers().size(); i++) {
+//            ImageView ii = new ImageView(this);
+//            ii.setImageBitmap(this.applicationData.getTriggers().get(i).getMainIconBitmap());
+//            simuletsBar.addView(ii);
+//        }
+//        for (int i = 0; i < this.applicationData.getSimulets().size(); i++) {
+//            ImageView ii = new ImageView(this);
+//            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
+//            simuletsBar.addView(ii);
+//        }
+//    }
 
     private void refreshButtonHandling() {
         final Button refreshButton = (Button) findViewById(R.id.refresh);
