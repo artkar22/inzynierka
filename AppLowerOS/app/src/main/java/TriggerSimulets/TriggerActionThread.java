@@ -107,19 +107,36 @@ public class TriggerActionThread implements Runnable {
         int index = indexVal + 1;
         Handler handler1 = new Handler();
         int delay = 0;
+//        int delay = executePreSequenceIconChange(handler1,index -1, currentMap);
         while (index < lastColumnIndex+1) {
-            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
-            final SimuletsState currentSimulet = dto.getSimuletState();
-            if (currentSimulet != null) {
-                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                handler1.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
-            } else {
-                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                handler1.postDelayed(new PostDelayedIconChange(index,gridView, currentMap, indexVal), delay);
-            }
+                if (currentMap.getPlacesInMap().size() > index) {
+                    final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
+                    final SimuletsState currentSimulet = dto.getSimuletState();
+                    if(currentSimulet != null){
+                        delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                        handler1.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
+                    } else {
+                        delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                        handler1.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+                    }
+                } else {
+                    delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                    handler1.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+                }
 
             index++;
         }
+    }
+
+    private int executePreSequenceIconChange(final Handler handler, final int preindex, final MapDTO currentMap) {
+        int delay = 0;
+        final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(preindex);
+        final SimuletsState currentSimulet = dto.getSimuletState();
+        if(currentSimulet != null){
+            delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+            handler.postDelayed(new PostDelayedIconChange(preindex,gridView, currentMap, 10000), delay);
+        }
+        return delay;
     }
 
     public void addToQueue(final Pair<TriggerSimulet, String> triggerAndState) {
