@@ -61,6 +61,7 @@ public class GraphicalResourcesService {
         if (simulets.size() > 0) {
             for (Simulet simulet : simulets) {
                 client.setURI(simulet.getStatesListResource());
+                client.setTimeout(0);
                 CoapResponse resp = client.get();
                 final SimuletsStateToSend[] recieved = SerializationUtils.deserialize(resp.getPayload());
                 simulet.setStates(createListOfStates(recieved, simulet.getUriOfSimulet()));
@@ -69,6 +70,7 @@ public class GraphicalResourcesService {
         if (triggers.size() > 0) {
             for (TriggerSimulet trigger : triggers) {
                 client.setURI(trigger.getStatesListResource());
+                client.setTimeout(0);
                 CoapResponse resp = client.get();
                 final SimuletsStateToSend[] recieved = SerializationUtils.deserialize(resp.getPayload());
                 trigger.setStates(createListOfStates(recieved, trigger.getUriOfTrigger()));

@@ -16,6 +16,7 @@ import Simulets.Simulet;
 import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
 import TriggerSimulets.TriggerSimuletButtonListener;
+import TriggerSimulets.TriggerWrapper;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import karolakpochwala.apploweros.R;
@@ -76,26 +77,26 @@ public class OptionButtonsUtils {
         }
     }
 
-    public static void setInitialStatusForSimulets(final ApplicationData applicationData, final CoapClient client,
-                                                   final TriggerActionThread triggerActionThread) {
-        final ArrayList<Simulet> listOfSimulets = applicationData.getSimulets();
-        for (Simulet simulet : listOfSimulets) {
-            client.setURI(simulet.getStatusResource());
-            CoapResponse get = client.get();
-            if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-                simulet.setSimuletOn(true);
-            } else {
-                simulet.setSimuletOn(false);
-            }
-        }
-        for (final TriggerSimulet trigger : applicationData.getTriggers()) {
+    public static void setInitialStatusForSimulets(final ArrayList<TriggerWrapper> triggerWrappers, final CoapClient client) {
+//        final ArrayList<Simulet> listOfSimulets = applicationData.getSimulets();
+//        for (Simulet simulet : listOfSimulets) {
+//            client.setURI(simulet.getStatusResource());
+//            CoapResponse get = client.get();
+//            if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
+//                simulet.setSimuletOn(true);
+//            } else {
+//                simulet.setSimuletOn(false);
+//            }
+//        }
+        for (final TriggerWrapper wrapper : triggerWrappers) {
+            final TriggerSimulet trigger = wrapper.getTrigger();
             client.setURI(trigger.getStatusResource());
             client.observe(new CoapHandler() {
                 @Override
                 public void onLoad(CoapResponse response) {
                     if (!response.getResponseText().equals("no_action")) {
-                        triggerActionThread.addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
-                        triggerActionThread.run();
+                        wrapper.getTriggerActionThread().addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
+                        wrapper.getTriggerActionThread().run();
 
                     }
                 }

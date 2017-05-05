@@ -109,7 +109,7 @@ public class TriggerActionThread implements Runnable {
         int delay = 0;
 //        int delay = executePreSequenceIconChange(handler1,index -1, currentMap);
         while (index < lastColumnIndex+1) {
-                if (currentMap.getPlacesInMap().size() > index) {
+                if (currentMap.getPlacesInMap().size() > index && index != lastColumnIndex) {
                     final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
                     final SimuletsState currentSimulet = dto.getSimuletState();
                     if(currentSimulet != null){

@@ -96,6 +96,9 @@ public class CoapClientThread implements Runnable {
             e.printStackTrace();
         }
     }
+    private void stopEndpoint() {
+        client.getEndpoint().destroy();
+    }
 
     public void run() {
         if (mainActivity != null) {
@@ -109,6 +112,7 @@ public class CoapClientThread implements Runnable {
             });
             discoverDevices();
             discoverResourcesOfEachDevice();
+            stopEndpoint();
 //            getMainIcons();
 //            getStateLists();
             mainActivity.runOnUiThread(new Runnable() {

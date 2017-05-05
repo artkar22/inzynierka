@@ -36,6 +36,7 @@ import Simulets.Simulet;
 import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
 import TriggerSimulets.TriggerSimuletButtonListener;
+import TriggerSimulets.TriggerWrapper;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
 import dynamicGrid.mapGenerator.map.MapDTO;
@@ -57,8 +58,7 @@ public class GridActivity extends Activity {
     private MapGenerator mapGenerator;
     private Gson gSON;
     private CoapClient client;
-    private TriggerActionThread triggerActionThread;
-    private Thread triggerThread;
+    private ArrayList<TriggerWrapper> triggerWrappers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,13 +93,12 @@ public class GridActivity extends Activity {
         Button playButton = (Button) findViewById(R.id.playButton);
         SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
-        triggerActionThread = new TriggerActionThread(gridView, applicationData, this, client);
-        triggerThread = new Thread(triggerActionThread);
-        triggerThread.start();
-        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
+
+        createTriggersHandling();
+        OptionButtonsUtils.setInitialStatusForSimulets(triggerWrappers, client);
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
 
-        refreshButtonHandling();
+//        refreshButtonHandling();
 //        createSimuletsAndTriggersBar();
 
 
@@ -240,14 +239,14 @@ public class GridActivity extends Activity {
 //        }
 //    }
 
-    private void refreshButtonHandling() {
-        final Button refreshButton = (Button) findViewById(R.id.refresh);
-        if (applicationData.getSimulets().size() < 4 || applicationData.getTriggers().size() < 2) {
-            refreshButton.setVisibility(View.VISIBLE);
-        }
-        refreshButton.setVisibility(View.VISIBLE);//TODO usunąć, na potrzeby testów
-        refreshButton.setOnClickListener(new RefreshButtonListener(applicationData, this, client, triggerActionThread));
-    }
+//    private void refreshButtonHandling() {
+//        final Button refreshButton = (Button) findViewById(R.id.refresh);
+//        if (applicationData.getSimulets().size() < 4 || applicationData.getTriggers().size() < 2) {
+//            refreshButton.setVisibility(View.VISIBLE);
+//        }
+//        refreshButton.setVisibility(View.VISIBLE);//TODO usunąć, na potrzeby testów
+//        refreshButton.setOnClickListener(new RefreshButtonListener(applicationData, this, client, triggerActionThread));
+//    }
 
     @Override
     public void onBackPressed() {
@@ -278,6 +277,17 @@ public class GridActivity extends Activity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void createTriggersHandling() {
+        triggerWrappers = new ArrayList<>();
+        final ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
+        for (final TriggerSimulet trigger : triggers) {
+            final TriggerWrapper wrapper = new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client));
+            triggerWrappers.add(wrapper);
+//
+// trigger.createTriggerThread(new TriggerActionThread(gridView, applicationData, this, client));
         }
     }
 }
