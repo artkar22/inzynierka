@@ -69,7 +69,7 @@
             <Button
                 android:id="@+id/playButton"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/play_button"
+                android:background="@drawable/ic_pause_circle"
                 android:layout_width="110dp"
                 android:layout_height="110dp" />
             <Button

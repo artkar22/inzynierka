@@ -1,6 +1,9 @@
 package TriggerSimulets;
 
 import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
+import android.util.ArrayMap;
 import android.util.Pair;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -9,7 +12,11 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import ApplicationData.ApplicationData;
 import Protocol.Comm_Protocol;
@@ -25,12 +32,16 @@ import mainUtils.Consts;
  * Created by ArturK on 2016-12-29.
  */
 public class TriggerActionThread implements Runnable {
-
+    private static final long PAUSED_TIME_UNSET = 0L;
     private LinkedList<Pair<TriggerSimulet, String>> queue;
     private DynamicGridView gridView;
     private ApplicationData applicationData;
     private GridActivity gridActivity;
     private CoapClient client;
+    private Handler delayHandler;
+    private List<Message> pendingMessages;
+    private long pausedTime;
+    private Map<Message, Long> messageTimeMap;
 
     public TriggerActionThread(final DynamicGridView gridView, final ApplicationData applicationData,
                                final GridActivity gridActivity, final CoapClient client) {
@@ -39,6 +50,20 @@ public class TriggerActionThread implements Runnable {
         this.gridActivity = gridActivity;
         this.client = client;
         queue = new LinkedList<>();
+        pendingMessages = new ArrayList<>();
+        messageTimeMap = new LinkedHashMap<>();
+        if(delayHandler == null) {
+            delayHandler = new Handler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message msg) {
+                    pendingMessages.remove(msg);
+                    if (msg.obj instanceof Runnable) {
+                        ((Runnable) msg.obj).run();
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
     @Override
@@ -58,44 +83,6 @@ public class TriggerActionThread implements Runnable {
                             executeSequenceForThatSimulet(indexVal, currentMap);
                         }
                     }
-//                    gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
-//                            applicationData.getSimulets(),
-//                            trigger,
-//                            currentMap,
-//                            false));
-//                    Handler handler1 = new Handler();
-//                    int delay = 0;
-//                    for (final Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
-//                        final PlaceInMapDTO dto = trigger.getMyPlacesInMap().get(specialPlaceId.intValue());
-//                        final Simulet currentSimulet = dto.getSimulet();
-//                        if (currentSimulet != null) {
-//                            delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-//                            handler1.postDelayed(new Runnable() {
-//
-//                                @Override
-//                                public void run() {
-//                                    client.setURI(currentSimulet.getStatusResource());
-//
-//                                    CoapResponse get = client.get();
-//                                    if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-//                                        CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-//                                        if (put.isSuccess()) {
-//                                            currentSimulet.setSimuletOn(true);
-//                                            ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                                        }
-//                                    } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-//                                        CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-//                                        if (put.isSuccess()) {
-//                                            currentSimulet.setSimuletOn(false);
-//                                            ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                                        }
-//                                    }
-//                                }
-//                            }, delay);
-//                        }
-//                    }
                 }
             }
         });
@@ -105,23 +92,33 @@ public class TriggerActionThread implements Runnable {
     private void executeSequenceForThatSimulet(final int indexVal, final MapDTO currentMap) {
         final int lastColumnIndex = indexVal + currentMap.getNumberOfColums();
         int index = indexVal + 1;
-        Handler handler1 = new Handler();
+//        Handler handler1 = new Handler();
         int delay = 0;
 //        int delay = executePreSequenceIconChange(handler1,index -1, currentMap);
         while (index < lastColumnIndex+1) {
+            final Message mess = Message.obtain();
                 if (currentMap.getPlacesInMap().size() > index && index != lastColumnIndex) {
                     final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
                     final SimuletsState currentSimulet = dto.getSimuletState();
                     if(currentSimulet != null){
                         delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                        handler1.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
+                        mess.obj = new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal);
+                        pendingMessages.add(mess);
+                        delayHandler.sendMessageDelayed(mess, delay);
+//                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
                     } else {
                         delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                        handler1.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+                        mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
+                        pendingMessages.add(mess);
+                        delayHandler.sendMessageDelayed(mess, delay);
+//                        delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
                     }
                 } else {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                    handler1.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+                    mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
+                    pendingMessages.add(mess);
+                    delayHandler.sendMessageDelayed(mess, delay);
+//                    delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
                 }
 
             index++;
@@ -155,20 +152,34 @@ public class TriggerActionThread implements Runnable {
         }
     }
 
-    private int getPictureForSimulet(Simulet simulet) {
-        if (simulet.isSimuletOn()) {
-            if (simulet.getOptionsStatus().isTimer()) {
-                return simulet.getPictureNameOnTimer();
-            } else {
-                return simulet.getPictureOn();
-            }
-        } else {
-            if (simulet.getOptionsStatus().isTimer()) {
-                return simulet.getPictureNameOffTimer();
-            } else {
-                return simulet.getPictureOff();
-            }
-        }
+    public void pause(){
+        if (delayHandler != null && pausedTime == PAUSED_TIME_UNSET) {
+            pausedTime = SystemClock.uptimeMillis();
 
+            //need to copy the Messages because their data will get cleared in removeCallbacksAndMessages
+            List<Message> copiedMessages = new ArrayList<Message>();
+            for (Message msg : pendingMessages) {
+                Message copy = Message.obtain();
+                copy.obj = msg.obj;
+                messageTimeMap.put(copy, msg.getWhen()); //remember the time since unable to set directly on Message
+                copiedMessages.add(copy);
+            }
+            //remove all messages from the handler
+            delayHandler.removeCallbacksAndMessages(null);
+            pendingMessages.clear();
+
+            pendingMessages.addAll(copiedMessages);
+        }
+    }
+    public void resume(){
+        if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET) {
+            for (Message msg : pendingMessages) {
+                long msgWhen = messageTimeMap.get(msg);
+                long timeLeftForMessage = msgWhen - pausedTime;
+                delayHandler.sendMessageDelayed(msg, timeLeftForMessage);
+            }
+            messageTimeMap.clear();
+            pausedTime = PAUSED_TIME_UNSET;
+        }
     }
 }

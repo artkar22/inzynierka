@@ -90,13 +90,13 @@ public class GridActivity extends Activity {
 ////        add callback to stop edit mode if needed
 //        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
         this.createNewClient();
-        Button playButton = (Button) findViewById(R.id.playButton);
-        SendButtonListener listener = new SendButtonListener(client, applicationData.getAllMaps().get(0), gridView);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
-        playButton.setOnClickListener(listener);
 
         createTriggersHandling();
         OptionButtonsUtils.setInitialStatusForSimulets(triggerWrappers, client);
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
+        final Button playButton = (Button) findViewById(R.id.playButton);
+        final SendButtonListener listener = new SendButtonListener(triggerWrappers);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
+        playButton.setOnClickListener(listener);
 
 //        refreshButtonHandling();
 //        createSimuletsAndTriggersBar();

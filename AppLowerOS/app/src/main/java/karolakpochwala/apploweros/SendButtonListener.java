@@ -2,7 +2,9 @@ package karolakpochwala.apploweros;
 
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -10,8 +12,11 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
 
+import java.util.ArrayList;
+
 import Protocol.Comm_Protocol;
 import Simulets.Simulet;
+import TriggerSimulets.TriggerWrapper;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
@@ -22,53 +27,29 @@ import mainUtils.Consts;
  */
 public class SendButtonListener implements View.OnClickListener {
 
-    private EditText messageTextView;
-    private CoapClient client;
-    private MapDTO currentMap;
-    private DynamicGridView gridView;
+    private ArrayList<TriggerWrapper> triggerWrappers;
+    private boolean isPauseButton = true;//if not, it is play button;
 
-    public SendButtonListener(CoapClient client, MapDTO currentMap, DynamicGridView gridView) {
+    public SendButtonListener(final ArrayList<TriggerWrapper> triggerWrappers) {
         super();
-        this.client = client;
-        this.currentMap = currentMap;
-        this.gridView = gridView;
+        this.triggerWrappers = triggerWrappers;
     }
 
     @Override
     public void onClick(View v) { //TODO SEND BUTTON
-//        Handler handler1 = new Handler();
-//        int delay = 0;
-//        for (final Integer specialPlaceId : currentMap.getSpecialPlacesIds()) {
-//            final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(specialPlaceId.intValue());
-//            final Simulet currentSimulet = dto.getSimulet();
-//            if (currentSimulet != null) {
-//                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, currentSimulet.getOptionsStatus().isTimer());
-//                handler1.postDelayed(new Runnable() {
-//
-//                    @Override
-//                    public void run() {
-//                        client.setURI(currentSimulet.getStatusResource());
-//
-//                        CoapResponse get = client.get();
-//                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-//                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_ON, 0);
-//                            if (put.isSuccess()) {
-//                                currentSimulet.setSimuletOn(true);
-//                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                            }
-//                        } else if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_ON)) {
-//                            CoapResponse put = client.put(Comm_Protocol.SWITCHED_OFF, 0);
-//                            if (put.isSuccess()) {
-//                                currentSimulet.setSimuletOn(false);
-//                                ((ImageView) ((LinearLayout) gridView.getChildAt(specialPlaceId.intValue())).getChildAt(0)).setImageResource(getPictureForSimulet(currentSimulet));
-//
-//                            }
-//                        }
-//                    }
-//                }, delay);
-//            }
-//        }
+        if(isPauseButton){
+            isPauseButton = false;
+            v.setBackgroundResource(R.drawable.ic_play_circle);
+            for (final TriggerWrapper wrapper: triggerWrappers) {
+                wrapper.getTriggerActionThread().pause();
+            }
+        } else {
+            isPauseButton = true;
+            v.setBackgroundResource(R.drawable.ic_pause_circle);
+            for (final TriggerWrapper wrapper: triggerWrappers) {
+                wrapper.getTriggerActionThread().resume();
+            }
+        }
     }
 
     private int getHowLongToWait(final int secs, final boolean simuletsTimerStatus) {
