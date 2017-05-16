@@ -39,7 +39,7 @@ public class TriggerActionThread implements Runnable {
     private GridActivity gridActivity;
     private CoapClient client;
     private Handler delayHandler;
-    private List<Message> pendingMessages;
+    private LinkedList<List<Message>> queueOfpendingMessages;
     private long pausedTime;
     private Map<Message, Long> messageTimeMap;
 
@@ -50,13 +50,22 @@ public class TriggerActionThread implements Runnable {
         this.gridActivity = gridActivity;
         this.client = client;
         queue = new LinkedList<>();
-        pendingMessages = new LinkedList<>();
+        queueOfpendingMessages = new LinkedList<>();
         messageTimeMap = new LinkedHashMap<>();
         if (delayHandler == null) {
             delayHandler = new Handler(new Handler.Callback() {
                 @Override
                 public boolean handleMessage(Message msg) {
-                    pendingMessages.remove(msg);
+                    for(List<Message> messages : queueOfpendingMessages){
+                        if(messages.contains(msg)){
+                            messages.remove(msg);
+                        }
+                    }
+                    for(int x = 0; x < queueOfpendingMessages.size(); x++){
+                        if(queueOfpendingMessages.get(x).isEmpty()){
+                            queueOfpendingMessages.remove(x);
+                        }
+                    }
                     if (msg.obj instanceof Runnable) {
                         ((Runnable) msg.obj).run();
                     }
@@ -90,6 +99,7 @@ public class TriggerActionThread implements Runnable {
     }
 
     private void executeSequenceForThatSimulet(final int indexVal, final MapDTO currentMap) {
+        List<Message> myPendingMessages = new LinkedList<>();
         final int lastColumnIndex = indexVal + currentMap.getNumberOfColums();
         int index = indexVal + 1;
 //        Handler handler1 = new Handler();
@@ -103,26 +113,27 @@ public class TriggerActionThread implements Runnable {
                 if (currentSimulet != null) {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                     mess.obj = new PostDelayedRunnable(client, currentSimulet, index, gridView, currentMap, indexVal);
-                    pendingMessages.add(mess);
+                    myPendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
 //                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
                 } else {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                     mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
-                    pendingMessages.add(mess);
+                    myPendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
 //                        delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
                 }
             } else {
                 delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                 mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
-                pendingMessages.add(mess);
+                myPendingMessages.add(mess);
                 delayHandler.sendMessageDelayed(mess, delay);
 //                    delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
             }
 
             index++;
         }
+        queueOfpendingMessages.add(myPendingMessages);
     }
 
     private int executePreSequenceIconChange(final Handler handler, final int preindex, final MapDTO currentMap) {
@@ -157,27 +168,34 @@ public class TriggerActionThread implements Runnable {
             pausedTime = SystemClock.uptimeMillis();
 
             //need to copy the Messages because their data will get cleared in removeCallbacksAndMessages
-            List<Message> copiedMessages = new ArrayList<Message>();
-            for (Message msg : pendingMessages) {
-                Message copy = Message.obtain();
-                copy.obj = msg.obj;
-                messageTimeMap.put(copy, msg.getWhen()); //remember the time since unable to set directly on Message
-                copiedMessages.add(copy);
+            final LinkedList<List<Message>> copiedQueueOfpendingMessages = new LinkedList<>();
+            for(List<Message> msgs : queueOfpendingMessages){
+                List<Message> copiedMessages = new ArrayList<Message>();
+                for (Message msg : msgs) {
+                    Message copy = Message.obtain();
+                    copy.obj = msg.obj;
+                    messageTimeMap.put(copy, msg.getWhen()); //remember the time since unable to set directly on Message
+                    copiedMessages.add(copy);
+                }
+                copiedQueueOfpendingMessages.add(copiedMessages);
             }
+
             //remove all messages from the handler
             delayHandler.removeCallbacksAndMessages(null);
-            pendingMessages.clear();
+            queueOfpendingMessages.clear();
 
-            pendingMessages.addAll(copiedMessages);
+            queueOfpendingMessages.addAll(copiedQueueOfpendingMessages);
         }
     }
 
     public void resume() {
         if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET) {
-            for (Message msg : pendingMessages) {
-                long msgWhen = messageTimeMap.get(msg);
-                long timeLeftForMessage = msgWhen - pausedTime;
-                delayHandler.sendMessageDelayed(msg, timeLeftForMessage);
+            for(List<Message> msgs : queueOfpendingMessages){
+                for (Message msg : msgs) {
+                    long msgWhen = messageTimeMap.get(msg);
+                    long timeLeftForMessage = msgWhen - pausedTime;
+                    delayHandler.sendMessageDelayed(msg, timeLeftForMessage);
+                }
             }
             messageTimeMap.clear();
             pausedTime = PAUSED_TIME_UNSET;
@@ -185,21 +203,25 @@ public class TriggerActionThread implements Runnable {
     }
 
     public void nextStep() {
-        if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET && !pendingMessages.isEmpty()) {
-            final Message nextStep = pendingMessages.remove(0);
-            long msgWhen = messageTimeMap.remove(nextStep);
+        if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET && !queueOfpendingMessages.isEmpty()) {
+            for(List<Message> msgs : queueOfpendingMessages){
+                if(!msgs.isEmpty()) {
+                    final Message nextStep = msgs.remove(0);
+                    long msgWhen = messageTimeMap.remove(nextStep);
 //            mapMessagesToNewTime();
-            long timeLeftForMessage = msgWhen - pausedTime;
-            delayHandler.sendMessageDelayed(nextStep, timeLeftForMessage);
+                    long timeLeftForMessage = msgWhen - pausedTime;
+                    delayHandler.sendMessageDelayed(nextStep, timeLeftForMessage);
+                }
+            }
             pausedTime = SystemClock.uptimeMillis();
         }
     }
 
-    private void mapMessagesToNewTime() {
-        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();
-        for (Message msg : pendingMessages) {
-            newTimeMap.put(msg, messageTimeMap.get(msg) - pausedTime);
-        }
-        messageTimeMap = newTimeMap;
-    }
+//    private void mapMessagesToNewTime() {
+//        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();
+//        for (Message msg : pendingMessages) {
+//            newTimeMap.put(msg, messageTimeMap.get(msg) - pausedTime);
+//        }
+//        messageTimeMap = newTimeMap;
+//    }
 }
