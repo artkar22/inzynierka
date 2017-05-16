@@ -50,9 +50,9 @@ public class TriggerActionThread implements Runnable {
         this.gridActivity = gridActivity;
         this.client = client;
         queue = new LinkedList<>();
-        pendingMessages = new ArrayList<>();
+        pendingMessages = new LinkedList<>();
         messageTimeMap = new LinkedHashMap<>();
-        if(delayHandler == null) {
+        if (delayHandler == null) {
             delayHandler = new Handler(new Handler.Callback() {
                 @Override
                 public boolean handleMessage(Message msg) {
@@ -95,31 +95,31 @@ public class TriggerActionThread implements Runnable {
 //        Handler handler1 = new Handler();
         int delay = 0;
 //        int delay = executePreSequenceIconChange(handler1,index -1, currentMap);
-        while (index < lastColumnIndex+1) {
+        while (index < lastColumnIndex + 1) {
             final Message mess = Message.obtain();
-                if (currentMap.getPlacesInMap().size() > index && index != lastColumnIndex) {
-                    final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
-                    final SimuletsState currentSimulet = dto.getSimuletState();
-                    if(currentSimulet != null){
-                        delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                        mess.obj = new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal);
-                        pendingMessages.add(mess);
-                        delayHandler.sendMessageDelayed(mess, delay);
+            if (currentMap.getPlacesInMap().size() > index && index != lastColumnIndex) {
+                final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
+                final SimuletsState currentSimulet = dto.getSimuletState();
+                if (currentSimulet != null) {
+                    delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                    mess.obj = new PostDelayedRunnable(client, currentSimulet, index, gridView, currentMap, indexVal);
+                    pendingMessages.add(mess);
+                    delayHandler.sendMessageDelayed(mess, delay);
 //                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
-                    } else {
-                        delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-                        mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
-                        pendingMessages.add(mess);
-                        delayHandler.sendMessageDelayed(mess, delay);
-//                        delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
-                    }
                 } else {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                     mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
                     pendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
-//                    delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+//                        delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
                 }
+            } else {
+                delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
+                mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
+                pendingMessages.add(mess);
+                delayHandler.sendMessageDelayed(mess, delay);
+//                    delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
+            }
 
             index++;
         }
@@ -129,9 +129,9 @@ public class TriggerActionThread implements Runnable {
         int delay = 0;
         final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(preindex);
         final SimuletsState currentSimulet = dto.getSimuletState();
-        if(currentSimulet != null){
+        if (currentSimulet != null) {
             delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
-            handler.postDelayed(new PostDelayedIconChange(preindex,gridView, currentMap, 10000), delay);
+            handler.postDelayed(new PostDelayedIconChange(preindex, gridView, currentMap, 10000), delay);
         }
         return delay;
     }
@@ -152,7 +152,7 @@ public class TriggerActionThread implements Runnable {
         }
     }
 
-    public void pause(){
+    public void pause() {
         if (delayHandler != null && pausedTime == PAUSED_TIME_UNSET) {
             pausedTime = SystemClock.uptimeMillis();
 
@@ -171,7 +171,8 @@ public class TriggerActionThread implements Runnable {
             pendingMessages.addAll(copiedMessages);
         }
     }
-    public void resume(){
+
+    public void resume() {
         if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET) {
             for (Message msg : pendingMessages) {
                 long msgWhen = messageTimeMap.get(msg);
@@ -181,5 +182,24 @@ public class TriggerActionThread implements Runnable {
             messageTimeMap.clear();
             pausedTime = PAUSED_TIME_UNSET;
         }
+    }
+
+    public void nextStep() {
+        if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET && !pendingMessages.isEmpty()) {
+            final Message nextStep = pendingMessages.remove(0);
+            long msgWhen = messageTimeMap.remove(nextStep);
+//            mapMessagesToNewTime();
+            long timeLeftForMessage = msgWhen - pausedTime;
+            delayHandler.sendMessageDelayed(nextStep, timeLeftForMessage);
+            pausedTime = SystemClock.uptimeMillis();
+        }
+    }
+
+    private void mapMessagesToNewTime() {
+        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();
+        for (Message msg : pendingMessages) {
+            newTimeMap.put(msg, messageTimeMap.get(msg) - pausedTime);
+        }
+        messageTimeMap = newTimeMap;
     }
 }

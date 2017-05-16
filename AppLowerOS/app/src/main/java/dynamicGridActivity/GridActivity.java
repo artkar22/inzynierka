@@ -43,6 +43,7 @@ import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
+import karolakpochwala.apploweros.ResumeButtonListener;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
 import mainUtils.NetworkUtils;
@@ -97,7 +98,8 @@ public class GridActivity extends Activity {
         final Button playButton = (Button) findViewById(R.id.playButton);
         final SendButtonListener listener = new SendButtonListener(triggerWrappers);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
         playButton.setOnClickListener(listener);
-
+        final Button resumeButton = (Button) findViewById(R.id.resumeButton);
+        resumeButton.setOnClickListener(new ResumeButtonListener(triggerWrappers));
 //        refreshButtonHandling();
 //        createSimuletsAndTriggersBar();
 
@@ -283,8 +285,8 @@ public class GridActivity extends Activity {
     private void createTriggersHandling() {
         triggerWrappers = new ArrayList<>();
         final ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
-        for (final TriggerSimulet trigger : triggers) {
-            final TriggerWrapper wrapper = new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client));
+        for (TriggerSimulet trigger : triggers) {
+            TriggerWrapper wrapper = new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client));
             triggerWrappers.add(wrapper);
 //
 // trigger.createTriggerThread(new TriggerActionThread(gridView, applicationData, this, client));
