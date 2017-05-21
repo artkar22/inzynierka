@@ -43,7 +43,7 @@ public class PostDelayedRunnable implements Runnable {
                 ((ImageView) ((LinearLayout) gridView.getChildAt(index-1)).getChildAt(0)).setImageBitmap(simuletInPreviousIter.getMiniature());
             }
             ((ImageView) ((LinearLayout) gridView.getChildAt(index)).getChildAt(0)).setImageBitmap(currentSimulet.getHighlightedMiniature());
-            CoapResponse post = client.post(currentSimulet.getStateId(), 0);
+            CoapResponse put = client.put(currentSimulet.getStateId(), 0);
 
 //                            if (put.isSuccess()) {
 //
