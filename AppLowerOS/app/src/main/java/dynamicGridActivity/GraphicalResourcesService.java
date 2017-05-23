@@ -3,6 +3,10 @@ package dynamicGridActivity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
@@ -14,6 +18,7 @@ import java.util.List;
 import Simulets.Simulet;
 import Simulets.SimuletsState;
 import TriggerSimulets.TriggerSimulet;
+import deserializers.SimuletStateDeserializer;
 import modules.SimuletsStateToSend;
 
 /**
@@ -58,12 +63,14 @@ public class GraphicalResourcesService {
 //    }
 
     private void getStateLists(CoapClient client, List<TriggerSimulet> triggers, List<Simulet> simulets) {
+        final Gson gsonDeserializer = new GsonBuilder().registerTypeAdapter(SimuletsStateToSend.class,
+                new SimuletStateDeserializer()).create();
         if (simulets.size() > 0) {
             for (Simulet simulet : simulets) {
                 client.setURI(simulet.getStatesListResource());
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
-                final SimuletsStateToSend[] recieved = SerializationUtils.deserialize(resp.getPayload());
+                final SimuletsStateToSend[] recieved = gsonDeserializer.fromJson(resp.getResponseText(),SimuletsStateToSend[].class);
                 simulet.setStates(createListOfStates(recieved, simulet.getUriOfSimulet()));
             }
         }
@@ -72,7 +79,7 @@ public class GraphicalResourcesService {
                 client.setURI(trigger.getStatesListResource());
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
-                final SimuletsStateToSend[] recieved = SerializationUtils.deserialize(resp.getPayload());
+                final SimuletsStateToSend[] recieved = gsonDeserializer.fromJson(resp.getResponseText(),SimuletsStateToSend[].class);
                 trigger.setStates(createListOfStates(recieved, trigger.getUriOfTrigger()));
             }
         }
