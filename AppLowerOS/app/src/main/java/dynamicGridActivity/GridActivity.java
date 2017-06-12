@@ -1,6 +1,7 @@
 package dynamicGridActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class GridActivity extends Activity {
     private CoapClient client;
     private ArrayList<TriggerWrapper> triggerWrappers;
     private SendButtonListener sendButtonListener;
+    private CheeseDynamicAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +74,12 @@ public class GridActivity extends Activity {
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         this.createNewClient();
-        final GraphicalResourcesService resourcesService = new GraphicalResourcesService();
-        resourcesService.refreshSimuletsAndTriggersGraphics(client, applicationData.getTriggers(), applicationData.getSimulets());
+        adapter = new CheeseDynamicAdapter(this,
+                applicationData.getSimulets(),
+                applicationData.getTriggers(),
+                applicationData.getAllMaps().get(0),
+                true);
+        gridView.setAdapter(adapter); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
 //        if (applicationData.getTriggers().size() > 0) {
 //            gridView.setAdapter(new CheeseDynamicAdapter(this,
@@ -82,11 +88,6 @@ public class GridActivity extends Activity {
 //                    applicationData.getAllMaps().get(0),
 //                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        } else {
-        gridView.setAdapter(new CheeseDynamicAdapter(this,
-                applicationData.getSimulets(),
-                applicationData.getTriggers(),
-                applicationData.getAllMaps().get(0),
-                true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        }
 ////        add callback to stop edit mode if needed
 //        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
@@ -150,10 +151,17 @@ public class GridActivity extends Activity {
 
         });
 
-
+        final GraphicalResourcesService graphResThread = new GraphicalResourcesService(client,
+                applicationData.getTriggers(),
+                applicationData.getSimulets(),
+                this,
+                applicationData.getAllMaps().get(0),
+                adapter);
+        graphResThread.execute();
     }
 
-//    private void createSimuletsAndTriggersBar() {
+
+    //    private void createSimuletsAndTriggersBar() {
 //        LinearLayout simuletsBar = (LinearLayout) findViewById(R.id.simulet_options);
 //        for (int i = 0; i < this.applicationData.getTriggers().size(); i++) {
 //            ImageView ii = new ImageView(this);

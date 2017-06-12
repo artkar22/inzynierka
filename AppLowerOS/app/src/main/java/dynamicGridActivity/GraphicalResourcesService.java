@@ -1,7 +1,9 @@
 package dynamicGridActivity;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -19,50 +21,44 @@ import Simulets.Simulet;
 import Simulets.SimuletsState;
 import TriggerSimulets.TriggerSimulet;
 import deserializers.SimuletStateDeserializer;
+import dynamicGrid.mapGenerator.map.MapDTO;
 import modules.SimuletsStateToSend;
 
 /**
  * Created by ArturK on 2017-02-28.
  */
 
-public class GraphicalResourcesService {
+public class GraphicalResourcesService extends AsyncTask {
+    private ProgressDialog dialog;
+    private CoapClient client;
+    private List<TriggerSimulet> triggers;
+    private List<Simulet> simulets;
+    private GridActivity gridActivity;
+    private MapDTO mapDTO;
+    private CheeseDynamicAdapter adapter;
 
-    public void refreshSimuletsAndTriggersGraphics(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets){
+    public GraphicalResourcesService(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets, final GridActivity gridActivity, MapDTO mapDTO, CheeseDynamicAdapter adapter){
 //        getMainIcons(client, triggers, simulets);
-        getStateLists(client, triggers, simulets);
+        this.client = client;
+        this.triggers = triggers;
+        this.simulets = simulets;
+        this.gridActivity = gridActivity;
+        this.mapDTO = mapDTO;
+        this.adapter = adapter;
+        dialog = new ProgressDialog(gridActivity);
     }
 
-//    private void getMainIcons(final CoapClient client,
-//                              final List<TriggerSimulet> triggers,
-//                              final List<Simulet> simulets) {
-//        if (simulets.size() > 0) {
-//            for (Simulet simulet : simulets) {
-//                client.setURI(simulet.getMainIconResource());
-//                CoapResponse resp = client.get();
-//                BitmapFactory.Options opt = new BitmapFactory.Options();
-//                opt.inDither = true;
-//                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                byte[] imageByteArray = resp.getPayload();
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-//                simulet.setMainIconBitmap(bitmap);
-//
-//            }
-//        }
-//        if (triggers.size() > 0) {
-//            for (TriggerSimulet trigger : triggers) {
-//                client.setURI(trigger.getMainIconResource());
-//                CoapResponse resp = client.get();
-//                BitmapFactory.Options opt = new BitmapFactory.Options();
-//                opt.inDither = true;
-//                opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                byte[] imageByteArray = resp.getPayload();
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.length, opt);
-//                trigger.setMainIconBitmap(bitmap);
-//            }
-//        }
-//    }
 
-    private void getStateLists(CoapClient client, List<TriggerSimulet> triggers, List<Simulet> simulets) {
+
+    private void getStateLists(CoapClient client, List<TriggerSimulet> triggers, List<Simulet> simulets, GridActivity gridActivity) {
+        gridActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                dialog.setMessage("Ładowanie grafik ...");
+                dialog.setCancelable(false);
+                dialog.setInverseBackgroundForced(false);
+                dialog.show();
+            }
+        });
         final Gson gsonDeserializer = new GsonBuilder().registerTypeAdapter(SimuletsStateToSend.class,
                 new SimuletStateDeserializer()).create();
         if (simulets.size() > 0) {
@@ -83,6 +79,11 @@ public class GraphicalResourcesService {
                 trigger.setStates(createListOfStates(recieved, trigger.getUriOfTrigger()));
             }
         }
+        gridActivity.runOnUiThread(new Runnable() {
+            public void run() {
+                dialog.dismiss();
+            }
+        });
     }
 
     private List<SimuletsState> createListOfStates(final SimuletsStateToSend[] recieved, final URI uriOfSimulet) {
@@ -99,5 +100,21 @@ public class GraphicalResourcesService {
         opt.inDither = true;
         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
         return BitmapFactory.decodeByteArray(miniature, 0, miniature.length, opt);
+    }
+
+    @Override
+    protected Object doInBackground(Object[] params) {
+
+        getStateLists(client, triggers, simulets, gridActivity);
+        adapter.bindPlacesInMapToTriggers(triggers, mapDTO);
+        adapter.bindPlacesInMapToSimulets(simulets, mapDTO, triggers.size());
+        adapter.bindPlaceInMapToPauseSimulet(mapDTO);
+        gridActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
+        return null;
     }
 }

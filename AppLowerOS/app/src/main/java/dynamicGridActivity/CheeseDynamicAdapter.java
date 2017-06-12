@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import Simulets.Simulet;
 import Simulets.SimuletsState;
@@ -37,18 +38,18 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         this.listOfSimulets = listOfSimulets;
 //        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
         this.currentMap = currentMap;//TODO tymczasowo pierwsza mapa tylko
-        bindPlacesInMapToTriggers(this.listOfTriggers, this.currentMap);
-        bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap, this.listOfTriggers.size());
-        bindPlaceInMapToPauseSimulet(this.currentMap);
+//        bindPlacesInMapToTriggers(this.listOfTriggers, this.currentMap);
+//        bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap, this.listOfTriggers.size());
+//        bindPlaceInMapToPauseSimulet(this.currentMap);
     }
 
-    private void bindPlaceInMapToPauseSimulet(MapDTO currentMap) {
+    public void bindPlaceInMapToPauseSimulet(MapDTO currentMap) {
         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.timer_nasycony);
         Bitmap hm = BitmapFactory.decodeResource(context.getResources(), R.drawable.timer_highlight);
         currentMap.getPlacesInMap().get(6).setSimuletState(new SimuletsState(PAUSE_SIMULET, bm, hm, null));
     }
 
-    private void bindPlacesInMapToTriggers(ArrayList<TriggerSimulet> listOfTriggers, MapDTO currentMap) {
+    public void bindPlacesInMapToTriggers(List<TriggerSimulet> listOfTriggers, MapDTO currentMap) {
         for (int x = 0; x < listOfTriggers.size(); x++) {
             final TriggerSimulet currentSim = listOfTriggers.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
@@ -60,7 +61,7 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
         }
     }
 
-    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets, MapDTO currentMap, int numberOfTriggers) {
+    public void bindPlacesInMapToSimulets(List<Simulet> listOfSimulets, MapDTO currentMap, int numberOfTriggers) {
         for (int x = 0; x < listOfSimulets.size(); x++) {
             final Simulet currentSim = listOfSimulets.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
