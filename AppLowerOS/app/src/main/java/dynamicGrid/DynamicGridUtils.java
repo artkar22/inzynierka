@@ -6,6 +6,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 import Simulets.Simulet;
 import Simulets.SimuletsState;
@@ -13,6 +14,8 @@ import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
+
+import static dynamicGrid.mapGenerator.map.MapDTOBuilder.PAUSE_SIMULET_PLACE;
 
 /**
  * Author: alex askerov
@@ -22,6 +25,7 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 public class DynamicGridUtils {
     private static final String TRIGGER = "TRIGGER";
     private static final String SIMULET = "SIMULET";
+    public static final String PAUSE_SIMULET = "PAUSE_SIMULET";
     private static final String NONE = "NONE";
 
     /**
@@ -58,7 +62,8 @@ public class DynamicGridUtils {
 //            list.set(firstIndex, secondObject);
             list.set(secondIndex, list.set(firstIndex, secondObject));
         } else if ((placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.TRIGGER_PLACE) && firstType.equals(TRIGGER)) ||
-                (placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && firstType.equals(SIMULET))) {
+                (placesTypes.get(firstIndex).equals(MapDTOBuilder.CONTAINER) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && firstType.equals(SIMULET)) ||
+                (placesTypes.get(firstIndex).equals(MapDTOBuilder.PAUSE_SIMULET_PLACE) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && firstType.equals(PAUSE_SIMULET))) {
 
             PlaceInMapDTO secondObject = list.get(secondIndex);
             PlaceInMapDTO firstObject = list.get(firstIndex);
@@ -85,9 +90,17 @@ public class DynamicGridUtils {
             return SIMULET;
         } else if (isTrigger(place, triggers)) {
             return TRIGGER;
+        } else if(isPauseSimulet(place)){
+          return PAUSE_SIMULET;
         } else {
             return NONE;
         }
+    }
+
+    private static boolean isPauseSimulet(PlaceInMapDTO place) {
+        if(place.getSimuletState()==null) return false;
+        return PAUSE_SIMULET.equals(place.getSimuletState().getStateId());
+
     }
 
     private static boolean isTrigger(final PlaceInMapDTO place, ArrayList<TriggerSimulet> triggers) {

@@ -14,6 +14,7 @@ public abstract class MapDTOBuilder {
     public static final String CONTAINER = "CONTAINER";
     public static final String TRIGGER_PLACE = "TRIGGER_PLACE";
     public static final String SIMULET_PLACE = "SIMULET_PLACE";
+    public static final String PAUSE_SIMULET_PLACE = "PAUSE_SIMULET_PLACE";
     public static final String ARROW_PLACE = "ARROW_PLACE";//strzałeczki pomiedzy triggerami a sekwencja simuletow
     public static final String SPACE_BEETWEEN = "SPACE_BEETWEEN"; //miejsce miedzy simuletami a sekwencjami
 
@@ -26,19 +27,6 @@ public abstract class MapDTOBuilder {
 //        }
         return dto;
     }
-
-//    private static void setSpecialPlacesOnDTO(LinkedList<PlaceInMapDTO> placesInDto, ArrayList<PlaceInMapDTO> specialPlacesInMap) {
-//        for (PlaceInMapDTO specialPlace : specialPlacesInMap) {
-//            for (PlaceInMapDTO placeInDto : placesInDto) {
-//                if (specialPlace.getPlaceInMapId() == placeInDto.getPlaceInMapId()) {
-//                    placeInDto.setIsItMap(true);
-//                    placeInDto.setDropAllowed(specialPlace.isDropAllowed());
-//                    placeInDto.setAlreadyDropped(specialPlace.isAlreadyDropped());
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     private static MapDTO initializeMapDTO(final String mapId, final int numberOfColumns,
                                            final int numberOfRows, final int numberOfStateRows) {
@@ -57,7 +45,11 @@ public abstract class MapDTOBuilder {
 
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
             String type;
-            if (currentPlaceInMapIndex < numberOfPlacesForAnItemContainer) {
+            if(currentPlaceInMapIndex == 6) {
+                type = PAUSE_SIMULET_PLACE;
+            }else if(currentPlaceInMapIndex == 13){
+                type = SPACE_BEETWEEN;
+            } else if (currentPlaceInMapIndex < numberOfPlacesForAnItemContainer) {
                 type = CONTAINER;
             } else if (dto.checkIfTriggersIndexesContainsValue(currentPlaceInMapIndex)) {
                 type = TRIGGER_PLACE;

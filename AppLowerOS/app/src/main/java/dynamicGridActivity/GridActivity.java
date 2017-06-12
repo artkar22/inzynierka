@@ -60,7 +60,7 @@ public class GridActivity extends Activity {
     private Gson gSON;
     private CoapClient client;
     private ArrayList<TriggerWrapper> triggerWrappers;
-
+    private SendButtonListener sendButtonListener;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,14 +90,13 @@ public class GridActivity extends Activity {
 //        }
 ////        add callback to stop edit mode if needed
 //        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
-        this.createNewClient();
 
         createTriggersHandling();
         OptionButtonsUtils.setInitialStatusForSimulets(triggerWrappers, client);
         OptionButtonsUtils.createOptionButtons(this, gridView, applicationData, client);
         final Button playButton = (Button) findViewById(R.id.playButton);
-        final SendButtonListener listener = new SendButtonListener(triggerWrappers);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
-        playButton.setOnClickListener(listener);
+        sendButtonListener = new SendButtonListener(triggerWrappers);//TODO WIECEJ MAPÓW BO TERA TYLKO PIERWSZA
+        playButton.setOnClickListener(sendButtonListener);
         final Button resumeButton = (Button) findViewById(R.id.resumeButton);
         resumeButton.setOnClickListener(new ResumeButtonListener(triggerWrappers));
 //        refreshButtonHandling();
@@ -148,79 +147,6 @@ public class GridActivity extends Activity {
 //                }
             }
 
-            private void simuletsOptionsLogicExecution(final Simulet simulet, final ImageView view) {
-                if (GlobalOptionsStates.TIMER_BUTTON_STATE) {//ustawiam timerbutton na simulecie
-                    timerButtonLogic(simulet, view);
-                }
-//                else if (GlobalOptionsStates.FOR_LOOP_BUTTON_STATE) { ////NO_LONGER_ACTIVE
-//                    forLoopButtonLogic(simulet, view);
-//                }
-
-            }
-
-            private void timerButtonLogic(final Simulet simulet, final ImageView view) {
-                if (simulet.isSimuletOn()) {
-                    if (!simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) {//gdy timer i loop nieustawione włacz timer bez loop
-                        view.setImageResource(simulet.getPictureNameOnTimer());
-                        simulet.getOptionsStatus().setTimer(true);
-                    } else if (!simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) {//gdy timer nieustawiony a loop tak to włącz timer i wciąż z loop
-                        view.setImageResource(simulet.getPictureNameOnPetlaTimer());
-                        simulet.getOptionsStatus().setTimer(true);
-                    } else if (simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) {//gdy timer juz ustawiony a loop nie to wyłącz timer i wciąż bez loop
-                        view.setImageResource(simulet.getPictureOn());
-                        simulet.getOptionsStatus().setTimer(false);
-                    } else if (simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) {//gdy timer juz ustawiony a loop tez ustawion to wyłącz timer i wciąż z loop
-                        view.setImageResource(simulet.getPictureNameOnPetla());
-                        simulet.getOptionsStatus().setTimer(false);
-                    }
-                } else { //tu wszystko jak wyżej tylko dla wyłączonego simuletu
-                    if (!simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) {
-                        view.setImageResource(simulet.getPictureNameOffTimer());
-                        simulet.getOptionsStatus().setTimer(true);
-                    } else if (!simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) {//gdy timer nieustawiony a loop tak to włącz timer i wciąż z loop
-                        view.setImageResource(simulet.getPictureNameOffPetlaTimer());
-                        simulet.getOptionsStatus().setTimer(true);
-                    } else if (simulet.getOptionsStatus().isTimer() && !simulet.getOptionsStatus().isForLoop()) {//gdy timer juz ustawiony a loop nie to wyłącz timer i wciąż bez loop
-                        view.setImageResource(simulet.getPictureOff());
-                        simulet.getOptionsStatus().setTimer(false);
-                    } else if (simulet.getOptionsStatus().isTimer() && simulet.getOptionsStatus().isForLoop()) {//gdy timer juz ustawiony a loop tez ustawion to wyłącz timer i wciąż z loop
-                        view.setImageResource(simulet.getPictureNameOffPetla());
-                        simulet.getOptionsStatus().setTimer(false);
-                    }
-                }
-            }
-
-//            private void forLoopButtonLogic(final Simulet simulet, final ImageView view) {
-//                if (simulet.isSimuletOn()) {
-//                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
-//                        view.setImageResource(simulet.getPictureNameOnPetla());
-//                        simulet.getOptionsStatus().setForLoop(true);
-//                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
-//                        view.setImageResource(simulet.getPictureNameOnPetlaTimer());
-//                        simulet.getOptionsStatus().setForLoop(true);
-//                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
-//                        view.setImageResource(simulet.getPictureOn());
-//                        simulet.getOptionsStatus().setForLoop(false);
-//                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
-//                        view.setImageResource(simulet.getPictureNameOnTimer());
-//                        simulet.getOptionsStatus().setForLoop(false);
-//                    }
-//                } else { //tu wszystko jak wyżej tylko dla wyłączonego simuletu
-//                    if (!simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop i timer nieustawione włacz loop bez timer
-//                        view.setImageResource(simulet.getPictureNameOffPetla());
-//                        simulet.getOptionsStatus().setForLoop(true);
-//                    } else if (!simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop nieustawiony a timer tak to włącz loop i wciąż z timer
-//                        view.setImageResource(simulet.getPictureNameOffPetlaTimer());
-//                        simulet.getOptionsStatus().setForLoop(true);
-//                    } else if (simulet.getOptionsStatus().isForLoop() && !simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer nie to wyłącz loopi wciąż bez timer
-//                        view.setImageResource(simulet.getPictureOff());
-//                        simulet.getOptionsStatus().setForLoop(false);
-//                    } else if (simulet.getOptionsStatus().isForLoop() && simulet.getOptionsStatus().isTimer()) {//gdy loop juz ustawiony a timer tez ustawion to wyłącz loop i wciąż z timer
-//                        view.setImageResource(simulet.getPictureNameOffTimer());
-//                        simulet.getOptionsStatus().setForLoop(false);
-//                    }
-//                }
-//            }
 
         });
 
@@ -291,5 +217,11 @@ public class GridActivity extends Activity {
 //
 // trigger.createTriggerThread(new TriggerActionThread(gridView, applicationData, this, client));
         }
+    }
+    public ArrayList<TriggerWrapper> getTriggerWrappers() {
+        return triggerWrappers;
+    }
+    public void resetPauseResumeButtons() {
+        sendButtonListener.reset(this.findViewById(R.id.playButton));
     }
 }

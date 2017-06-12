@@ -11,6 +11,8 @@ import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGridActivity.GridActivity;
 
+import static dynamicGrid.DynamicGridUtils.PAUSE_SIMULET;
+
 /**
  * Created by ArturK on 2017-04-22.
  */
@@ -43,7 +45,9 @@ public class PostDelayedRunnable implements Runnable {
                 ((ImageView) ((LinearLayout) gridView.getChildAt(index-1)).getChildAt(0)).setImageBitmap(simuletInPreviousIter.getMiniature());
             }
             ((ImageView) ((LinearLayout) gridView.getChildAt(index)).getChildAt(0)).setImageBitmap(currentSimulet.getHighlightedMiniature());
+        if(!PAUSE_SIMULET.equals(currentSimulet.getStateId())){
             CoapResponse put = client.put(currentSimulet.getStateId(), 0);
+        }
 
 //                            if (put.isSuccess()) {
 //

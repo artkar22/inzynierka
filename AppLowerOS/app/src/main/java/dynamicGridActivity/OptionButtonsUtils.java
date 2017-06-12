@@ -95,9 +95,10 @@ public class OptionButtonsUtils {
                 @Override
                 public void onLoad(CoapResponse response) {
                     if (!response.getResponseText().equals("no_action")) {
-                        wrapper.getTriggerActionThread().addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
-                        wrapper.getTriggerActionThread().run();
-
+                        if(!wrapper.getTriggerActionThread().isProcessing()) {
+                            wrapper.getTriggerActionThread().addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
+                            wrapper.getTriggerActionThread().run();
+                        }
                     }
                 }
 

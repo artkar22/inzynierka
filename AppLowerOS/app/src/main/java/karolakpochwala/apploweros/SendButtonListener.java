@@ -39,13 +39,13 @@ public class SendButtonListener implements View.OnClickListener {
     public void onClick(View v) { //TODO SEND BUTTON
         if(isPauseButton){
             isPauseButton = false;
-            v.setBackgroundResource(R.drawable.ic_play_circle);
+            v.setBackgroundResource(R.drawable.play_button_2);
             for (TriggerWrapper wrapper: triggerWrappers) {
                 wrapper.getTriggerActionThread().pause();
             }
         } else {
             isPauseButton = true;
-            v.setBackgroundResource(R.drawable.ic_pause_circle);
+            v.setBackgroundResource(R.drawable.pause_3);
             for (TriggerWrapper wrapper: triggerWrappers) {
                 wrapper.getTriggerActionThread().resume();
             }
@@ -88,5 +88,11 @@ public class SendButtonListener implements View.OnClickListener {
             }
         }
 
+    }
+
+    public void reset(View viewById) {
+
+        isPauseButton = true;
+        viewById.setBackgroundResource(R.drawable.pause_3);
     }
 }

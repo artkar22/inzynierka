@@ -37,13 +37,15 @@
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_pause_circle" />
+            android:background="@drawable/pause_3"
+            android:visibility="invisible"/>
         <Button
             android:id="@+id/resumeButton"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_play_circle"
+            android:background="@drawable/next_3"
             android:layout_width="110dp"
-            android:layout_height="110dp" />
+            android:layout_height="110dp"
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:layout_width="match_parent"

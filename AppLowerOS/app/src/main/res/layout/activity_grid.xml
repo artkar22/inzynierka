@@ -43,13 +43,6 @@
                 android:visibility="gone"/>
 
             <Button
-                android:id="@+id/buttonTime"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/time"
-                android:layout_gravity="center_horizontal" />
-
-            <Button
                 android:id="@+id/buttonFor"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -69,15 +62,17 @@
             <Button
                 android:id="@+id/playButton"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_pause_circle"
+                android:background="@drawable/pause_3"
                 android:layout_width="110dp"
-                android:layout_height="110dp" />
+                android:layout_height="110dp"
+                android:visibility="invisible"/>
             <Button
                 android:id="@+id/resumeButton"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_play_circle"
+                android:background="@drawable/next_3"
                 android:layout_width="110dp"
-                android:layout_height="110dp" />
+                android:layout_height="110dp"
+                android:visibility="invisible"/>
             <Button
                 android:id="@+id/refresh"
                 android:layout_gravity="center_horizontal"

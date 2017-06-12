@@ -3,14 +3,9 @@ package TriggerSimulets;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.util.ArrayMap;
 import android.util.Pair;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import ApplicationData.ApplicationData;
-import Protocol.Comm_Protocol;
-import Simulets.Simulet;
 import Simulets.SimuletsState;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
@@ -42,6 +35,8 @@ public class TriggerActionThread implements Runnable {
     private LinkedList<List<Message>> queueOfpendingMessages;
     private long pausedTime;
     private Map<Message, Long> messageTimeMap;
+    private boolean processing =false;
+    private boolean canSwitchProccessingOff;
 
     public TriggerActionThread(final DynamicGridView gridView, final ApplicationData applicationData,
                                final GridActivity gridActivity, final CoapClient client) {
@@ -81,7 +76,7 @@ public class TriggerActionThread implements Runnable {
         gridActivity.runOnUiThread(new Runnable() {
             public void run() {
                 while (queue.size() > 0) {
-                    final Pair<TriggerSimulet, String> trigger = removeFirst();
+                    final Pair<TriggerSimulet, String> trigger = queue.remove(0);
                     final MapDTO currentMap = applicationData.getAllMaps().get(0);
                     final LinkedList<Integer> indexes = currentMap.getTriggersIndexes();
                     for (Integer index : indexes) {
@@ -105,8 +100,12 @@ public class TriggerActionThread implements Runnable {
 //        Handler handler1 = new Handler();
         int delay = 0;
 //        int delay = executePreSequenceIconChange(handler1,index -1, currentMap);
+        Message showPlayResumeBeforeSequence = Message.obtain();
+        showPlayResumeBeforeSequence.obj = new PostDelayedPlayResumeButtonsManagment(gridActivity, true, this);
+        myPendingMessages.add(showPlayResumeBeforeSequence);
+        delayHandler.sendMessageDelayed(showPlayResumeBeforeSequence, delay);
         while (index < lastColumnIndex + 1) {
-            final Message mess = Message.obtain();
+            Message mess = Message.obtain();
             if (currentMap.getPlacesInMap().size() > index && index != lastColumnIndex) {
                 final PlaceInMapDTO dto = currentMap.getPlacesInMap().get(index);
                 final SimuletsState currentSimulet = dto.getSimuletState();
@@ -115,6 +114,7 @@ public class TriggerActionThread implements Runnable {
                     mess.obj = new PostDelayedRunnable(client, currentSimulet, index, gridView, currentMap, indexVal);
                     myPendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
+                    processing = true;
 //                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
                 } else {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
@@ -123,7 +123,8 @@ public class TriggerActionThread implements Runnable {
                     delayHandler.sendMessageDelayed(mess, delay);
 //                        delayHandler.postDelayed(new PostDelayedIconChange(index, gridView, currentMap, indexVal), delay);
                 }
-            } else {
+            }
+            else {
                 delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                 mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
                 myPendingMessages.add(mess);
@@ -133,6 +134,11 @@ public class TriggerActionThread implements Runnable {
 
             index++;
         }
+        Message hidePlayResumeAfterSequence = Message.obtain();
+        hidePlayResumeAfterSequence.obj = new PostDelayedPlayResumeButtonsManagment(gridActivity, false, this);
+        myPendingMessages.add(hidePlayResumeAfterSequence);
+        delayHandler.sendMessageDelayed(hidePlayResumeAfterSequence, delay);
+        delayHandler.sendEmptyMessageAtTime(100, delay);
         queueOfpendingMessages.add(myPendingMessages);
     }
 
@@ -149,6 +155,10 @@ public class TriggerActionThread implements Runnable {
 
     public void addToQueue(final Pair<TriggerSimulet, String> triggerAndState) {
         queue.add(triggerAndState);
+    }
+    public boolean isQueueEmpty(){
+        if(queue.size() == 0) return true;
+        return false;
     }
 
     private Pair<TriggerSimulet, String> removeFirst() {
@@ -216,7 +226,15 @@ public class TriggerActionThread implements Runnable {
             pausedTime = SystemClock.uptimeMillis();
         }
     }
-
+    public boolean canISwitchOffProcessing(){
+        return canSwitchProccessingOff;
+    }
+    public boolean isProcessing(){
+        return processing;
+    }
+    public void setProcessing(boolean val){
+        processing = val;
+    }
 //    private void mapMessagesToNewTime() {
 //        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();
 //        for (Message msg : pendingMessages) {
