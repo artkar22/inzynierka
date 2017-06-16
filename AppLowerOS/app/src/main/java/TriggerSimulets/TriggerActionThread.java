@@ -35,8 +35,7 @@ public class TriggerActionThread implements Runnable {
     private LinkedList<List<Message>> queueOfpendingMessages;
     private long pausedTime;
     private Map<Message, Long> messageTimeMap;
-    private boolean processing =false;
-    private boolean canSwitchProccessingOff;
+    private List<String> activeProcessess;
 
     public TriggerActionThread(final DynamicGridView gridView, final ApplicationData applicationData,
                                final GridActivity gridActivity, final CoapClient client) {
@@ -44,6 +43,7 @@ public class TriggerActionThread implements Runnable {
         this.applicationData = applicationData;
         this.gridActivity = gridActivity;
         this.client = client;
+        activeProcessess = new LinkedList<>();
         queue = new LinkedList<>();
         queueOfpendingMessages = new LinkedList<>();
         messageTimeMap = new LinkedHashMap<>();
@@ -84,6 +84,7 @@ public class TriggerActionThread implements Runnable {
                         final PlaceInMapDTO placeOfTrigger = currentMap.getPlacesInMap().get(indexVal);
                         if (placeOfTrigger.getSimuletState() != null && placeOfTrigger.getSimuletState().getStateId().equals(trigger.second)
                                 && placeOfTrigger.getSimuletState().getSimuletsURI().equals(trigger.first.getUriOfTrigger())) {
+                            activeProcessess.add(trigger.second);
                             executeSequenceForThatSimulet(indexVal, currentMap);
                         }
                     }
@@ -114,7 +115,6 @@ public class TriggerActionThread implements Runnable {
                     mess.obj = new PostDelayedRunnable(client, currentSimulet, index, gridView, currentMap, indexVal);
                     myPendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
-                    processing = true;
 //                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
                 } else {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
@@ -226,14 +226,17 @@ public class TriggerActionThread implements Runnable {
             pausedTime = SystemClock.uptimeMillis();
         }
     }
-    public boolean canISwitchOffProcessing(){
-        return canSwitchProccessingOff;
+
+    public boolean isInProcessing(String newProcess){
+        return activeProcessess.contains(newProcess);
     }
-    public boolean isProcessing(){
-        return processing;
+    public boolean isProcessing() {
+        return activeProcessess.size()>0;
     }
-    public void setProcessing(boolean val){
-        processing = val;
+
+    public void removeFirstInProcessing() {
+        if(activeProcessess.size()>0)
+            activeProcessess.remove(0);
     }
 //    private void mapMessagesToNewTime() {
 //        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();

@@ -88,25 +88,10 @@ public class OptionButtonsUtils {
 //                simulet.setSimuletOn(false);
 //            }
 //        }
-        for (final TriggerWrapper wrapper : triggerWrappers) {
-            final TriggerSimulet trigger = wrapper.getTrigger();
+        for (TriggerWrapper wrapper : triggerWrappers) {
+            TriggerSimulet trigger = wrapper.getTrigger();
             client.setURI(trigger.getStatusResource());
-            client.observe(new CoapHandler() {
-                @Override
-                public void onLoad(CoapResponse response) {
-                    if (!response.getResponseText().equals("no_action")) {
-                        if(!wrapper.getTriggerActionThread().isProcessing()) {
-                            wrapper.getTriggerActionThread().addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
-                            wrapper.getTriggerActionThread().run();
-                        }
-                    }
-                }
-
-                @Override
-                public void onError() {
-
-                }
-            });
+            client.observe(new TriggerHandler(wrapper, trigger));
         }
     }
 }

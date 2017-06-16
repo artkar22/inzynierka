@@ -30,7 +30,7 @@ public class PostDelayedPlayResumeButtonsManagment implements Runnable {
             (gridActivity.findViewById(R.id.playButton)).setVisibility(View.VISIBLE);
             (gridActivity.findViewById(R.id.resumeButton)).setVisibility(View.VISIBLE);
         } else {
-            this.processing.setProcessing(false);
+            this.processing.removeFirstInProcessing();
             boolean isAnyThreadProccessing = false;
             for(TriggerWrapper wrapper : gridActivity.getTriggerWrappers()){
                 if(wrapper.getTriggerActionThread().isProcessing()){

@@ -218,10 +218,9 @@ public class GridActivity extends Activity {
 
     private void createTriggersHandling() {
         triggerWrappers = new ArrayList<>();
-        final ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
+        ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
         for (TriggerSimulet trigger : triggers) {
-            TriggerWrapper wrapper = new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client));
-            triggerWrappers.add(wrapper);
+            triggerWrappers.add(new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client)));
 //
 // trigger.createTriggerThread(new TriggerActionThread(gridView, applicationData, this, client));
         }
