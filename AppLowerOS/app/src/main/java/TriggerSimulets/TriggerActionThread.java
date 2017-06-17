@@ -223,7 +223,12 @@ public class TriggerActionThread implements Runnable {
                     delayHandler.sendMessageDelayed(nextStep, timeLeftForMessage);
                 }
             }
-            pausedTime = SystemClock.uptimeMillis();
+            if(queueOfpendingMessages.size()>0 && queueOfpendingMessages.getFirst().size()>0){
+                pausedTime = SystemClock.uptimeMillis();
+            } else {
+                resetPauseTime();
+                gridActivity.resetPauseResumeButtons();
+            }
         }
     }
 
@@ -237,6 +242,10 @@ public class TriggerActionThread implements Runnable {
     public void removeFirstInProcessing() {
         if(activeProcessess.size()>0)
             activeProcessess.remove(0);
+    }
+
+    public void resetPauseTime() {
+        pausedTime = PAUSED_TIME_UNSET;
     }
 //    private void mapMessagesToNewTime() {
 //        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();

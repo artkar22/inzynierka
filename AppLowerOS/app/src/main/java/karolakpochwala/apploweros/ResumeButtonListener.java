@@ -5,6 +5,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import TriggerSimulets.TriggerWrapper;
+import dynamicGridActivity.GridActivity;
 
 /**
  * Created by Inni on 2017-05-16.
