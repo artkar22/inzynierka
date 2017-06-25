@@ -116,7 +116,7 @@ public class TriggerActionThread implements Runnable {
                     myPendingMessages.add(mess);
                     delayHandler.sendMessageDelayed(mess, delay);
 //                        delayHandler.postDelayed(new PostDelayedRunnable(client,currentSimulet,index,gridView, currentMap, indexVal), delay);
-                } else {
+                } else if(myPendingMessages.size()>0 && !myPendingMessages.get(myPendingMessages.size()-1).obj.getClass().getCanonicalName().equals(PostDelayedIconChange.class.getCanonicalName())) {
                     delay = delay + getHowLongToWait(Consts.TIME_BEETWEEN_SIMULETS, false);
                     mess.obj = new PostDelayedIconChange(index, gridView, currentMap, indexVal);
                     myPendingMessages.add(mess);
