@@ -2,11 +2,8 @@ package coapClient;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.network.CoapEndpoint;
@@ -26,13 +23,9 @@ import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 import Simulets.IpsoDigitalOutput;
-import Simulets.IpsoLightControl;
 import Simulets.Simulet;
-import Simulets.SimuletsState;
-import modules.SimuletsStateToSend;
 import TriggerSimulets.TriggerSimulet;
 import dynamicGridActivity.GridActivity;
 import karolakpochwala.apploweros.MainActivity;
@@ -184,11 +177,11 @@ public class CoapClientThread implements Runnable {
                     if (broadcast.getClass().equals(Inet4Address.class)) {
                         int port = 11110;
                         while (port < 11118) {
-                            URI uriOfSimuletsId = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/id");
+                            URI uriOfSimuletsClass = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/class");
 
-                            Log.i("uri", uriOfSimuletsId.toString());
+                            Log.i("uri", uriOfSimuletsClass.toString());
 
-                            client.setURI(uriOfSimuletsId.toString());
+                            client.setURI(uriOfSimuletsClass.toString());
                             CoapResponse resp = client.get();
                             if (resp != null) {
                                 URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
@@ -210,16 +203,11 @@ public class CoapClientThread implements Runnable {
     }
 
     private void createSimulet(CoapResponse resp, URI uri) {
-
-        if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL))) {
-            IpsoLightControl simulet = new IpsoLightControl(uri);
-            simulet.setId(resp.getResponseText());
-            simulets.add(simulet);
-        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_OUTPUT))) {
+        if (resp.getResponseText().equals(ACTION_SIMULET)) {
             IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
             simulet.setId(resp.getResponseText());
             simulets.add(simulet);
-        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_INPUT))) {
+        } else if (resp.getResponseText().equals(EVENT_SIMULET)) {
             TriggerSimulet trigger = new TriggerSimulet(uri);
             trigger.setId(resp.getResponseText());
             triggers.add(trigger);

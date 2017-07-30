@@ -19,16 +19,14 @@ import java.util.Enumeration;
 
 import ApplicationData.ApplicationData;
 import Simulets.IpsoDigitalOutput;
-import Simulets.IpsoLightControl;
 import Simulets.Simulet;
 import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGridActivity.GridActivity;
 
-import static ipsoConfig.ipsoDefinitions.IPSO_DIGITAL_INPUT;
-import static ipsoConfig.ipsoDefinitions.IPSO_DIGITAL_OUTPUT;
-import static ipsoConfig.ipsoDefinitions.IPSO_LIGHT_CONTROL;
+import static ipsoConfig.ipsoDefinitions.EVENT_SIMULET;
+import static ipsoConfig.ipsoDefinitions.ACTION_SIMULET;
 
 /**
  * Created by ArturK on 2017-01-10.
@@ -116,14 +114,10 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
     }
 
     private void createSimulet(CoapResponse resp, URI uri) {
-
-        if (resp.getResponseText().equals(Integer.toString(IPSO_LIGHT_CONTROL))) {
-            IpsoLightControl simulet = new IpsoLightControl(uri);
-            simulets.add(simulet);
-        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_OUTPUT))) {
+        if (resp.getResponseText().equals(ACTION_SIMULET)) {
             IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
             simulets.add(simulet);
-        } else if (resp.getResponseText().equals(Integer.toString(IPSO_DIGITAL_INPUT))) {
+        } else if (resp.getResponseText().equals(EVENT_SIMULET)) {
             TriggerSimulet trigger = new TriggerSimulet(uri);
             triggers.add(trigger);
         }
