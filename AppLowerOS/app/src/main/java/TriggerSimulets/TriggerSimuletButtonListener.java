@@ -4,9 +4,6 @@ import android.view.View;
 
 import ApplicationData.ApplicationData;
 import dynamicGrid.DynamicGridView;
-import dynamicGridActivity.CheeseDynamicAdapter;
-import karolakpochwala.apploweros.R;
-import options.GlobalOptionsStates;
 
 /**
  * Created by ArturK on 2016-12-13.
@@ -30,7 +27,7 @@ public class TriggerSimuletButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-//        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
+//        gridView.setAdapter(new SimuletDynamicAdapter(gridView.getContext(),
 //                appData.getSimulets(),
 //                triggerSimulet,
 //                appData.getAllMaps().get(0),

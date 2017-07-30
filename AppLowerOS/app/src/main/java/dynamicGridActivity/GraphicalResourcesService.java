@@ -7,9 +7,7 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 
@@ -35,9 +33,9 @@ public class GraphicalResourcesService extends AsyncTask {
     private List<Simulet> simulets;
     private GridActivity gridActivity;
     private MapDTO mapDTO;
-    private CheeseDynamicAdapter adapter;
+    private SimuletDynamicAdapter adapter;
 
-    public GraphicalResourcesService(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets, final GridActivity gridActivity, MapDTO mapDTO, CheeseDynamicAdapter adapter){
+    public GraphicalResourcesService(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets, final GridActivity gridActivity, MapDTO mapDTO, SimuletDynamicAdapter adapter){
 //        getMainIcons(client, triggers, simulets);
         this.client = client;
         this.triggers = triggers;

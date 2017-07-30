@@ -23,13 +23,8 @@ import Simulets.IpsoLightControl;
 import Simulets.Simulet;
 import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
-import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
-import dynamicGridActivity.CheeseDynamicAdapter;
 import dynamicGridActivity.GridActivity;
-import dynamicGridActivity.OptionButtonsUtils;
-import karolakpochwala.apploweros.MainActivity;
-import karolakpochwala.apploweros.R;
 
 import static ipsoConfig.ipsoDefinitions.IPSO_DIGITAL_INPUT;
 import static ipsoConfig.ipsoDefinitions.IPSO_DIGITAL_OUTPUT;
@@ -66,7 +61,7 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void result) {
 //        OptionButtonsUtils.createMapForFirstTrigger(triggers, allMaps.get(0));
 //        final DynamicGridView gridView = (DynamicGridView) gridActivity.findViewById(R.id.dynamic_grid);
-//        gridView.setAdapter(new CheeseDynamicAdapter(gridView.getContext(),
+//        gridView.setAdapter(new SimuletDynamicAdapter(gridView.getContext(),
 //                simulets,
 //                triggers.get(0),
 //                allMaps.get(0),

@@ -1,25 +1,16 @@
 package dynamicGridActivity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v7.graphics.drawable.DrawableUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
 
 import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapHandler;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.network.CoapEndpoint;
 import org.eclipse.californium.core.network.config.NetworkConfig;
 
@@ -32,24 +23,17 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import ApplicationData.ApplicationData;
-import Protocol.Comm_Protocol;
-import Simulets.Simulet;
 import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.TriggerSimulet;
-import TriggerSimulets.TriggerSimuletButtonListener;
 import TriggerSimulets.TriggerWrapper;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
-import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
-import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import karolakpochwala.apploweros.R;
 import karolakpochwala.apploweros.ResumeButtonListener;
 import karolakpochwala.apploweros.SendButtonListener;
 import mainUtils.Consts;
 import mainUtils.NetworkUtils;
-import options.GlobalOptionsStates;
-import options.timer.TimerButtonListener;
 
 public class GridActivity extends Activity {
 
@@ -62,7 +46,7 @@ public class GridActivity extends Activity {
     private CoapClient client;
     private ArrayList<TriggerWrapper> triggerWrappers;
     private SendButtonListener sendButtonListener;
-    private CheeseDynamicAdapter adapter;
+    private SimuletDynamicAdapter adapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +58,7 @@ public class GridActivity extends Activity {
         gridView = (DynamicGridView) findViewById(R.id.dynamic_grid);
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         this.createNewClient();
-        adapter = new CheeseDynamicAdapter(this,
+        adapter = new SimuletDynamicAdapter(this,
                 applicationData.getSimulets(),
                 applicationData.getTriggers(),
                 applicationData.getAllMaps().get(0),
@@ -82,7 +66,7 @@ public class GridActivity extends Activity {
         gridView.setAdapter(adapter); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
 //        if (applicationData.getTriggers().size() > 0) {
-//            gridView.setAdapter(new CheeseDynamicAdapter(this,
+//            gridView.setAdapter(new SimuletDynamicAdapter(this,
 //                    applicationData.getSimulets(),
 //                    applicationData.getTriggers().get(0),
 //                    applicationData.getAllMaps().get(0),

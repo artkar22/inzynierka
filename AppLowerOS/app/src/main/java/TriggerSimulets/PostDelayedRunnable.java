@@ -39,7 +39,7 @@ public class PostDelayedRunnable implements Runnable {
     public void run() {
 //                        CoapResponse get = client.get();
 //                        if (get.getCode().equals(CoAP.ResponseCode.CONTENT) && get.getResponseText().equals(Comm_Protocol.SWITCHED_OFF)) {
-            client.setURI(currentSimulet.getSimuletsURI() + "/current_status");//status_resource - tak będzie szybciej XD
+            client.setURI(currentSimulet.getSimuletsURI() + "/current_state");//status_resource - tak będzie szybciej XD
             SimuletsState simuletInPreviousIter = currentMap.getPlacesInMap().get(index-1).getSimuletState();
             if(simuletInPreviousIter != null && index-1>= indexVal+1){
                 ((ImageView) ((LinearLayout) gridView.getChildAt(index-1)).getChildAt(0)).setImageBitmap(simuletInPreviousIter.getMiniature());

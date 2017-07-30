@@ -24,14 +24,14 @@ import karolakpochwala.apploweros.R;
 import static dynamicGrid.DynamicGridUtils.PAUSE_SIMULET;
 
 
-public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
+public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
     private MapDTO currentMap;
     private ArrayList<Simulet> listOfSimulets;
     private ArrayList<TriggerSimulet> listOfTriggers;
     private Context context;
 
-    public CheeseDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets,
-                                ArrayList<TriggerSimulet> triggers, MapDTO currentMap, boolean bindSimulets) {
+    public SimuletDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets,
+                                 ArrayList<TriggerSimulet> triggers, MapDTO currentMap, boolean bindSimulets) {
         super(context, currentMap, listOfSimulets, triggers);
         this.context = context;
         this.listOfTriggers = triggers;
@@ -89,21 +89,21 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        CheeseViewHolder holder;
+        SimuletViewHolder holder;
         PlaceInMapDTO currentPlace = currentMap.getPlacesInMap().get(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_grid, null);
             if (currentPlace.getSimuletState() != null) {
-                holder = new CheeseViewHolder(convertView, currentMap.getPlacesInMap().get(position).getSimuletState());
+                holder = new SimuletViewHolder(convertView, currentMap.getPlacesInMap().get(position).getSimuletState());
 
             } else {
-                holder = new CheeseViewHolder(convertView);
+                holder = new SimuletViewHolder(convertView);
 
             }
             convertView.setTag(holder);
         } else {
-            holder = (CheeseViewHolder) convertView.getTag();
+            holder = (SimuletViewHolder) convertView.getTag();
             if (currentPlace.getSimuletState() != null) {
                 holder.simuletState = currentPlace.getSimuletState();
             }
@@ -125,16 +125,16 @@ public class CheeseDynamicAdapter extends BaseDynamicGridAdapter {
     }
 
 
-    private class CheeseViewHolder {
+    private class SimuletViewHolder {
         private ImageView image;
         private SimuletsState simuletState;
 
-        private CheeseViewHolder(View view, SimuletsState simuletState) {
+        private SimuletViewHolder(View view, SimuletsState simuletState) {
             this.simuletState = simuletState;
             image = (ImageView) view.findViewById(R.id.item_img);
         }
 
-        public CheeseViewHolder(View view) {
+        public SimuletViewHolder(View view) {
             image = (ImageView) view.findViewById(R.id.item_img);
             simuletState = null;
         }
