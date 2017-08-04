@@ -2,25 +2,17 @@ package dynamicGridActivity;
 
 
 import android.app.ProgressDialog;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListAdapter;
 
 import org.eclipse.californium.core.CoapClient;
 
 import java.util.ArrayList;
 
 import ApplicationData.ApplicationData;
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import TriggerSimulets.TriggerActionThread;
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import coapClient.AsyncRefresh;
-import coapClient.CoapClientThread;
-import dynamicGrid.DynamicGridView;
-import dynamicGrid.mapGenerator.map.MapDTO;
-import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
-import karolakpochwala.apploweros.MainActivity;
-import karolakpochwala.apploweros.R;
 
 /**
  * Created by ArturK on 2017-01-04.
@@ -41,9 +33,9 @@ public class RefreshButtonListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        final ArrayList<Simulet> simulets = applicationData.getSimulets();
-        final ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
-        simulets.clear();
+        final ArrayList<ActionSimulet> actionSimulets = applicationData.getActionSimulets();
+        final ArrayList<EventSimulet> triggers = applicationData.getEventSimulets();
+        actionSimulets.clear();
         triggers.clear();
         ProgressDialog dialog = new ProgressDialog(gridActivity);
         dialog.setMessage("Wyszukiwanie simuletów, proszę czekać ...");

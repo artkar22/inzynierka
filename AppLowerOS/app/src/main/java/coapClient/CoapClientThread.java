@@ -24,9 +24,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
-import Simulets.IpsoDigitalOutput;
-import Simulets.Simulet;
-import TriggerSimulets.TriggerSimulet;
+import Simulets.ActionSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGridActivity.GridActivity;
 import karolakpochwala.apploweros.MainActivity;
 import mainUtils.NetworkUtils;
@@ -41,28 +40,30 @@ public class CoapClientThread implements Runnable {
 
     private static final int MIN_PORT_NUMBER = 0;
     private static final int MAX_PORT_NUMBER = 12000;
-    private ArrayList<Simulet> simulets;
-    private ArrayList<TriggerSimulet> triggers;
+    public static final int SEARCH_BEGINNING_PORT = 11110;
+    public static final int SEARCH_END_PORT = 11120;
+    private ArrayList<ActionSimulet> actionSimulets;
+    private ArrayList<EventSimulet> eventSimulets;
     private CoapClient client;
     private MainActivity mainActivity;
     private GridActivity gridActivity;
     private ProgressDialog dialog;
 
-    public CoapClientThread(final ArrayList<Simulet> simulets, final ArrayList<TriggerSimulet> triggers,
+    public CoapClientThread(final ArrayList<ActionSimulet> actionSimulets, final ArrayList<EventSimulet> eventSimulets,
                             final MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-        this.simulets = simulets;
-        this.triggers = triggers;
+        this.actionSimulets = actionSimulets;
+        this.eventSimulets = eventSimulets;
         this.client = new CoapClient();
         dialog = new ProgressDialog(mainActivity);
         setCoap();
     }
 
-    public CoapClientThread(final ArrayList<Simulet> simulets, final ArrayList<TriggerSimulet> triggers,
+    public CoapClientThread(final ArrayList<ActionSimulet> actionSimulets, final ArrayList<EventSimulet> eventSimulets,
                             final GridActivity gridActivity, final CoapClient client) {
         this.gridActivity = gridActivity;
-        this.simulets = simulets;
-        this.triggers = triggers;
+        this.actionSimulets = actionSimulets;
+        this.eventSimulets = eventSimulets;
         this.client = client;
         dialog = new ProgressDialog(gridActivity);
     }
@@ -89,6 +90,7 @@ public class CoapClientThread implements Runnable {
             e.printStackTrace();
         }
     }
+
     private void stopEndpoint() {
         client.getEndpoint().destroy();
     }
@@ -160,7 +162,6 @@ public class CoapClientThread implements Runnable {
 
 
     private void discoverDevices() {
-
         try {
             Enumeration interfaces = NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements()) {
@@ -175,54 +176,62 @@ public class CoapClientThread implements Runnable {
                         continue;
                     }
                     if (broadcast.getClass().equals(Inet4Address.class)) {
-                        int port = 11110;
-                        while (port < 11118) {
-                            URI uriOfSimuletsClass = new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/class");
-
-                            Log.i("uri", uriOfSimuletsClass.toString());
-
-                            client.setURI(uriOfSimuletsClass.toString());
-                            CoapResponse resp = client.get();
-                            if (resp != null) {
-                                URI uriOfSimulet = new URI("coap://" + resp.advanced().getSource().getHostAddress() + ":" + Integer.toString(port));
-
-                                createSimulet(resp, uriOfSimulet);
-                            }
-                            port++;
-                        }
+                        searchForSimulets(broadcast);
                     }
-//                    }
                 }
             }
         } catch (SocketException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void searchForSimulets(InetAddress broadcast) {
+        try {
+            int port = SEARCH_BEGINNING_PORT;
+            while (port < SEARCH_END_PORT) {
+                URI uriOfSimuletsClass =
+                        new URI("coap:/" + broadcast + ":" + Integer.toString(port) + "/class");
+
+                Log.i("uri", uriOfSimuletsClass.toString());
+
+                client.setURI(uriOfSimuletsClass.toString());
+                CoapResponse resp = client.get();
+                if (resp != null && resp.isSuccess()) {
+                    URI uriOfSimulet =
+                            new URI("coap://" +
+                                    resp.advanced().getSource().getHostAddress() +
+                                    ":" + Integer.toString(port));
+
+                    createSimulet(resp, uriOfSimulet);
+                }
+                port++;
+            }
         } catch (URISyntaxException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     private void createSimulet(CoapResponse resp, URI uri) {
         if (resp.getResponseText().equals(ACTION_SIMULET)) {
-            IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
-            simulet.setId(resp.getResponseText());
-            simulets.add(simulet);
+            ActionSimulet simulet = new ActionSimulet(uri);
+            simulet.setSimuletClass(resp.getResponseText());
+            actionSimulets.add(simulet);
         } else if (resp.getResponseText().equals(EVENT_SIMULET)) {
-            TriggerSimulet trigger = new TriggerSimulet(uri);
-            trigger.setId(resp.getResponseText());
-            triggers.add(trigger);
+            EventSimulet eventSimulet = new EventSimulet(uri);
+            eventSimulet.setClass(resp.getResponseText());
+            eventSimulets.add(eventSimulet);
         }
     }
 
     private void discoverResourcesOfEachDevice() {
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getUriOfSimulet().toString());
-                simulet.setResources(client.discover());
+        if (actionSimulets.size() > 0) {
+            for (ActionSimulet actionSimulet : actionSimulets) {
+                client.setURI(actionSimulet.getUriOfSimulet().toString());
+                actionSimulet.setResources(client.discover());
             }
         }
-        if (triggers.size() > 0) {
-            for (TriggerSimulet trigger : triggers) {
+        if (eventSimulets.size() > 0) {
+            for (EventSimulet trigger : eventSimulets) {
                 client.setURI(trigger.getUriOfTrigger().toString());
                 trigger.setResources(client.discover());
             }

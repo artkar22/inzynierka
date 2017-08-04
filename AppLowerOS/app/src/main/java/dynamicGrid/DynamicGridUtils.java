@@ -6,16 +6,13 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.StringTokenizer;
 
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import Simulets.SimuletsState;
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
-
-import static dynamicGrid.mapGenerator.map.MapDTOBuilder.PAUSE_SIMULET_PLACE;
 
 /**
  * Author: alex askerov
@@ -50,11 +47,11 @@ public class DynamicGridUtils {
      * @param secondIndex The position of the second item in the list.
      */
     public static void swap(LinkedList<PlaceInMapDTO> list, MapDTO map,
-                            ArrayList<Simulet> listOfSimulets, ArrayList<TriggerSimulet> triggers,
+                            ArrayList<ActionSimulet> listOfActionSimulets, ArrayList<EventSimulet> triggers,
                             int firstIndex, int secondIndex) {
         final ArrayList placesTypes = map.getPlacesTypes();
-        final String firstType = checkType(list.get(firstIndex), triggers, listOfSimulets);
-        final String secondType = checkType(list.get(secondIndex), triggers, listOfSimulets);
+        final String firstType = checkType(list.get(firstIndex), triggers, listOfActionSimulets);
+        final String secondType = checkType(list.get(secondIndex), triggers, listOfActionSimulets);
         if ((placesTypes.get(firstIndex).equals(MapDTOBuilder.TRIGGER_PLACE) && placesTypes.get(secondIndex).equals(MapDTOBuilder.TRIGGER_PLACE) && !firstType.equals(SIMULET)&& !secondType.equals(SIMULET)) ||
                 (placesTypes.get(firstIndex).equals(MapDTOBuilder.SIMULET_PLACE) && placesTypes.get(secondIndex).equals(MapDTOBuilder.SIMULET_PLACE) && !firstType.equals(TRIGGER)&& !secondType.equals(TRIGGER))) {
             //Trigger podmien z triggerem lub simulet z simuletem
@@ -85,8 +82,8 @@ public class DynamicGridUtils {
         return Math.abs((view.getBottom() - view.getTop()) / 2);
     }
 
-    private static String checkType(final PlaceInMapDTO place, ArrayList<TriggerSimulet> triggers, ArrayList<Simulet> simulets) {
-        if (isSimulet(place, simulets)) {
+    private static String checkType(final PlaceInMapDTO place, ArrayList<EventSimulet> triggers, ArrayList<ActionSimulet> actionSimulets) {
+        if (isSimulet(place, actionSimulets)) {
             return SIMULET;
         } else if (isTrigger(place, triggers)) {
             return TRIGGER;
@@ -103,20 +100,20 @@ public class DynamicGridUtils {
 
     }
 
-    private static boolean isTrigger(final PlaceInMapDTO place, ArrayList<TriggerSimulet> triggers) {
+    private static boolean isTrigger(final PlaceInMapDTO place, ArrayList<EventSimulet> triggers) {
         if(place.getSimuletState()==null) return false;
         final URI triggersUri = place.getSimuletState().getSimuletsURI();
-        for (TriggerSimulet trigger : triggers) {
+        for (EventSimulet trigger : triggers) {
             if (trigger.getUriOfTrigger().equals(triggersUri)) return true;
         }
         return false;
     }
 
-    private static boolean isSimulet(final PlaceInMapDTO place, ArrayList<Simulet> simulets) {
+    private static boolean isSimulet(final PlaceInMapDTO place, ArrayList<ActionSimulet> actionSimulets) {
         if(place.getSimuletState()==null) return false;
         final URI simuletsUri = place.getSimuletState().getSimuletsURI();
-        for (Simulet simulet : simulets) {
-            if (simulet.getUriOfSimulet().equals(simuletsUri)) return true;
+        for (ActionSimulet actionSimulet : actionSimulets) {
+            if (actionSimulet.getUriOfSimulet().equals(simuletsUri)) return true;
         }
         return false;
     }

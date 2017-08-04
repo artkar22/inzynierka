@@ -5,7 +5,7 @@ import android.util.Pair;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
 
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import TriggerSimulets.TriggerWrapper;
 
 /**
@@ -15,9 +15,9 @@ import TriggerSimulets.TriggerWrapper;
 public class TriggerHandler implements CoapHandler{
 
     private TriggerWrapper wrapper;
-    private TriggerSimulet trigger;
+    private EventSimulet trigger;
 
-    public TriggerHandler(TriggerWrapper wrapper, TriggerSimulet trigger){
+    public TriggerHandler(TriggerWrapper wrapper, EventSimulet trigger){
             this.wrapper = wrapper;
             this.trigger = trigger;
         }
@@ -26,7 +26,7 @@ public class TriggerHandler implements CoapHandler{
         public void onLoad(CoapResponse response) {
             if (!response.getResponseText().equals("no_action")) {
                 if(!wrapper.getTriggerActionThread().isInProcessing(response.getResponseText())) {
-                    wrapper.getTriggerActionThread().addToQueue(new Pair<TriggerSimulet, String>(trigger, response.getResponseText()));
+                    wrapper.getTriggerActionThread().addToQueue(new Pair<EventSimulet, String>(trigger, response.getResponseText()));
                     wrapper.getTriggerActionThread().run();
                 }
             }

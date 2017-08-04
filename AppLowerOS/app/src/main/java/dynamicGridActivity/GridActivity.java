@@ -23,8 +23,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import ApplicationData.ApplicationData;
+import TriggerSimulets.EventSimulet;
 import TriggerSimulets.TriggerActionThread;
-import TriggerSimulets.TriggerSimulet;
 import TriggerSimulets.TriggerWrapper;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.MapGenerator;
@@ -59,22 +59,22 @@ public class GridActivity extends Activity {
         gridView.setNumColumns(applicationData.getAllMaps().get(0).getNumberOfColums());
         this.createNewClient();
         adapter = new SimuletDynamicAdapter(this,
-                applicationData.getSimulets(),
-                applicationData.getTriggers(),
+                applicationData.getActionSimulets(),
+                applicationData.getEventSimulets(),
                 applicationData.getAllMaps().get(0),
                 true);
         gridView.setAdapter(adapter); //TODO TYLKO PIERWSZA MAPA NA RAZIE
-//        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getTriggers(), applicationData.getAllMaps().get(0));
-//        if (applicationData.getTriggers().size() > 0) {
+//        OptionButtonsUtils.createMapForFirstTrigger(applicationData.getEventSimulets(), applicationData.getAllMaps().get(0));
+//        if (applicationData.getEventSimulets().size() > 0) {
 //            gridView.setAdapter(new SimuletDynamicAdapter(this,
-//                    applicationData.getSimulets(),
-//                    applicationData.getTriggers().get(0),
+//                    applicationData.getActionSimulets(),
+//                    applicationData.getEventSimulets().get(0),
 //                    applicationData.getAllMaps().get(0),
 //                    true)); //TODO TYLKO PIERWSZA MAPA NA RAZIE
 //        } else {
 //        }
 ////        add callback to stop edit mode if needed
-//        OptionButtonsUtils.createMapForEachTrigger(applicationData.getTriggers());
+//        OptionButtonsUtils.createMapForEachTrigger(applicationData.getEventSimulets());
 
         createTriggersHandling();
         OptionButtonsUtils.setInitialStatusForSimulets(triggerWrappers, client);
@@ -136,8 +136,8 @@ public class GridActivity extends Activity {
         });
 
         final GraphicalResourcesService graphResThread = new GraphicalResourcesService(client,
-                applicationData.getTriggers(),
-                applicationData.getSimulets(),
+                applicationData.getEventSimulets(),
+                applicationData.getActionSimulets(),
                 this,
                 applicationData.getAllMaps().get(0),
                 adapter);
@@ -147,21 +147,21 @@ public class GridActivity extends Activity {
 
     //    private void createSimuletsAndTriggersBar() {
 //        LinearLayout simuletsBar = (LinearLayout) findViewById(R.id.simulet_options);
-//        for (int i = 0; i < this.applicationData.getTriggers().size(); i++) {
+//        for (int i = 0; i < this.applicationData.getEventSimulets().size(); i++) {
 //            ImageView ii = new ImageView(this);
-//            ii.setImageBitmap(this.applicationData.getTriggers().get(i).getMainIconBitmap());
+//            ii.setImageBitmap(this.applicationData.getEventSimulets().get(i).getMainIconBitmap());
 //            simuletsBar.addView(ii);
 //        }
-//        for (int i = 0; i < this.applicationData.getSimulets().size(); i++) {
+//        for (int i = 0; i < this.applicationData.getActionSimulets().size(); i++) {
 //            ImageView ii = new ImageView(this);
-//            ii.setImageBitmap(this.applicationData.getSimulets().get(i).getMainIconBitmap());
+//            ii.setImageBitmap(this.applicationData.getActionSimulets().get(i).getMainIconBitmap());
 //            simuletsBar.addView(ii);
 //        }
 //    }
 
 //    private void refreshButtonHandling() {
 //        final Button refreshButton = (Button) findViewById(R.id.refresh);
-//        if (applicationData.getSimulets().size() < 4 || applicationData.getTriggers().size() < 2) {
+//        if (applicationData.getActionSimulets().size() < 4 || applicationData.getEventSimulets().size() < 2) {
 //            refreshButton.setVisibility(View.VISIBLE);
 //        }
 //        refreshButton.setVisibility(View.VISIBLE);//TODO usunąć, na potrzeby testów
@@ -202,8 +202,8 @@ public class GridActivity extends Activity {
 
     private void createTriggersHandling() {
         triggerWrappers = new ArrayList<>();
-        ArrayList<TriggerSimulet> triggers = applicationData.getTriggers();
-        for (TriggerSimulet trigger : triggers) {
+        ArrayList<EventSimulet> triggers = applicationData.getEventSimulets();
+        for (EventSimulet trigger : triggers) {
             triggerWrappers.add(new TriggerWrapper(trigger, new TriggerActionThread(gridView, applicationData, this, client)));
 //
 // trigger.createTriggerThread(new TriggerActionThread(gridView, applicationData, this, client));

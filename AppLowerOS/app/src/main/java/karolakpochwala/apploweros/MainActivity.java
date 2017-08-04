@@ -2,11 +2,8 @@ package karolakpochwala.apploweros;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,7 +12,6 @@ import android.widget.Button;
 import com.google.gson.Gson;
 
 import ApplicationData.ApplicationData;
-import Simulets.Simulet;
 import coapClient.CoapClientThread;
 import dynamicGridActivity.GridActivity;
 import mainUtils.Consts;
@@ -36,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         applicationData = new ApplicationData();
         sendButton = (Button) findViewById(R.id.button1);
-        coapRunnable = new CoapClientThread(applicationData.getSimulets(), applicationData.getTriggers(),
+        coapRunnable = new CoapClientThread(applicationData.getActionSimulets(), applicationData.getEventSimulets(),
                 this);
         coapClient = new Thread(coapRunnable);
         coapClient.start();
@@ -88,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 ////            Thread.State state = coapClient.getState();
 ////            state.name();
 //            coapClient.notify();
-//            coapRunnable = new CoapClientThread(sendButton, applicationData.getSimulets(),
+//            coapRunnable = new CoapClientThread(sendButton, applicationData.getActionSimulets(),
 //                    this);
 //            coapClient = new Thread(coapRunnable);
 //            coapClient.start();

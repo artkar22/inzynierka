@@ -18,10 +18,9 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import ApplicationData.ApplicationData;
-import Simulets.IpsoDigitalOutput;
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import TriggerSimulets.TriggerActionThread;
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGridActivity.GridActivity;
 
@@ -33,8 +32,8 @@ import static ipsoConfig.ipsoDefinitions.ACTION_SIMULET;
  */
 public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
 
-    private ArrayList<Simulet> simulets;
-    private ArrayList<TriggerSimulet> triggers;
+    private ArrayList<ActionSimulet> actionSimulets;
+    private ArrayList<EventSimulet> eventSimulets;
     private CoapClient client;
     private ProgressDialog dialog;
     private ArrayList<MapDTO> allMaps;
@@ -47,8 +46,8 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
                         final GridActivity gridActivity, final ProgressDialog dialog, final CoapClient client) {
         this.dialog = dialog;
         this.applicationData = applicationData;
-        this.simulets = applicationData.getSimulets();
-        this.triggers = applicationData.getTriggers();
+        this.actionSimulets = applicationData.getActionSimulets();
+        this.eventSimulets = applicationData.getEventSimulets();
         this.client = client;
         this.allMaps = applicationData.getAllMaps();
         this.triggerActionThread = triggerActionThread;
@@ -57,14 +56,14 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result) {
-//        OptionButtonsUtils.createMapForFirstTrigger(triggers, allMaps.get(0));
+//        OptionButtonsUtils.createMapForFirstTrigger(eventSimulets, allMaps.get(0));
 //        final DynamicGridView gridView = (DynamicGridView) gridActivity.findViewById(R.id.dynamic_grid);
 //        gridView.setAdapter(new SimuletDynamicAdapter(gridView.getContext(),
-//                simulets,
-//                triggers.get(0),
+//                actionSimulets,
+//                eventSimulets.get(0),
 //                allMaps.get(0),
 //                true));
-//        OptionButtonsUtils.createMapForEachTrigger(triggers);
+//        OptionButtonsUtils.createMapForEachTrigger(eventSimulets);
 //        OptionButtonsUtils.setInitialStatusForSimulets(applicationData, client, triggerActionThread);
 //        OptionButtonsUtils.createOptionButtons(gridActivity, gridView, applicationData, client);
 //        dialog.dismiss();
@@ -115,23 +114,23 @@ public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
 
     private void createSimulet(CoapResponse resp, URI uri) {
         if (resp.getResponseText().equals(ACTION_SIMULET)) {
-            IpsoDigitalOutput simulet = new IpsoDigitalOutput(uri);
-            simulets.add(simulet);
+            ActionSimulet simulet = new ActionSimulet(uri);
+            actionSimulets.add(simulet);
         } else if (resp.getResponseText().equals(EVENT_SIMULET)) {
-            TriggerSimulet trigger = new TriggerSimulet(uri);
-            triggers.add(trigger);
+            EventSimulet eventSimulet = new EventSimulet(uri);
+            eventSimulets.add(eventSimulet);
         }
     }
 
     private void discoverResourcesOfEachDevice() {
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getUriOfSimulet().toString());
-                simulet.setResources(client.discover());
+        if (actionSimulets.size() > 0) {
+            for (ActionSimulet actionSimulet : actionSimulets) {
+                client.setURI(actionSimulet.getUriOfSimulet().toString());
+                actionSimulet.setResources(client.discover());
             }
         }
-        if (triggers.size() > 0) {
-            for (TriggerSimulet trigger : triggers) {
+        if (eventSimulets.size() > 0) {
+            for (EventSimulet trigger : eventSimulets) {
                 client.setURI(trigger.getUriOfTrigger().toString());
                 trigger.setResources(client.discover());
             }

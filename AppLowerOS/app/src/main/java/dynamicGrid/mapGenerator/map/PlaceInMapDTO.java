@@ -1,6 +1,5 @@
 package dynamicGrid.mapGenerator.map;
 
-import Simulets.Simulet;
 import Simulets.SimuletsState;
 
 /**

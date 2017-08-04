@@ -4,10 +4,9 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
-import Simulets.Simulet;
-import TriggerSimulets.TriggerSimulet;
+import Simulets.ActionSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
@@ -21,13 +20,13 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
 
     private LinkedList<PlaceInMapDTO> mItems = new LinkedList<PlaceInMapDTO>();
     private MapDTO currentMap;
-    private ArrayList<Simulet> listOfSimulets;
-    private ArrayList<TriggerSimulet> listOfTriggers;
+    private ArrayList<ActionSimulet> listOfActionSimulets;
+    private ArrayList<EventSimulet> listOfTriggers;
     public BaseDynamicGridAdapter(Context context, MapDTO currentMap,
-                                  ArrayList<Simulet> listOfSimulets, ArrayList<TriggerSimulet> triggers) {
+                                  ArrayList<ActionSimulet> listOfActionSimulets, ArrayList<EventSimulet> triggers) {
         mContext = context;
         this.currentMap = currentMap;
-        this.listOfSimulets = listOfSimulets;
+        this.listOfActionSimulets = listOfActionSimulets;
         this.listOfTriggers = triggers;
         init(currentMap.getPlacesInMap());
     }
@@ -89,7 +88,7 @@ public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter 
     public void reorderItems(int originalPosition, int newPosition) {
         if (newPosition < getCount()) {
 //            DynamicGridUtils.reorder(mItems, originalPosition, newPosition);
-            DynamicGridUtils.swap(mItems, currentMap, listOfSimulets, listOfTriggers, originalPosition, newPosition);
+            DynamicGridUtils.swap(mItems, currentMap, listOfActionSimulets, listOfTriggers, originalPosition, newPosition);
             notifyDataSetChanged();
         }
     }

@@ -26,7 +26,7 @@ import mainUtils.Consts;
  */
 public class TriggerActionThread implements Runnable {
     private static final long PAUSED_TIME_UNSET = 0L;
-    private LinkedList<Pair<TriggerSimulet, String>> queue;
+    private LinkedList<Pair<EventSimulet, String>> queue;
     private DynamicGridView gridView;
     private ApplicationData applicationData;
     private GridActivity gridActivity;
@@ -76,7 +76,7 @@ public class TriggerActionThread implements Runnable {
         gridActivity.runOnUiThread(new Runnable() {
             public void run() {
                 while (queue.size() > 0) {
-                    final Pair<TriggerSimulet, String> trigger = queue.remove(0);
+                    final Pair<EventSimulet, String> trigger = queue.remove(0);
                     final MapDTO currentMap = applicationData.getAllMaps().get(0);
                     final LinkedList<Integer> indexes = currentMap.getTriggersIndexes();
                     for (Integer index : indexes) {
@@ -153,7 +153,7 @@ public class TriggerActionThread implements Runnable {
         return delay;
     }
 
-    public void addToQueue(final Pair<TriggerSimulet, String> triggerAndState) {
+    public void addToQueue(final Pair<EventSimulet, String> triggerAndState) {
         queue.add(triggerAndState);
     }
     public boolean isQueueEmpty(){
@@ -161,7 +161,7 @@ public class TriggerActionThread implements Runnable {
         return false;
     }
 
-    private Pair<TriggerSimulet, String> removeFirst() {
+    private Pair<EventSimulet, String> removeFirst() {
         return queue.removeFirst();
     }
 

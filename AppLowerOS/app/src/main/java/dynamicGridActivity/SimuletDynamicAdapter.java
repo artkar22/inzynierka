@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import Simulets.SimuletsState;
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGrid.BaseDynamicGridAdapter;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
@@ -26,20 +26,20 @@ import static dynamicGrid.DynamicGridUtils.PAUSE_SIMULET;
 
 public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
     private MapDTO currentMap;
-    private ArrayList<Simulet> listOfSimulets;
-    private ArrayList<TriggerSimulet> listOfTriggers;
+    private ArrayList<ActionSimulet> listOfActionSimulets;
+    private ArrayList<EventSimulet> listOfTriggers;
     private Context context;
 
-    public SimuletDynamicAdapter(Context context, ArrayList<Simulet> listOfSimulets,
-                                 ArrayList<TriggerSimulet> triggers, MapDTO currentMap, boolean bindSimulets) {
-        super(context, currentMap, listOfSimulets, triggers);
+    public SimuletDynamicAdapter(Context context, ArrayList<ActionSimulet> listOfActionSimulets,
+                                 ArrayList<EventSimulet> triggers, MapDTO currentMap, boolean bindSimulets) {
+        super(context, currentMap, listOfActionSimulets, triggers);
         this.context = context;
         this.listOfTriggers = triggers;
-        this.listOfSimulets = listOfSimulets;
+        this.listOfActionSimulets = listOfActionSimulets;
 //        this.allMaps = allMaps;//TODO tymczasowo pierwsza mapa tylko
         this.currentMap = currentMap;//TODO tymczasowo pierwsza mapa tylko
 //        bindPlacesInMapToTriggers(this.listOfTriggers, this.currentMap);
-//        bindPlacesInMapToSimulets(this.listOfSimulets, this.currentMap, this.listOfTriggers.size());
+//        bindPlacesInMapToSimulets(this.listOfActionSimulets, this.currentMap, this.listOfTriggers.size());
 //        bindPlaceInMapToPauseSimulet(this.currentMap);
     }
 
@@ -49,9 +49,9 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
         currentMap.getPlacesInMap().get(6).setSimuletState(new SimuletsState(PAUSE_SIMULET, bm, hm, null));
     }
 
-    public void bindPlacesInMapToTriggers(List<TriggerSimulet> listOfTriggers, MapDTO currentMap) {
+    public void bindPlacesInMapToTriggers(List<EventSimulet> listOfTriggers, MapDTO currentMap) {
         for (int x = 0; x < listOfTriggers.size(); x++) {
-            final TriggerSimulet currentSim = listOfTriggers.get(x);
+            final EventSimulet currentSim = listOfTriggers.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
                 final PlaceInMapDTO place = currentMap.getPlacesInMap().get(x + (y * currentMap.getNumberOfColums()));
                 if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
@@ -61,9 +61,9 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
         }
     }
 
-    public void bindPlacesInMapToSimulets(List<Simulet> listOfSimulets, MapDTO currentMap, int numberOfTriggers) {
-        for (int x = 0; x < listOfSimulets.size(); x++) {
-            final Simulet currentSim = listOfSimulets.get(x);
+    public void bindPlacesInMapToSimulets(List<ActionSimulet> listOfActionSimulets, MapDTO currentMap, int numberOfTriggers) {
+        for (int x = 0; x < listOfActionSimulets.size(); x++) {
+            final ActionSimulet currentSim = listOfActionSimulets.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
                 final PlaceInMapDTO place = currentMap.getPlacesInMap().get(numberOfTriggers + x + (y * currentMap.getNumberOfColums()));
                 if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
@@ -73,9 +73,9 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
         }
     }
 
-//    private void bindPlacesInMapToSimulets(ArrayList<Simulet> listOfSimulets) {
+//    private void bindPlacesInMapToSimulets(ArrayList<ActionSimulet> listOfActionSimulets) {
 //        int x = 0;
-//        for (Simulet simulet : listOfSimulets) {
+//        for (ActionSimulet simulet : listOfActionSimulets) {
 //            for (int index = x; index < trigger.getMyPlacesInMap().size(); index++) {
 //                PlaceInMapDTO place = trigger.getMyPlacesInMap().get(index);
 //                if (place.isDropAllowed() && !place.isItMap() && place.getSimulet() == null) {
@@ -95,7 +95,8 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_grid, null);
             if (currentPlace.getSimuletState() != null) {
-                holder = new SimuletViewHolder(convertView, currentMap.getPlacesInMap().get(position).getSimuletState());
+                holder = new SimuletViewHolder(convertView, currentMap.getPlacesInMap().
+                        get(position).getSimuletState());
 
             } else {
                 holder = new SimuletViewHolder(convertView);

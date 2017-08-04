@@ -1,25 +1,11 @@
 package karolakpochwala.apploweros;
 
-import android.os.Handler;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
 
 import java.util.ArrayList;
 
-import Protocol.Comm_Protocol;
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import TriggerSimulets.TriggerWrapper;
-import dynamicGrid.DynamicGridView;
-import dynamicGrid.mapGenerator.map.MapDTO;
-import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import mainUtils.Consts;
 
 /**
@@ -71,23 +57,6 @@ public class SendButtonListener implements View.OnClickListener {
             }
         } catch (InterruptedException ex) {
         }
-    }
-
-    private int getPictureForSimulet(Simulet simulet) {
-        if (simulet.isSimuletOn()) {
-            if (simulet.getOptionsStatus().isTimer()) {
-                return simulet.getPictureNameOnTimer();
-            } else {
-                return simulet.getPictureOn();
-            }
-        } else {
-            if (simulet.getOptionsStatus().isTimer()) {
-                return simulet.getPictureNameOffTimer();
-            } else {
-                return simulet.getPictureOff();
-            }
-        }
-
     }
 
     public void reset(View viewById) {

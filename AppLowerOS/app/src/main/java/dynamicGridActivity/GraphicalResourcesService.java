@@ -15,9 +15,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import Simulets.Simulet;
+import Simulets.ActionSimulet;
 import Simulets.SimuletsState;
-import TriggerSimulets.TriggerSimulet;
+import TriggerSimulets.EventSimulet;
 import deserializers.SimuletStateDeserializer;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import modules.SimuletsStateToSend;
@@ -29,17 +29,16 @@ import modules.SimuletsStateToSend;
 public class GraphicalResourcesService extends AsyncTask {
     private ProgressDialog dialog;
     private CoapClient client;
-    private List<TriggerSimulet> triggers;
-    private List<Simulet> simulets;
+    private List<EventSimulet> triggers;
+    private List<ActionSimulet> actionSimulets;
     private GridActivity gridActivity;
     private MapDTO mapDTO;
     private SimuletDynamicAdapter adapter;
 
-    public GraphicalResourcesService(final CoapClient client, final List<TriggerSimulet> triggers, final List<Simulet> simulets, final GridActivity gridActivity, MapDTO mapDTO, SimuletDynamicAdapter adapter){
-//        getMainIcons(client, triggers, simulets);
+    public GraphicalResourcesService(final CoapClient client, final List<EventSimulet> triggers, final List<ActionSimulet> actionSimulets, final GridActivity gridActivity, MapDTO mapDTO, SimuletDynamicAdapter adapter){
         this.client = client;
         this.triggers = triggers;
-        this.simulets = simulets;
+        this.actionSimulets = actionSimulets;
         this.gridActivity = gridActivity;
         this.mapDTO = mapDTO;
         this.adapter = adapter;
@@ -48,7 +47,7 @@ public class GraphicalResourcesService extends AsyncTask {
 
 
 
-    private void getStateLists(CoapClient client, List<TriggerSimulet> triggers, List<Simulet> simulets, GridActivity gridActivity) {
+    private void getStateLists(CoapClient client, List<EventSimulet> triggers, List<ActionSimulet> actionSimulets, GridActivity gridActivity) {
         gridActivity.runOnUiThread(new Runnable() {
             public void run() {
                 dialog.setMessage("Ładowanie grafik ...");
@@ -59,17 +58,17 @@ public class GraphicalResourcesService extends AsyncTask {
         });
         final Gson gsonDeserializer = new GsonBuilder().registerTypeAdapter(SimuletsStateToSend.class,
                 new SimuletStateDeserializer()).create();
-        if (simulets.size() > 0) {
-            for (Simulet simulet : simulets) {
-                client.setURI(simulet.getStatesListResource());
+        if (actionSimulets.size() > 0) {
+            for (ActionSimulet actionSimulet : actionSimulets) {
+                client.setURI(actionSimulet.getStatesListResource());
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
                 final SimuletsStateToSend[] recieved = gsonDeserializer.fromJson(resp.getResponseText(),SimuletsStateToSend[].class);
-                simulet.setStates(createListOfStates(recieved, simulet.getUriOfSimulet()));
+                actionSimulet.setStates(createListOfStates(recieved, actionSimulet.getUriOfSimulet()));
             }
         }
         if (triggers.size() > 0) {
-            for (TriggerSimulet trigger : triggers) {
+            for (EventSimulet trigger : triggers) {
                 client.setURI(trigger.getStatesListResource());
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
@@ -103,9 +102,9 @@ public class GraphicalResourcesService extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
 
-        getStateLists(client, triggers, simulets, gridActivity);
+        getStateLists(client, triggers, actionSimulets, gridActivity);
         adapter.bindPlacesInMapToTriggers(triggers, mapDTO);
-        adapter.bindPlacesInMapToSimulets(simulets, mapDTO, triggers.size());
+        adapter.bindPlacesInMapToSimulets(actionSimulets, mapDTO, triggers.size());
         adapter.bindPlaceInMapToPauseSimulet(mapDTO);
         gridActivity.runOnUiThread(new Runnable() {
             @Override

@@ -12,15 +12,15 @@ public class TriggerSimuletButtonListener implements View.OnClickListener {
     //    private boolean timerButtonOn;
     private View buttonView;
     private DynamicGridView gridView;
-    private TriggerSimulet triggerSimulet;
+    private EventSimulet eventSimulet;
     private ApplicationData appData;
 
     public TriggerSimuletButtonListener(View buttonView, DynamicGridView gridView,
-                                        TriggerSimulet triggerSimulet, ApplicationData appData) {
+                                        EventSimulet eventSimulet, ApplicationData appData) {
 //        timerButtonOn = false;
         this.buttonView = buttonView;
         this.gridView = gridView;
-        this.triggerSimulet = triggerSimulet;
+        this.eventSimulet = eventSimulet;
         this.appData = appData;
 
     }
@@ -28,11 +28,11 @@ public class TriggerSimuletButtonListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 //        gridView.setAdapter(new SimuletDynamicAdapter(gridView.getContext(),
-//                appData.getSimulets(),
-//                triggerSimulet,
+//                appData.getActionSimulets(),
+//                eventSimulet,
 //                appData.getAllMaps().get(0),
 //                false));
-//        gridView.switchView(triggerSimulet.getMyPlacesInMap());
+//        gridView.switchView(eventSimulet.getMyPlacesInMap());
     }
 
 //    public boolean getStatus() {

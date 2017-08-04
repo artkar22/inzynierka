@@ -1,27 +1,26 @@
 package ApplicationData;
 
-import org.eclipse.californium.core.CoapClient;
-
 import java.util.ArrayList;
 
-import Simulets.Simulet;
-import TriggerSimulets.TriggerSimulet;
+import Simulets.ActionSimulet;
+import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 
 /**
  * Created by ArturK on 2016-09-24.
  */
+
 public class ApplicationData {
 
     private ArrayList<MapDTO> allMaps;
-    private ArrayList<Simulet> simulets;
-    private ArrayList<TriggerSimulet> triggers;
+    private ArrayList<ActionSimulet> actionSimulets;
+    private ArrayList<EventSimulet> eventSimulets;
 
 
     public ApplicationData() {
         allMaps = new ArrayList<>();
-        simulets = new ArrayList<>();
-        triggers = new ArrayList<>();
+        actionSimulets = new ArrayList<>();
+        eventSimulets = new ArrayList<>();
     }
 
     public void addMap(final MapDTO newMap) {
@@ -34,12 +33,12 @@ public class ApplicationData {
         return allMaps;
     }
 
-    public ArrayList<Simulet> getSimulets() {
-        return simulets;
+    public ArrayList<ActionSimulet> getActionSimulets() {
+        return actionSimulets;
     }
 
-    public void addSimulet(final Simulet simulet) { //TODO dodawanie simuletów powinno być tą metodą, zmiana na pozniej
-        this.simulets.add(simulet);
+    public void addSimulet(final ActionSimulet actionSimulet) { //TODO dodawanie simuletów powinno być tą metodą, zmiana na pozniej
+        this.actionSimulets.add(actionSimulet);
     }
 
     public void removeSimulet(final String simuletId) {
@@ -47,10 +46,10 @@ public class ApplicationData {
     }
 
     public void removeAllSimulets() {
-        simulets = new ArrayList<>();
+        actionSimulets = new ArrayList<>();
     }
 
-    public ArrayList<TriggerSimulet> getTriggers() {
-        return triggers;
+    public ArrayList<EventSimulet> getEventSimulets() {
+        return eventSimulets;
     }
 }
