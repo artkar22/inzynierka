@@ -11,11 +11,13 @@ public class SimuletsStateToSend implements Serializable {
     private final String StateId;
     private final byte[] miniature;
     private final byte[] highlightedMiniature;
+    private final String eventType;
 
-    public SimuletsStateToSend(final String StateId, final byte[] miniature, final byte[] highlightedMiniature) {
+    public SimuletsStateToSend(final String StateId, final byte[] miniature, final byte[] highlightedMiniature, final String eventType) {
         this.StateId = StateId;
         this.miniature = miniature;
         this.highlightedMiniature = highlightedMiniature;
+        this.eventType = eventType;
     }
 
     public String getStateId() {
@@ -29,5 +31,7 @@ public class SimuletsStateToSend implements Serializable {
     public byte[] getHighlightedMiniature() {
         return highlightedMiniature;
     }
+
+    public String getEventType() { return eventType; }
 }
 

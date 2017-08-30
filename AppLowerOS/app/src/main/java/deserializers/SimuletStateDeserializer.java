@@ -25,7 +25,11 @@ public class SimuletStateDeserializer implements JsonDeserializer<SimuletsStateT
         String a = object.get("StateId").getAsString();
         JsonArray b = object.get("miniature").getAsJsonArray();
         JsonArray c = object.get("highlightedMiniature").getAsJsonArray();
-        return new SimuletsStateToSend(a,transformToBytes(b),transformToBytes(c));
+        if(object.has("eventType")){
+            String d = object.get("eventType").getAsString();
+            return new SimuletsStateToSend(a,transformToBytes(b),transformToBytes(c), d);
+        }
+        return new SimuletsStateToSend(a,transformToBytes(b),transformToBytes(c), null);
 
     }
     private byte[] transformToBytes(JsonArray array) {

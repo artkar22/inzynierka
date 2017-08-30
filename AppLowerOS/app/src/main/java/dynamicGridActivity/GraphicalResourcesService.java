@@ -86,7 +86,7 @@ public class GraphicalResourcesService extends AsyncTask {
     private List<SimuletsState> createListOfStates(final SimuletsStateToSend[] recieved, final URI uriOfSimulet) {
         final List<SimuletsState> states = new ArrayList<>();
         for (int x = 0; x < recieved.length; x++) {
-            SimuletsState state = new SimuletsState(recieved[x].getStateId(), convertMiniatureToBitmap(recieved[x].getMiniature()), convertMiniatureToBitmap(recieved[x].getHighlightedMiniature()), uriOfSimulet);
+            SimuletsState state = new SimuletsState(recieved[x].getStateId(), convertMiniatureToBitmap(recieved[x].getMiniature()), convertMiniatureToBitmap(recieved[x].getHighlightedMiniature()), uriOfSimulet, recieved[x].getEventType());
             states.add(state);
         }
         return states;
@@ -104,7 +104,7 @@ public class GraphicalResourcesService extends AsyncTask {
 
         getStateLists(client, triggers, actionSimulets, gridActivity);
         adapter.bindPlacesInMapToTriggers(triggers, mapDTO);
-        adapter.bindPlacesInMapToSimulets(actionSimulets, mapDTO, triggers.size());
+        adapter.bindPlacesInMapToSimulets(actionSimulets, mapDTO, triggers);
         adapter.bindPlaceInMapToPauseSimulet(mapDTO);
         gridActivity.runOnUiThread(new Runnable() {
             @Override

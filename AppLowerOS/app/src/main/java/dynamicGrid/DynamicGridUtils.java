@@ -67,7 +67,8 @@ public class DynamicGridUtils {
             SimuletsState copy = new SimuletsState(firstObject.getSimuletState().getStateId(),
                     firstObject.getSimuletState().getMiniature(),
                     firstObject.getSimuletState().getHighlightedMiniature(),
-                    firstObject.getSimuletState().getSimuletsURI());
+                    firstObject.getSimuletState().getSimuletsURI(),
+                    firstObject.getSimuletState().getEventType());
             secondObject.setSimuletState(copy);
             list.set(secondIndex, list.set(firstIndex, secondObject));
         }
@@ -83,7 +84,7 @@ public class DynamicGridUtils {
     }
 
     private static String checkType(final PlaceInMapDTO place, ArrayList<EventSimulet> triggers, ArrayList<ActionSimulet> actionSimulets) {
-        if (isSimulet(place, actionSimulets)) {
+        if (isSimulet(place, actionSimulets, triggers)) {
             return SIMULET;
         } else if (isTrigger(place, triggers)) {
             return TRIGGER;
@@ -109,11 +110,14 @@ public class DynamicGridUtils {
         return false;
     }
 
-    private static boolean isSimulet(final PlaceInMapDTO place, ArrayList<ActionSimulet> actionSimulets) {
+    private static boolean isSimulet(final PlaceInMapDTO place, ArrayList<ActionSimulet> actionSimulets, ArrayList<EventSimulet> eventSimulets) {
         if(place.getSimuletState()==null) return false;
         final URI simuletsUri = place.getSimuletState().getSimuletsURI();
         for (ActionSimulet actionSimulet : actionSimulets) {
             if (actionSimulet.getUriOfSimulet().equals(simuletsUri)) return true;
+        }
+        for (EventSimulet eventSimulet : eventSimulets){
+            if(eventSimulet.getUriOfTrigger().equals(simuletsUri) && "action".equals(place.getSimuletState().getEventType())) return true;
         }
         return false;
     }

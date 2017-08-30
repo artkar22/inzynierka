@@ -216,7 +216,7 @@ public class CoapClientThread implements Runnable {
             ActionSimulet simulet = new ActionSimulet(uri);
             simulet.setSimuletClass(resp.getResponseText());
             actionSimulets.add(simulet);
-        } else if (resp.getResponseText().equals(EVENT_SIMULET)) {
+        } else if (resp.getResponseText().equals(EVENT_SIMULET) || resp.getResponseText().equals(COUNTER_SIMULET)) {
             EventSimulet eventSimulet = new EventSimulet(uri);
             eventSimulet.setClass(resp.getResponseText());
             eventSimulets.add(eventSimulet);

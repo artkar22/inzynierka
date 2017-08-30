@@ -46,7 +46,7 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
     public void bindPlaceInMapToPauseSimulet(MapDTO currentMap) {
         Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.timer_nasycony);
         Bitmap hm = BitmapFactory.decodeResource(context.getResources(), R.drawable.timer_highlight);
-        currentMap.getPlacesInMap().get(6).setSimuletState(new SimuletsState(PAUSE_SIMULET, bm, hm, null));
+        currentMap.getPlacesInMap().get(6).setSimuletState(new SimuletsState(PAUSE_SIMULET, bm, hm, null, null));
     }
 
     public void bindPlacesInMapToTriggers(List<EventSimulet> listOfTriggers, MapDTO currentMap) {
@@ -54,6 +54,10 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
             final EventSimulet currentSim = listOfTriggers.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
                 final PlaceInMapDTO place = currentMap.getPlacesInMap().get(x + (y * currentMap.getNumberOfColums()));
+
+                if(currentSim.getStates().get(y).getEventType() != null && currentSim.getStates().get(y).getEventType().equals("action")){
+                    continue;
+                }
                 if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
                     place.setSimuletState(currentSim.getStates().get(y));
                 }
@@ -61,11 +65,23 @@ public class SimuletDynamicAdapter extends BaseDynamicGridAdapter {
         }
     }
 
-    public void bindPlacesInMapToSimulets(List<ActionSimulet> listOfActionSimulets, MapDTO currentMap, int numberOfTriggers) {
+    public void bindPlacesInMapToSimulets(List<ActionSimulet> listOfActionSimulets, MapDTO currentMap, List<EventSimulet> listOfTriggers) {
+        for (int x = 0; x < listOfTriggers.size(); x++) {
+            final EventSimulet currentSim = listOfTriggers.get(x);
+            for (int y = 0; y < currentSim.getStates().size(); y++) {
+                if(currentSim.getStates().get(y).getEventType() != null &&
+                        currentSim.getStates().get(y).getEventType().equals("action")){
+                    final PlaceInMapDTO place = currentMap.getPlacesInMap().get(listOfTriggers.size() + x + (y * currentMap.getNumberOfColums()));
+                    if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
+                        place.setSimuletState(currentSim.getStates().get(y));
+                    }
+                }
+            }
+        }
         for (int x = 0; x < listOfActionSimulets.size(); x++) {
             final ActionSimulet currentSim = listOfActionSimulets.get(x);
             for (int y = 0; y < currentSim.getStates().size(); y++) {
-                final PlaceInMapDTO place = currentMap.getPlacesInMap().get(numberOfTriggers + x + (y * currentMap.getNumberOfColums()));
+                final PlaceInMapDTO place = currentMap.getPlacesInMap().get(listOfTriggers.size() + x + (y * currentMap.getNumberOfColums()));
                 if (place.getTypeOfPlace().equals(MapDTOBuilder.CONTAINER) && place.getSimuletState() == null) {
                     place.setSimuletState(currentSim.getStates().get(y));
                 }
