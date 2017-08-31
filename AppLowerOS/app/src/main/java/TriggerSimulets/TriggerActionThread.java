@@ -140,6 +140,7 @@ public class TriggerActionThread implements Runnable {
         delayHandler.sendMessageDelayed(hidePlayResumeAfterSequence, delay);
         delayHandler.sendEmptyMessageAtTime(100, delay);
         queueOfpendingMessages.add(myPendingMessages);
+//        hold();
     }
 
     private int executePreSequenceIconChange(final Handler handler, final int preindex, final MapDTO currentMap) {
@@ -176,6 +177,30 @@ public class TriggerActionThread implements Runnable {
     public void pause() {
         if (delayHandler != null && pausedTime == PAUSED_TIME_UNSET) {
             pausedTime = SystemClock.uptimeMillis();
+
+            //need to copy the Messages because their data will get cleared in removeCallbacksAndMessages
+            final LinkedList<List<Message>> copiedQueueOfpendingMessages = new LinkedList<>();
+            for(List<Message> msgs : queueOfpendingMessages){
+                List<Message> copiedMessages = new ArrayList<Message>();
+                for (Message msg : msgs) {
+                    Message copy = Message.obtain();
+                    copy.obj = msg.obj;
+                    messageTimeMap.put(copy, msg.getWhen()); //remember the time since unable to set directly on Message
+                    copiedMessages.add(copy);
+                }
+                copiedQueueOfpendingMessages.add(copiedMessages);
+            }
+
+            //remove all messages from the handler
+            delayHandler.removeCallbacksAndMessages(null);
+            queueOfpendingMessages.clear();
+
+            queueOfpendingMessages.addAll(copiedQueueOfpendingMessages);
+        }
+    }
+
+    public void hold(){
+        if (delayHandler != null && pausedTime != PAUSED_TIME_UNSET) {
 
             //need to copy the Messages because their data will get cleared in removeCallbacksAndMessages
             final LinkedList<List<Message>> copiedQueueOfpendingMessages = new LinkedList<>();
@@ -246,6 +271,10 @@ public class TriggerActionThread implements Runnable {
 
     public void resetPauseTime() {
         pausedTime = PAUSED_TIME_UNSET;
+    }
+
+    public boolean isPausedTimeUnset() {
+        return pausedTime == PAUSED_TIME_UNSET;
     }
 //    private void mapMessagesToNewTime() {
 //        final Map<Message, Long> newTimeMap = new LinkedHashMap<>();

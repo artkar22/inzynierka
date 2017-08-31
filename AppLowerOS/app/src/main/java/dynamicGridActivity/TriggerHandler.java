@@ -25,7 +25,7 @@ public class TriggerHandler implements CoapHandler{
         @Override
         public void onLoad(CoapResponse response) {
             if (!response.getResponseText().equals("no_action") && !"INITIAL".equals(response.getResponseText())) {
-                if(!wrapper.getTriggerActionThread().isInProcessing(response.getResponseText())) {
+                if(!wrapper.getTriggerActionThread().isInProcessing(response.getResponseText()) && wrapper.getTriggerActionThread().isPausedTimeUnset()) {
                     wrapper.getTriggerActionThread().addToQueue(new Pair<EventSimulet, String>(trigger, response.getResponseText()));
                     wrapper.getTriggerActionThread().run();
                 }
