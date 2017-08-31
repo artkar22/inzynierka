@@ -45,7 +45,7 @@ public abstract class MapDTOBuilder {
 
         for (int currentPlaceInMapIndex = 0; currentPlaceInMapIndex < numberOfPlacesInMap; currentPlaceInMapIndex++) {
             String type;
-            if(currentPlaceInMapIndex == 6) {
+            if(currentPlaceInMapIndex == numberOfColumns-1) {
                 type = PAUSE_SIMULET_PLACE;
             }else if(currentPlaceInMapIndex == 13){
                 type = SPACE_BEETWEEN;
@@ -53,9 +53,11 @@ public abstract class MapDTOBuilder {
                 type = CONTAINER;
             } else if (dto.checkIfTriggersIndexesContainsValue(currentPlaceInMapIndex)) {
                 type = TRIGGER_PLACE;
-            }else if (dto.checkIfArrowsIndexesContainsValue(currentPlaceInMapIndex)) {
+            }
+            else if (dto.checkIfArrowsIndexesContainsValue(currentPlaceInMapIndex)) {
                 type = ARROW_PLACE;
-            } else if(dto.checkIfSpaceBeetweenIndexesContainsValue(currentPlaceInMapIndex)){
+            }
+            else if(dto.checkIfSpaceBeetweenIndexesContainsValue(currentPlaceInMapIndex)){
               type = SPACE_BEETWEEN;
             } else {
                 type = SIMULET_PLACE;
