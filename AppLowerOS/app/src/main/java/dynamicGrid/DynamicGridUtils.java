@@ -14,24 +14,12 @@ import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
-/**
- * Author: alex askerov
- * Date: 9/7/13
- * Time: 10:14 PM
- */
 public class DynamicGridUtils {
     private static final String TRIGGER = "TRIGGER";
     private static final String SIMULET = "SIMULET";
     public static final String PAUSE_SIMULET = "PAUSE_SIMULET";
     private static final String NONE = "NONE";
 
-    /**
-     * Delete item in <code>list</code> from position <code>indexFrom</code> and insert it to <code>indexTwo</code>
-     *
-     * @param list
-     * @param indexFrom
-     * @param indexTwo
-     */
     public static void reorder(LinkedList<PlaceInMapDTO> list, int indexFrom, int indexTwo) {
 //        if (list.get(indexTwo).isDropAllowed()) {
         PlaceInMapDTO obj = list.remove(indexFrom);
@@ -39,13 +27,6 @@ public class DynamicGridUtils {
 //        }
     }
 
-    /**
-     * Swap item in <code>list</code> at position <code>firstIndex</code> with item at position <code>secondIndex</code>
-     *
-     * @param list        The list in which to swap the items.
-     * @param firstIndex  The position of the first item in the list.
-     * @param secondIndex The position of the second item in the list.
-     */
     public static void swap(LinkedList<PlaceInMapDTO> list, MapDTO map,
                             ArrayList<ActionSimulet> listOfActionSimulets, ArrayList<EventSimulet> triggers,
                             int firstIndex, int secondIndex) {

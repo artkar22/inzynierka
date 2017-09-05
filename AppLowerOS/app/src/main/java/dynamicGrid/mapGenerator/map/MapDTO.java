@@ -1,13 +1,9 @@
 package dynamicGrid.mapGenerator.map;
 
-import android.util.Pair;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
+
 public class MapDTO {
 
     private String mapID;

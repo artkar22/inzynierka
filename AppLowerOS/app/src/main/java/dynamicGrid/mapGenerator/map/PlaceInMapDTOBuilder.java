@@ -1,8 +1,5 @@
 package dynamicGrid.mapGenerator.map;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
 public abstract class PlaceInMapDTOBuilder {
 //    public static PlaceInMapDTO buildPlaceInMapDto(final int placeInMapId, final boolean dropAllowed,
 //                                                   final boolean alreadyDropped, final boolean isItMap) {

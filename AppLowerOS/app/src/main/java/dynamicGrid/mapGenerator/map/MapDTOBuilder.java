@@ -1,15 +1,9 @@
 package dynamicGrid.mapGenerator.map;
 
-import android.util.Pair;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import dynamicGrid.mapGenerator.MapGenerator;
-
-/**
- * Created by ArturK on 2016-09-24.
- */
 public abstract class MapDTOBuilder {
     public static final String CONTAINER = "CONTAINER";
     public static final String TRIGGER_PLACE = "TRIGGER_PLACE";

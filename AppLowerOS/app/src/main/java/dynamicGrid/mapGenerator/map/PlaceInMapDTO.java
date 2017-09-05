@@ -2,9 +2,6 @@ package dynamicGrid.mapGenerator.map;
 
 import Simulets.SimuletsState;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
 public class PlaceInMapDTO {
 
     private int placeInMapId;

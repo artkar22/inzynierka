@@ -9,10 +9,6 @@ import Simulets.SimuletsState;
 import dynamicGrid.DynamicGridView;
 import dynamicGrid.mapGenerator.map.MapDTO;
 
-/**
- * Created by ArturK on 2017-04-22.
- */
-
 public class PostDelayedIconChange implements Runnable {
 
     private int index;

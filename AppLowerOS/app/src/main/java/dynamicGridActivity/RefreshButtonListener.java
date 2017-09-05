@@ -14,9 +14,6 @@ import TriggerSimulets.TriggerActionThread;
 import TriggerSimulets.EventSimulet;
 import coapClient.AsyncRefresh;
 
-/**
- * Created by ArturK on 2017-01-04.
- */
 public class RefreshButtonListener implements View.OnClickListener {
     private ApplicationData applicationData;
     private GridActivity gridActivity;

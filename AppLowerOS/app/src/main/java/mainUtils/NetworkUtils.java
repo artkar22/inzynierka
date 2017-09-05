@@ -6,9 +6,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
-/**
- * Created by ArturK on 2016-10-31.
- */
 public class NetworkUtils {
     public static final int PORT = 8080;
 

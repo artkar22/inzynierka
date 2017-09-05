@@ -1,8 +1,5 @@
 package TriggerSimulets;
 
-/**
- * Created by ArturK on 2017-05-04.
- */
 
 public class TriggerWrapper {
     private EventSimulet trigger;

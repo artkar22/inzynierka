@@ -12,10 +12,6 @@ import dynamicGrid.mapGenerator.map.MapDTO;
 
 import static dynamicGrid.DynamicGridUtils.PAUSE_SIMULET;
 
-/**
- * Created by ArturK on 2017-04-22.
- */
-
 public class PostDelayedRunnable implements Runnable {
     private CoapClient client;
     private SimuletsState currentSimuletState;

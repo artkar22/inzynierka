@@ -1,16 +1,11 @@
 package TriggerSimulets;
 
-import android.util.Pair;
 import android.view.View;
 
-import java.util.LinkedList;
 
 import dynamicGridActivity.GridActivity;
 import karolakpochwala.apploweros.R;
 
-/**
- * Created by Inni on 2017-06-11.
- */
 
 public class PostDelayedPlayResumeButtonsManagment implements Runnable {
 

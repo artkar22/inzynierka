@@ -1,8 +1,5 @@
 package dynamicGrid.mapGenerator.utils;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
 public class Consts {
     public static final String MAP_ID = "mapID";
     public static final String NUMBER_OF_COLUMNS = "numberOfColumns";

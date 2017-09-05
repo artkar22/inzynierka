@@ -7,7 +7,6 @@ import java.util.Set;
 import org.eclipse.californium.core.WebLink;
 
 import ExceptionHandling.ExceptionCodes;
-import options.OptionsStatus;
 
 import static karolakpochwala.apploweros.ResourcesList.STATES_LIST_RESOURCE;
 import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
@@ -20,11 +19,9 @@ public class ActionSimulet {
     private Set<WebLink> resources;
     private List<SimuletsState> states;
 
-    private OptionsStatus optionsStatus;
 
     public ActionSimulet(URI simuletsURI) {
         this.simuletsURI = simuletsURI;
-        optionsStatus = new OptionsStatus();
     }
 
     public String getSimuletClass() {
@@ -67,9 +64,5 @@ public class ActionSimulet {
 
     public void setStates(List<SimuletsState> states) {
         this.states = states;
-    }
-
-    public OptionsStatus getOptionsStatus() {
-        return optionsStatus;
     }
 }

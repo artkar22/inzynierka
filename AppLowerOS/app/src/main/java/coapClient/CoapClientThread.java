@@ -33,9 +33,6 @@ import mainUtils.NetworkUtils;
 import static ipsoConfig.ipsoDefinitions.*;
 
 
-/**
- * Created by Inni on 2016-03-15.
- */
 public class CoapClientThread implements Runnable {
 
     private static final int MIN_PORT_NUMBER = 0;

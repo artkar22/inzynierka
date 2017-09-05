@@ -8,9 +8,6 @@ import Simulets.ActionSimulet;
 import TriggerSimulets.TriggerWrapper;
 import mainUtils.Consts;
 
-/**
- * Created by Inni on 2016-03-05.
- */
 public class SendButtonListener implements View.OnClickListener {
 
     private ArrayList<TriggerWrapper> triggerWrappers;

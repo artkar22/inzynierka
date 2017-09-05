@@ -21,9 +21,6 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import dynamicGridActivity.GridActivity;
 import mainUtils.Consts;
 
-/**
- * Created by ArturK on 2016-12-29.
- */
 public class TriggerActionThread implements Runnable {
     private static final long PAUSED_TIME_UNSET = 0L;
     private LinkedList<Pair<EventSimulet, String>> queue;

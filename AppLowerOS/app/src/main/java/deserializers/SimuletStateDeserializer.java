@@ -12,9 +12,6 @@ import java.lang.reflect.Type;
 
 import modules.SimuletsStateToSend;
 
-/**
- * Created by Inni on 2017-05-23.
- */
 
 public class SimuletStateDeserializer implements JsonDeserializer<SimuletsStateToSend> {
     @Override

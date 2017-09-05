@@ -2,23 +2,16 @@ package dynamicGrid.mapGenerator;
 
 import android.content.res.AssetManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.MapDTOBuilder;
-import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
-import dynamicGrid.mapGenerator.map.PlaceInMapDTOBuilder;
 import dynamicGrid.mapGenerator.utils.Consts;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
 public class MapGenerator {
 
     public static MapDTO loadMap(final AssetManager assets, final String mapName) {

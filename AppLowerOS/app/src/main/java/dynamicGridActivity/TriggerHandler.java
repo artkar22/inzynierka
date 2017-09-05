@@ -8,10 +8,6 @@ import org.eclipse.californium.core.CoapResponse;
 import TriggerSimulets.EventSimulet;
 import TriggerSimulets.TriggerWrapper;
 
-/**
- * Created by Inni on 2017-06-16.
- */
-
 public class TriggerHandler implements CoapHandler{
 
     private TriggerWrapper wrapper;

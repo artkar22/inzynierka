@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 
 import java.net.URI;
 
-/**
- * Created by ArturK on 2017-02-27.
- */
 
 public class SimuletsState {
 

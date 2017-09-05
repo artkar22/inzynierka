@@ -39,11 +39,6 @@ import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 
-/**
- * Author: alex askerov
- * Date: 9/6/13
- * Time: 12:31 PM
- */
 public class DynamicGridView extends GridView {
     private static final int INVALID_ID = -1;
 
@@ -62,7 +57,6 @@ public class DynamicGridView extends GridView {
     private int mLastEventY = -1;
     private int mLastEventX = -1;
 
-    //used to distinguish straight line and diagonal switching
     private int mOverlapIfSwitchStraightLine;
 
     private List<Long> idList = new ArrayList<Long>();
@@ -136,25 +130,15 @@ public class DynamicGridView extends GridView {
         this.mDragListener = dragListener;
     }
 
-    /**
-     * Metoda która ma umożliwić podmianę mapy dla różnych triggerów
-     */
+
     public void switchView(LinkedList<PlaceInMapDTO> items) {
         getAdapterInterface().setItems(items);
     }
 
-    /**
-     * Start edit mode without starting drag;
-     */
     public void startEditMode() {
         startEditMode(-1);
     }
 
-    /**
-     * Start edit mode with position. Useful for start edit mode in
-     * {@link OnItemClickListener}
-     * or {@link OnItemLongClickListener}
-     */
     public void startEditMode(int position) {
         if (!mIsEditModeEnabled)
             return;
@@ -363,11 +347,6 @@ public class DynamicGridView extends GridView {
         return ((DynamicGridAdapterInterface) getAdapter());
     }
 
-    /**
-     * Creates the hover cell with the appropriate bitmap and of appropriate
-     * size. The hover cell's BitmapDrawable is drawn on top of the bitmap every
-     * single time an invalidate call is made.
-     */
     private BitmapDrawable getAndAddHoverView(View v) {
 
         int w = v.getWidth();
@@ -387,9 +366,6 @@ public class DynamicGridView extends GridView {
         return drawable;
     }
 
-    /**
-     * Returns a bitmap showing a screenshot of the view passed in.
-     */
     private Bitmap getBitmapFromView(View v) {
         Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -408,9 +384,6 @@ public class DynamicGridView extends GridView {
         }
     }
 
-    /**
-     * Retrieves the position in the grid corresponding to <code>itemId</code>
-     */
     public int getPositionForID(long itemId) {
         View v = getViewForId(itemId);
         if (v == null) {
@@ -503,10 +476,7 @@ public class DynamicGridView extends GridView {
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
-                /* If a multitouch event took place and the original touch dictating
-                 * the movement of the hover cell has ended, then the dragging event
-                 * ends and the hover cell is animated to its corresponding position
-                 * in the listview. */
+
                 pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >>
                         MotionEvent.ACTION_POINTER_INDEX_SHIFT;
                 final int pointerId = event.getPointerId(pointerIndex);
@@ -582,9 +552,6 @@ public class DynamicGridView extends GridView {
             mIsMobileScrolling = false;
             mActivePointerId = INVALID_ID;
 
-            // If the autoscroller has not completed scrolling, we need to wait for it to
-            // finish in order to determine the final location of where the hover cell
-            // should be animated to.
             if (mScrollState != OnScrollListener.SCROLL_STATE_IDLE) {
                 mIsWaitingForScrollFinish = true;
                 return;
@@ -671,22 +638,10 @@ public class DynamicGridView extends GridView {
         setEnabled(!mHoverAnimation && !mReorderAnimation);
     }
 
-    /**
-     * Seems that GridView before HONEYCOMB not support stable id in proper way.
-     * That cause bugs on view recycle if we will animate or change visibility state for items.
-     *
-     * @return
-     */
     private boolean isPostHoneycomb() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
     }
 
-    /**
-     * The GridView from Android Lollipoop requires some different
-     * setVisibility() logic when switching cells.
-     *
-     * @return true if OS version is less than Lollipop, false if not
-     */
     public static boolean isPreLollipop() {
         return Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP;
     }
@@ -831,9 +786,6 @@ public class DynamicGridView extends GridView {
         }
     }
 
-    /**
-     * for versions KitKat and below.
-     */
     private class KitKatSwitchCellAnimator implements SwitchCellAnimator {
 
         private int mDeltaY;
@@ -882,9 +834,6 @@ public class DynamicGridView extends GridView {
         }
     }
 
-    /**
-     * A for versions L and above.
-     */
     private class LSwitchCellAnimator implements SwitchCellAnimator {
 
         private int mDeltaY;
@@ -1040,13 +989,6 @@ public class DynamicGridView extends GridView {
     }
 
 
-    /**
-     * This scroll listener is added to the gridview in order to handle cell swapping
-     * when the cell is either at the top or bottom edge of the gridview. If the hover
-     * cell is at either edge of the gridview, the gridview will begin scrolling. As
-     * scrolling takes place, the gridview continuously checks if new cells became visible
-     * and determines whether they are potential candidates for a cell swap.
-     */
     private OnScrollListener mScrollListener = new OnScrollListener() {
 
         private int mPreviousFirstVisibleItem = -1;
@@ -1109,14 +1051,6 @@ public class DynamicGridView extends GridView {
             }
         }
 
-        /**
-         * This method is in charge of invoking 1 of 2 actions. Firstly, if the gridview
-         * is in a state of scrolling invoked by the hover cell being outside the bounds
-         * of the gridview, then this scrolling event is continued. Secondly, if the hover
-         * cell has already been released, this invokes the animation for the hover cell
-         * to return to its correct position after the gridview has entered an idle scroll
-         * state.
-         */
         private void isScrollCompleted() {
             if (mCurrentVisibleItemCount > 0 && mCurrentScrollState == SCROLL_STATE_IDLE) {
                 if (mCellIsMobile && mIsMobileScrolling) {
@@ -1127,10 +1061,6 @@ public class DynamicGridView extends GridView {
             }
         }
 
-        /**
-         * Determines if the gridview scrolled up enough to reveal a new cell at the
-         * top of the list. If so, then the appropriate parameters are updated.
-         */
         public void checkAndHandleFirstVisibleCellChange() {
             if (mCurrentFirstVisibleItem != mPreviousFirstVisibleItem) {
                 if (mCellIsMobile && mMobileItemId != INVALID_ID) {
@@ -1140,10 +1070,6 @@ public class DynamicGridView extends GridView {
             }
         }
 
-        /**
-         * Determines if the gridview scrolled down enough to reveal a new cell at the
-         * bottom of the list. If so, then the appropriate parameters are updated.
-         */
         public void checkAndHandleLastVisibleCellChange() {
             int currentLastVisibleItem = mCurrentFirstVisibleItem + mCurrentVisibleItemCount;
             int previousLastVisibleItem = mPreviousFirstVisibleItem + mPreviousVisibleItemCount;

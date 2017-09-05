@@ -27,9 +27,6 @@ import dynamicGridActivity.GridActivity;
 import static ipsoConfig.ipsoDefinitions.EVENT_SIMULET;
 import static ipsoConfig.ipsoDefinitions.ACTION_SIMULET;
 
-/**
- * Created by ArturK on 2017-01-10.
- */
 public class AsyncRefresh extends AsyncTask<Void, Void, Void> {
 
     private ArrayList<ActionSimulet> actionSimulets;

@@ -6,9 +6,6 @@ import Simulets.ActionSimulet;
 import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 
-/**
- * Created by ArturK on 2016-09-24.
- */
 
 public class ApplicationData {
 

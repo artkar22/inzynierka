@@ -17,9 +17,6 @@ import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 import static karolakpochwala.apploweros.ResourcesList.STATES_LIST_RESOURCE;
 import static karolakpochwala.apploweros.ResourcesList.STATUS_RESOURCE_ID;
 
-/**
- * Created by ArturK on 2016-12-27.
- */
 public class EventSimulet {
 
     private String simuletClass;

@@ -22,10 +22,6 @@ import deserializers.SimuletStateDeserializer;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import modules.SimuletsStateToSend;
 
-/**
- * Created by ArturK on 2017-02-28.
- */
-
 public class GraphicalResourcesService extends AsyncTask {
     private ProgressDialog dialog;
     private CoapClient client;
@@ -61,6 +57,7 @@ public class GraphicalResourcesService extends AsyncTask {
         if (actionSimulets.size() > 0) {
             for (ActionSimulet actionSimulet : actionSimulets) {
                 client.setURI(actionSimulet.getStatesListResource());
+                client.useEarlyNegotiation(1024);
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
                 final SimuletsStateToSend[] recieved = gsonDeserializer.fromJson(resp.getResponseText(),SimuletsStateToSend[].class);
@@ -70,6 +67,7 @@ public class GraphicalResourcesService extends AsyncTask {
         if (triggers.size() > 0) {
             for (EventSimulet trigger : triggers) {
                 client.setURI(trigger.getStatesListResource());
+                client.useEarlyNegotiation(1024);
                 client.setTimeout(0);
                 CoapResponse resp = client.get();
                 final SimuletsStateToSend[] recieved = gsonDeserializer.fromJson(resp.getResponseText(),SimuletsStateToSend[].class);

@@ -10,11 +10,6 @@ import TriggerSimulets.EventSimulet;
 import dynamicGrid.mapGenerator.map.MapDTO;
 import dynamicGrid.mapGenerator.map.PlaceInMapDTO;
 
-/**
- * Author: alex askerov
- * Date: 9/7/13
- * Time: 10:49 PM
- */
 public abstract class BaseDynamicGridAdapter extends AbstractDynamicGridAdapter {
     private Context mContext;
 
